@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
+		"module": "commonjs",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"target": "es5",
+		"jsx": "react",
+		"lib": [
+			"dom",
+			"es2015",
+			"es2015.promise",
+			"es5"
+		]
+	},
+	"include": [
+		"./src/**/*"
+	],
+	"compileOnSave": false
+}

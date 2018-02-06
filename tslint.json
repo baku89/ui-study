@@ -1,0 +1,10 @@
+{
+	"extends": ["tslint-react"],
+	"rules": {
+		"indent": [true, "tabs"],
+		"quotemark": [true, "single"],
+		"semicolon": [true, "never"],
+		"jsx-no-multiline-js": [false],
+		"jsx-alignment": [false]
+	}
+}

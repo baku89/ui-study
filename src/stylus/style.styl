@@ -1,0 +1,449 @@
+//--------------------------------------------------
+// configration
+
+$fonts = -apple-system, 'BlinkMacSystemFont', monospace 
+$monospace-fonts = 'Lucida Console', monospace
+
+$basic-margin = .5rem
+
+$input-height = 1.6rem
+$slider-size = 1.6rem
+
+$global-header-height = 4rem
+
+$max-page-width = 36rem
+
+$border-radius = 2px
+
+// color scheme
+$c-bg = #272c35
+$c-text = #5b6371
+$c-hover = #bfc5cf
+$c-focus = #2abac4
+$c-update = #e85e73
+$c-border = #616c85
+$c-inputbg = #21252c
+$c-inputtext = #bfc5cf
+
+$mobile-threshold = 480px
+
+//--------------------------------------------------
+
+@import './partials/utils'
+
+*, ::after, ::before
+	box-sizing: border-box
+	outline none
+
+html, body
+	width 100%
+	height 100%
+
+html
+	font-size 12px
+	font-family $fonts
+	user-select none
+
+	+mobile()
+		font-size 14px
+
+body
+	background $c-bg
+	color $c-text
+	user-select none
+	
+// forms reset
+button, input, select
+	color inherit
+	font-size inherit
+	font-family inherit
+	background transparent
+	outline none
+	appearance none
+	border none
+	border-radius 0
+
+// headings
+h1, h2, h3, h4, h5, h6
+	font-family $fonts-heading
+	font-weight bold
+	position relative
+	margin 0 .5rem
+
+h1
+	font-size 2rem
+	margin-bottom 1em
+
+h2
+	font-size 1.6rem
+	margin-bottom 1em
+
+a
+	&:link, &:visited
+		color $c-text
+	
+	&:hover, &:active, &:focus
+		background $c-text
+		text-decoration none
+		color $c-bg
+
+p
+	line-height 1.5em
+
+//--------------------------------------------------
+// app
+
+.app
+	width 100%
+	height 100%
+	background $c-inputbg
+
+//--------------------------------------------------
+// params
+
+.sidebar
+	width 40rem
+	min-height 100%
+	padding 2rem 0
+	background $c-bg
+
+	+mobile()
+		width 100%
+
+$pc-indent = .75rem
+$pc-row = $input-height + .6rem
+
+$c-pcline = rgba($c-border, 0.8)
+
+.params
+	padding-left $pc-indent
+
+.param-row
+	display flex
+	position relative
+	border-left 1px solid $c-pcline
+	height $pc-row
+
+	&__label
+		height 100%
+		line-height $pc-row
+		padding-left .5rem
+		flex-basis 8rem
+		flex-shrink 0
+
+		.param-group &
+			flex-basis @flex-basis - $pc-indent
+			margin-left -1px
+
+	
+	&__control
+		display flex
+		flex-grow 10
+
+	&:hover
+		background rgba($c-hover, .1)
+
+
+.param-group
+
+	&__label
+		border-left 1px solid $c-pcline
+		padding-left .3rem
+		height $pc-row
+		line-height $pc-row
+		cursor pointer
+
+		&:hover
+			background rgba($c-hover, .1)
+
+		&:before
+			content: '▶ '
+			^[0].expanded > &
+				content: '▼ '
+	
+	&__control
+		border-left 1px dotted $c-pcline
+		display none
+
+		^[0].expanded > &
+			visibility visible
+			display block
+
+//--------------------------------------------------
+// input style
+
+input-style()
+	height $input-height
+	border 1px solid $c-border
+	border-radius $border-radius
+	background $c-inputbg
+	color $c-inputtext
+	font-family $monospace-fonts
+	line-height $input-height
+	
+	&:hover, &.hover, .hover &
+		border-color $c-hover
+	
+	&:focus, &.focus, .focus &
+		border-color $c-focus
+	
+	&.update, .update &
+		border-color $c-update
+
+
+input-inner-style()
+	padding 0 .3rem
+
+.input
+	font-size 0.9rem
+	position relative
+	display: flex
+	margin-right .5rem
+	align-items: center
+	justify-content: center
+
+	& > &
+		margin-right 0
+	
+	// unit
+	&__unit
+		width 1.6rem
+		margin-left -1px
+		z-index 1
+		padding-left .3rem
+		margin-right .5rem
+		border-radius 0 $border-radius $border-radius 0
+		height $input-height
+		line-height $input-height
+
+		&:hover
+			background $c-border
+			color $c-bg
+
+nested-input()
+	& > .input
+		margin-right 0		
+
+// InputNumber
+.input-number
+
+	&:hover, &.focus
+		z-index 1
+	
+	// value
+	&__value
+		position relative
+		width 6rem
+		input-style()
+
+		+mobile()
+			width 4.5rem
+
+	&__input, &__static
+		width 100%
+		height 100%
+		position absolute
+		top 0
+		text-align right
+		input-inner-style()
+
+	&__input
+		visibility: hidden
+
+		^[0].focus &
+			visibility visible
+
+	&__static
+		cursor col-resize
+
+		^[0].focus &
+			visibility: hidden
+
+	// multipe
+	&.left
+		margin-right 0
+
+		& ^[0]__value
+			border-top-right-radius 0
+			border-bottom-right-radius 0
+	
+	&.right
+		margin-left -1px
+
+		& ^[0]__value
+			border-top-left-radius 0
+			border-bottom-left-radius 0
+
+// InputPoint
+.input-point
+	nested-input()
+
+	&__slider
+		width $slider-size
+		height @width
+		background $c-border
+		cursor: all-scroll
+		position relative
+		border-radius $border-radius
+
+		&:hover
+			background $c-hover
+		
+		&.update
+			background $c-update
+
+		&:before
+			pseudo-block()
+			background $c-bg
+			top 50%
+			left 50%
+			width 4px
+			height 4px
+			margin -2px 0 0 -2px
+
+// InputAngle
+.input-angle
+	nested-input()
+
+	&__slider-wrapper
+		position relative
+		width $slider-size
+		height @width
+	
+	&__slider
+		position relative
+		width 100%
+		height 100%
+		border-radius 50%
+		background $c-border
+		cursor: all-scroll
+
+		^[0].hover &
+			background $c-hover
+		
+		&.update
+			background $c-update
+		
+		&:before
+			pseudo-block()
+			top 0
+			left 50%
+			width 1px
+			height 50%
+			background: $c-bg
+
+// InputSlider
+.input-slider
+	nested-input()
+	width 100%
+	
+	&__slider
+		height $input-height
+		// background red
+		position relative
+		margin 0 3px
+		flex-grow 1
+		cursor col-resize
+
+		&:before
+			pseudo-block()
+			top 50%
+			height 2px
+			width 100%
+			background $c-border
+
+	&__knob
+		position relative
+		height $slider-size
+		margin-top ($input-height - $slider-size) * 0.5rem
+		width 7px
+		margin-left -3px
+		border-radius: 2px
+		background $c-border
+		
+		^[0].hover &
+			background $c-hover
+		
+		^[0].update &
+			background $c-update
+
+// InputScale
+.input-scale
+
+	&__slider
+		width $slider-size
+		height @width
+		background $c-border
+		cursor: all-scroll
+		position relative
+		border-radius $border-radius
+
+		&:hover
+			background $c-hover
+		
+		&.update
+			background $c-update
+
+		&:before
+			pseudo-block()
+			border 1px solid $c-bg
+			top 3px
+			right @top
+			bottom @top
+			left @top
+
+	&__uniform-scale
+		width 1.2rem
+		height $input-height
+		line-height @height
+		color $c-inputbg
+		cursor pointer
+		text-align center
+		margin-left -1px
+		border-top 1px solid $c-border
+		border-bottom 1px solid $c-border
+		background $c-bg		
+
+		&.enabled
+			background $c-border
+
+			&:before
+				content '~'
+		
+		&:hover
+			background $c-hover
+			z-index 1
+		
+		^[0].hover &
+			border-color $c-hover
+		
+		^[0].update &
+			border-color $c-update
+		
+
+
+
+//--------------------------------------------------
+
+.svg-overlay
+	position fixed
+	top 0
+	left 0
+	width 100vw
+	height 100vh
+	z-index 100
+	cursor all-scroll
+
+	.arrow
+		fill $c-update
+
+	.bold
+		fill none
+		stroke $c-update
+		stroke-width 2px
+	
+	.dashed
+		fill none
+		stroke $c-hover
+		stroke-dasharray 2 4
+		stroke-width 1px

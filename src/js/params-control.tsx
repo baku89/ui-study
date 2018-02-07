@@ -12,6 +12,7 @@ import InputSlider from './input-slider'
 import InputScale from './input-scale'
 
 interface Props {
+	path: string,
 	params: Array<Param>,
 	onChange: (params: Array<Param>) => void
 }
@@ -37,6 +38,9 @@ export default class ParamsControl extends React.Component<Props, {}> {
 		const params = this.props.params
 
 		const paramsJSX = params.map((param, i) => {
+
+			const path = this.props.path + '/' + param.name
+
 			if (param.type === ParamType.Float) {
 				return (
 					<ParamRow
@@ -44,6 +48,7 @@ export default class ParamsControl extends React.Component<Props, {}> {
 						label={param.label || param.name}
 					>
 						<InputNumber
+							path={path}
 							value={param.value}
 							onChange={this.handleChangeParam.bind(this, i)}
 							unit={param.unit}
@@ -57,6 +62,7 @@ export default class ParamsControl extends React.Component<Props, {}> {
 						label={param.label || param.name}
 					>
 						<InputPoint
+							path={path}
 							value={param.value}
 							onChange={this.handleChangeParam.bind(this, i)}
 							unit={param.unit}
@@ -70,6 +76,7 @@ export default class ParamsControl extends React.Component<Props, {}> {
 						label={param.label || param.name}
 					>
 						<InputAngle
+							path={path}
 							value={param.value}
 							onChange={this.handleChangeParam.bind(this, i)}
 						/>
@@ -82,6 +89,7 @@ export default class ParamsControl extends React.Component<Props, {}> {
 						label={param.label || param.name}
 					>
 						<InputSlider
+							path={path}
 							value={param.value}
 							unit={param.unit}
 							min={0}
@@ -97,6 +105,7 @@ export default class ParamsControl extends React.Component<Props, {}> {
 						label={param.label || param.name}
 					>
 						<InputScale
+							path={path}
 							value={param.value}
 							onChange={this.handleChangeParam.bind(this, i)}
 						/>
@@ -109,6 +118,7 @@ export default class ParamsControl extends React.Component<Props, {}> {
 						label={param.label || param.name}
 					>
 						<ParamsControl
+							path={this.props.path + '/' + param.name}
 							params={param.value}
 							onChange={this.handleChangeParam.bind(this, i)}
 						/>

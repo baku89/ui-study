@@ -87,6 +87,7 @@ export default class InputSlider extends React.Component<Props, State> {
 		return (
 			<div className={classes}>
 				<InputNumber
+					path={this.props.path}
 					value={value}
 					onChange={this.handleChange}
 					unit={this.props.unit}

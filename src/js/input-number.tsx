@@ -9,6 +9,7 @@ import evalExpression from './eval-expression'
 
 import SvgOverlay from './svg-overlay'
 import {InputBaseProps} from './input-base'
+import { DragEvent } from './gesture'
 
 interface Props extends InputBaseProps<number> {
 	unit?: string,
@@ -194,7 +195,7 @@ export default class InputNumber extends React.Component<Props, State> {
 
 	render() {
 
-		console.log('number render', Math.random()) 
+		console.log('number render', this.props.path) 
 
 		const {focusing, updating, dragging} = this.state
 		

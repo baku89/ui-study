@@ -49,6 +49,7 @@ class App extends React.Component<{}, State> {
 			<div className='sidebar'>
 				<h1>UI Study</h1>
 				<ParamsControl
+					path='.'
 					params={this.state.params}
 					onChange={this.handleChangeParams}
 				/>

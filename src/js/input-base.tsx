@@ -1,4 +1,5 @@
 export interface InputBaseProps<T> {
+	path: string,
 	value: T,
 	onChange: (value: T) => void
 }

@@ -107,11 +107,13 @@ export default class InputPoint extends React.Component<Props, State> {
 		return (
 			<div className={classes}>
 				<InputNumber
+					path={this.props.path + '/x'}
 					value={this.props.value.x}
 					onChange={this.handleChange.bind(this, 'x')}
 					className='left'
 				/>
 				<InputNumber
+					path={this.props.path + '/y'}
 					value={this.props.value.y}
 					onChange={this.handleChange.bind(this, 'y')}
 					className='right'

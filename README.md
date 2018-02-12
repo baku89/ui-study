@@ -10,7 +10,7 @@ The motivation of this project is described here: [Study of UI](http://baku89.co
 
 ## Development Environment
 
-## Transpiler languages
+### Transpiler languages
 
  - JavaScript: [TypeScript](https://www.typescriptlang.org/) + [JSX](https://reactjs.org/docs/introducing-jsx.html)
  - HTML: [Pug](https://pugjs.org)

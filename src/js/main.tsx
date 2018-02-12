@@ -21,7 +21,7 @@ class App extends React.Component<{}, State> {
 
 		this.state = {
 			params: [
-				{type: ParamType.Float, name: 'Float', value: 0},
+				{type: ParamType.Float, name: 'Number', value: 0},
 				{type: ParamType.Point, name: 'Point', value: new Point, unit: 'px'},
 				{type: ParamType.Angle, name: 'Angle', value: 0},
 				{type: ParamType.Slider, name: 'Slider', value: 0, unit: 'px'},
@@ -29,9 +29,9 @@ class App extends React.Component<{}, State> {
 					type: ParamType.Group,
 					name: 'Transform',
 					value: [
-						{type: ParamType.Point, name: 'Pos', value: new Point(960, 540), unit: 'px'},
+						{type: ParamType.Point, name: 'Position', value: new Point(960, 540), unit: 'px'},
 						{type: ParamType.Scale, name: 'Scale', value: new Point(100, 100)},
-						{type: ParamType.Angle, name: 'Rot', value: 0}
+						{type: ParamType.Angle, name: 'Rotation', value: 0}
 					]
 				},
 				{type: ParamType.Slider, name: 'Opacity', value: 100, unit: '%'}

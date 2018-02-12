@@ -217,7 +217,8 @@ export default class InputNumber extends React.Component<Props, State> {
 					onMouseLeave={this.handleMouseLeaveValue}
 				>
 
-					<input className='input-number__input mousetrap'
+					<input
+						className='input-number__input mousetrap'
 						ref={el => this.$input = el}
 						type='text'
 						value={this.state.inputValue}
@@ -226,8 +227,10 @@ export default class InputNumber extends React.Component<Props, State> {
 						onBlur={this.handleBlur}
 					/>
 
-					<div className='input-number__static'
-						ref={el => this.$static = el}>
+					<div
+						className='input-number__static'
+						ref={el => this.$static = el}
+					>
 						{this.props.value.toFixed(1)}
 					</div>
 				</div>
@@ -245,13 +248,15 @@ export default class InputNumber extends React.Component<Props, State> {
 								scale(${dragDest.x - dragOrigin.x >= 0 ? 1 : -1}, 1)
 							`}
 						/>
-						<line className='bold'
+						<line
+							className='bold'
 							x1={dragOrigin.x}
 							y1={dragOrigin.y}
 							x2={dragDest.x}
 							y2={dragOrigin.y}
 						/>
-						<line className='dashed'
+						<line
+							className='dashed'
 							x1={dragDest.x}
 							y1={dragOrigin.y}
 							x2={dragDest.x}

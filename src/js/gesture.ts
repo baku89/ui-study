@@ -103,10 +103,6 @@ class Gesture extends EventEmitter {
 		Mousetrap.unbind('up', 'shift+up', 'down', 'shift+down', 'shift', 'option')
 	}
 
-	onDrag(callback: (e: Gesture.DragEvent) => void) {
-		this.on('drag', callback)
-	}
-
 	private preventTouchScroll(e) {
 		e.preventDefault()
 	}

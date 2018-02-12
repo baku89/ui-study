@@ -36,7 +36,7 @@ export default class InputSlider extends React.Component<Props, State> {
 	componentDidMount() {
 		this.gesture = new Gesture(this.$slider)
 
-		this.gesture.onDrag(({current}) => {
+		this.gesture.on('drag', ({current}) => {
 			this.handeDragSlider(current.x)
 		})
 

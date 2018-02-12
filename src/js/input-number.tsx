@@ -55,7 +55,7 @@ export default class InputNumber extends React.Component<Props, State> {
 		this.gesture = new Gesture(this.$static, this.$input)
 
 		this.gesture.on('start-drag', this.handleStartDrag)
-		this.gesture.onDrag(this.handleDrag)
+		this.gesture.on('drag', this.handleDrag)
 		this.gesture.on('end-drag', this.handleEndDrag)
 		this.gesture.on('click', this.handleClickStatic)
 		this.gesture.on('increment', this.handleIncrement)
@@ -131,7 +131,7 @@ export default class InputNumber extends React.Component<Props, State> {
 		this.setState({dragging: false})
 	}
 	
-	handleIncrement = (inc) => {
+	handleIncrement = (inc: number) => {
 		const precision = calcPrecision(inc)
 		const digits = Math.pow(10, precision)
 

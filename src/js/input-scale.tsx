@@ -43,7 +43,7 @@ export default class InputScale extends React.Component<Props, State> {
 	componentDidMount() {
 		this.gesture = new Gesture(this.$slider)
 
-		this.gesture.onDrag(({offset, multiplyMode}: Gesture.DragEvent) => {
+		this.gesture.on('drag', ({offset, multiplyMode}: Gesture.DragEvent) => {
 
 			const hudScale = Math.min(2, Math.abs(InputScale.HudSize / this.state.dragStartValue.max()))
 

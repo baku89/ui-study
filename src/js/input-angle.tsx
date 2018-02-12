@@ -51,7 +51,7 @@ export default class InputAngle extends React.Component<Props, State> {
 		const axisOrigin = new Point()
 		const axisXMinus = new Point(-10000, 0)
 
-		this.gesture.onDrag(({current, multiplyMode}: Gesture.DragEvent) => {
+		this.gesture.on('drag', ({current, multiplyMode}: Gesture.DragEvent) => {
 
 			const origin = getDOMCenter(this.$sliderWrapper)
 

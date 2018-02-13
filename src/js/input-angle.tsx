@@ -51,7 +51,7 @@ export default class InputAngle extends React.Component<Props, State> {
 		const axisOrigin = new Point()
 		const axisXMinus = new Point(-10000, 0)
 
-		this.gesture.on('drag', ({current, multiplyMode}: Gesture.DragEvent) => {
+		this.gesture.on('drag', ({current, multiplier}: Gesture.DragEvent) => {
 
 			const origin = getDOMCenter(this.$sliderWrapper)
 
@@ -71,10 +71,8 @@ export default class InputAngle extends React.Component<Props, State> {
 			const angleRad = Math.atan2(offset.y, offset.x)
 			let angle = angleRad / Math.PI * 180
 
-			if (multiplyMode === Gesture.MultiplyMode.More) {
+			if (multiplier === Gesture.Multiplier.Larger) {
 				angle = Math.round(angle / 45) * 45
-			} else if (multiplyMode !== Gesture.MultiplyMode.Less) {
-				angle = Math.round(angle)
 			}
 
 			let newValue = rotation * 360 + angle
@@ -165,6 +163,7 @@ export default class InputAngle extends React.Component<Props, State> {
 				<InputNumber
 					path={this.props.path}
 					value={value}
+					largerStep={15}
 					onChange={this.handleChange}
 					unit='°'
 					altUnits={{rad: 1 / Math.PI * 180, pi: 180, deg: 1, x: 360}}

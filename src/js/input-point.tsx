@@ -38,16 +38,15 @@ export default class InputPoint extends React.Component<Props, State> {
 	componentDidMount() {
 		this.gesture = new Gesture(this.$slider)
 
-		this.gesture.on('drag', ({current, delta, multiplyMode}: Gesture.DragEvent) => {
+		this.gesture.on('drag', ({current, delta, multiplier}: Gesture.DragEvent) => {
 
 			let x = delta.x
 			let y = delta.y
 
-			if (multiplyMode === Gesture.MultiplyMode.More) {
+			if (multiplier === Gesture.Multiplier.Larger) {
 				x *= 10
 				y *= 10
-			}
-			if (multiplyMode === Gesture.MultiplyMode.Less) {
+			} else if (multiplier === Gesture.Multiplier.Smaller) {
 				x *= 0.1
 				y *= 0.1
 			}

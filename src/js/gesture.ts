@@ -7,12 +7,12 @@ import Point from './point'
 class Gesture extends EventEmitter {
 
 	private drag: ClickDrag
-	private multiplyMode: Gesture.MultiplyMode
+	private Multiplier: Gesture.Multiplier
 
 	constructor(dragElement: HTMLElement, inputElement?: HTMLInputElement) {
 		super()
 
-		this.multiplyMode = Gesture.MultiplyMode.Normal
+		this.Multiplier = Gesture.Multiplier.Normal
 		this.drag = ClickDrag(dragElement, {touch: true})
 
 		let origin: Point 
@@ -27,17 +27,17 @@ class Gesture extends EventEmitter {
 			justMousedown = true	
 
 			Mousetrap.bind('shift', () => {
-				this.multiplyMode = Gesture.MultiplyMode.More
+				this.Multiplier = Gesture.Multiplier.Larger
 			}, 'keydown')
 			Mousetrap.bind('shift', () => {
-				this.multiplyMode = Gesture.MultiplyMode.Normal
+				this.Multiplier = Gesture.Multiplier.Normal
 			}, 'keyup')
 	
 			Mousetrap.bind('option', () => {
-				this.multiplyMode = Gesture.MultiplyMode.Less
+				this.Multiplier = Gesture.Multiplier.Smaller
 			}, 'keydown')
 			Mousetrap.bind('option', () => {
-				this.multiplyMode = Gesture.MultiplyMode.Normal
+				this.Multiplier = Gesture.Multiplier.Normal
 			}, 'keyup')
 
 			window.addEventListener('touchmove', this.preventTouchScroll)
@@ -63,7 +63,7 @@ class Gesture extends EventEmitter {
 				offset: new Point(ox, oy),
 				current: new Point(e.pageX, e.pageY),
 				origin,
-				multiplyMode: this.multiplyMode
+				multiplier: this.Multiplier
 			}
 
 			this.emit('drag', dragEvent)
@@ -85,14 +85,14 @@ class Gesture extends EventEmitter {
 
 			const mousetrap = new Mousetrap(inputElement)
 
-			mousetrap.bind('up', () => this.emit('increment', 1))
-			mousetrap.bind('down', () => this.emit('increment', -1))
+			mousetrap.bind('up', () => this.emit('increment', 1, Gesture.Multiplier.Normal))
+			mousetrap.bind('down', () => this.emit('increment', -1, Gesture.Multiplier.Normal))
 	
-			mousetrap.bind('shift+up', () => this.emit('increment', 10))
-			mousetrap.bind('shift+down', () => this.emit('increment', -10))
+			mousetrap.bind('shift+up', () => this.emit('increment', 1, Gesture.Multiplier.Larger))
+			mousetrap.bind('shift+down', () => this.emit('increment', -1, Gesture.Multiplier.Larger))
 
-			mousetrap.bind('option+up', () => this.emit('increment', 0.1))
-			mousetrap.bind('option+down', () => this.emit('increment', -0.1))
+			mousetrap.bind('option+up', () => this.emit('increment', 1, Gesture.Multiplier.Smaller))
+			mousetrap.bind('option+down', () => this.emit('increment', -1, Gesture.Multiplier.Smaller))
 
 			mousetrap.bind(['enter', 'esc'], () => this.emit('blur'))
 		}	
@@ -109,10 +109,10 @@ class Gesture extends EventEmitter {
 }
 
 module Gesture {
-	export enum MultiplyMode {
+	export enum Multiplier {
 		Normal = 'normal',
-		More = 'more',
-		Less = 'less'
+		Larger = 'larger',
+		Smaller = 'smaller'
 	}
 
 	export interface DragEvent {
@@ -120,7 +120,7 @@ module Gesture {
 		delta: Point,
 		origin: Point,
 		current: Point,
-		multiplyMode: Gesture.MultiplyMode
+		multiplier: Gesture.Multiplier
 
 	}
 }

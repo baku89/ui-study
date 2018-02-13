@@ -9,13 +9,14 @@ import evalExpression from './eval-expression'
 
 import SvgOverlay from './svg-overlay'
 import {InputBaseProps} from './input-base'
-import { DragEvent } from './gesture'
 
 interface Props extends InputBaseProps<number> {
 	unit?: string,
 	baseUnit?: string,
 	altUnits?: object
 	className?: string,
+	smallerStep?: number,
+	largerStep?: number,
 	onHover?: (hover: boolean) => void,
 	onToggleDrag?: (dragging: boolean) => void
 }
@@ -30,6 +31,14 @@ interface State {
 }
 
 export default class InputNumber extends React.Component<Props, State> {
+
+	public static defaultProps: Props = {
+		path: null,
+		value: 0,
+		onChange: (value: number) => {},
+		smallerStep: 0.1,
+		largerStep: 10
+	}
 
 	static NumberRegex: RegExp = /^[\+\-]?\d*\.?\d+(?:[Ee][\+\-]?\d+)?$/
 	
@@ -108,12 +117,12 @@ export default class InputNumber extends React.Component<Props, State> {
 		})
 	}
 
-	handleDrag = ({multiplyMode, delta, current}: Gesture.DragEvent) => {
+	handleDrag = ({multiplier, delta, current}: Gesture.DragEvent) => {
 		if (this.state.focusing) return
 
 		let inc = delta.x
-		if (multiplyMode === Gesture.MultiplyMode.More) inc *= 10
-		if (multiplyMode === Gesture.MultiplyMode.Less) inc *= 0.1
+		if (multiplier === Gesture.Multiplier.Larger) inc *= 10
+		else if (multiplier === Gesture.Multiplier.Smaller) inc *= 0.1
 
 		const p:number = Math.max(1, calcPrecision(this.props.value))
 
@@ -131,11 +140,16 @@ export default class InputNumber extends React.Component<Props, State> {
 		this.setState({dragging: false})
 	}
 	
-	handleIncrement = (inc: number) => {
-		const precision = calcPrecision(inc)
+	handleIncrement = (inc: number, multiplier: Gesture.Multiplier) => {
+		
+		let multipliedInc = inc
+		if (multiplier === Gesture.Multiplier.Larger) multipliedInc *= this.props.largerStep
+		else if (multiplier === Gesture.Multiplier.Smaller) multipliedInc *= this.props.smallerStep
+
+		const precision = calcPrecision(multipliedInc)
 		const digits = Math.pow(10, precision)
 
-		let newValue = this.props.value + inc
+		let newValue = this.props.value + multipliedInc
 		newValue = Math.round(newValue * digits) / digits
 		
 		this.props.onChange(newValue)

@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper">
+	<div class="InputVector__root">
 		<InputNumber
 			v-for="(v, index) in value"
 			:key="index"
@@ -35,6 +35,6 @@ export default class InputVector extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-.wrapper
+.InputVector__root
 	display flex
 </style>

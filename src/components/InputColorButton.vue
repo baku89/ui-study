@@ -1,21 +1,21 @@
 <template>
-	<div class="wrapper">
-		<div class="preview" @click="openPicker" :style="previewStyle"/>
-		<div v-if="isPopupOpen" class="popup" ref="popup">
-			<div class="popup-content">
-				<div class="color-picker-wrapper">
-					<InputColorPicker class="color-picker" :value="value" @input="onInput"/>
+	<div class="InputColorButton__root">
+		<div class="InputColorButton__preview" @click="openPicker" :style="previewStyle"/>
+		<div v-if="isPopupOpen" class="InputColorButton__popup" ref="popup">
+			<div class="InputColorButton__popup-content">
+				<div class="InputColorButton__color-picker-wrapper">
+					<InputColorPicker class="InputColorButton__color-picker" :value="value" @input="onInput"/>
 				</div>
-				<div class="parameters">
+				<div class="InputColorButton__parameters">
 					<InputDropdown
-						class="color-mode"
+						class="InputColorButton__mode"
 						theme="simple"
 						:value="value[0]"
 						:values="['hsl', 'rgb', 'hex']"
 						:labels="['HSL', 'RGB', 'HEX']"
 						@input="onChangeMode"
 					/>
-					<InputColor class="input-color" :value="value" @input="onInput"/>
+					<InputColor class="InputColorButton__elements" :value="value" @input="onInput"/>
 				</div>
 			</div>
 		</div>
@@ -99,12 +99,12 @@ export default class InputColorButton extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.wrapper
+.InputColorButton__root
 	position relative
 	width $input-height
 	height $input-height
 
-.preview
+.InputColorButton__preview
 	position relative
 	display block
 	input-border-style()
@@ -117,7 +117,7 @@ export default class InputColorButton extends Vue {
 	&:active
 		input-border-focus-style()
 
-.popup
+.InputColorButton__popup
 	position fixed
 	top 0
 	left 0
@@ -128,31 +128,31 @@ export default class InputColorButton extends Vue {
 	background var(--color-bg)
 	box-shadow 0 0 10px 0 rgba(black, 0.1)
 
-.popup-content
+.InputColorButton__popup-content
 	position relative
 	margin 0.3em
 
-.color-picker-wrapper
+.InputColorButton__color-picker-wrapper
 	position relative
 	margin-bottom 0.3em
 	padding-top 100%
 	height 0
 
-.color-picker
+.InputColorButton__color-picker
 	position absolute
 	top 0
 	left 0
 	width 100%
 	height 100%
 
-.parameters
+.InputColorButton__parameters
 	display flex
 
-.color-mode
+.InputColorButton__mode
 	margin-right 0.3em
 	width 4.5em
 
-.input-color
+.InputColorButton__elements
 	width 100%
 </style>
 

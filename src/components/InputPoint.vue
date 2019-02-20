@@ -1,17 +1,17 @@
 <template>
-	<div class="wrapper">
+	<div class="InputPoint__root">
 		<Draggable
-			:class="{knob: true, dragging: isDragging}"
+			:class="{InputPoint__knob: true, dragging: isDragging}"
 			@dragstart="onDragstart"
 			@drag="onDrag"
 			@dragend="onDragend"
 		>
-			<svg class="icon">
+			<svg class="InputPoint__icon">
 				<line class="cross" x1="50%" y1="15%" x2="50%" y2="85%"></line>
 				<line class="cross" x1="15%" y1="50%" x2="85%" y2="50%"></line>
 			</svg>
 		</Draggable>
-		<svg class="svg-overlay" v-if="isDragging">
+		<svg class="InputPoint__svg svg-overlay" v-if="isDragging">
 			<SvgArrow :from="dragFrom" :to="[dragFrom[0], dragTo[1]]"></SvgArrow>
 			<SvgArrow :from="dragFrom" :to="[dragTo[0], dragFrom[1]]"></SvgArrow>
 			<line class="guide" :x1="dragFrom[0]" :y1="dragTo[1]" :x2="dragTo[0]" :y2="dragTo[1]"></line>
@@ -70,12 +70,12 @@ export default class InputPoint extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.wrapper
+.InputPoint__root
 	position relative
 	width $input-height
 	height $input-height
 
-.knob
+.InputPoint__knob
 	position relative
 	top 15%
 	left 15%
@@ -92,13 +92,13 @@ export default class InputPoint extends Vue {
 		background var(--color-active)
 		box-shadow 0 0 0 1px var(--color-active)
 
-	svg
-		width 100%
-		height 100%
+.InputPoint__icon
+	width 100%
+	height 100%
 
-		.cross
-			stroke-width 1px
-			stroke var(--color-bg)
+	.cross
+		stroke-width 1px
+		stroke var(--color-bg)
 </style>
 
 

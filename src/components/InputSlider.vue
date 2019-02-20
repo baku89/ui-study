@@ -1,13 +1,13 @@
 <template>
-	<div class="wrapper">
+	<div class="InputSlider__root">
 		<Draggable
-			:class="{slit: true, dragging: isDragging}"
+			:class="{InputSlider__slit: true, dragging: isDragging}"
 			@dragstart="onDragstart"
 			@drag="onDrag"
 			@dragend="onDragend"
 		>
-			<div class="accum" :style="{width: percent}"/>
-			<div class="knob" ref="knob" :style="{left: percent}"/>
+			<div class="InputSlider__accum" :style="{width: percent}"/>
+			<div class="InputSlider__knob" ref="knob" :style="{left: percent}"/>
 		</Draggable>
 	</div>
 </template>
@@ -70,13 +70,13 @@ export default class InputSlider extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-.wrapper
+.InputSlider__root
 	position relative
 	height 2em
 
 $size = 1em
 
-.slit
+.InputSlider__slit
 	position absolute
 	top 0
 	right 0.5 * $size
@@ -94,7 +94,7 @@ $size = 1em
 		background var(--color-control)
 		content ' '
 
-.accum
+.InputSlider__accum
 	position absolute
 	top 50%
 	margin-top -1.5px
@@ -105,7 +105,7 @@ $size = 1em
 	:hover > &, .dragging > &
 		background var(--color-active)
 
-.knob
+.InputSlider__knob
 	position absolute
 	top 50%
 	margin-top -0.5 * $size

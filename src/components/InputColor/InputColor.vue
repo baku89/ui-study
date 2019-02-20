@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper">
+	<div class="InputColor__root">
 		<template v-if="isHex">
 			<InputString
 				class="left"
@@ -137,6 +137,6 @@ export default class InputColor extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-.wrapper
+.InputColor__root
 	display flex
 </style>

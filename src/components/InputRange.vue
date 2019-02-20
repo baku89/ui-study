@@ -1,7 +1,7 @@
 <template>
-	<div class="wrapper">
+	<div class="InputRange__root">
 		<Draggable
-			class="slit"
+			class="InputRange__slit"
 			@dragstart="onDragstart"
 			@drag="onDrag"
 			@dragend="onDragend"
@@ -10,17 +10,17 @@
 			ref="slit"
 		>
 			<div
-				:class="{bar: true, inverted: this.value[0] > this.value[1], dragging: dragMode === 'bar', hover: hoverTarget === 'bar'}"
+				:class="{InputRange__bar: true, inverted: this.value[0] > this.value[1], dragging: dragMode === 'bar', hover: hoverTarget === 'bar'}"
 				:style="barStyle"
 				ref="bar"
 			/>
 			<div
-				:class="{edge: true, first: true, dragging: dragMode === 'first', hover: hoverTarget === 'first'}"
+				:class="{InputRange__edge: true, first: true, dragging: dragMode === 'first', hover: hoverTarget === 'first'}"
 				:style="firstStyle"
 				ref="first"
 			/>
 			<div
-				:class="{edge: true, second: true, dragging: dragMode === 'second', hover: hoverTarget === 'second'}"
+				:class="{InputRange__edge: true, second: true, dragging: dragMode === 'second', hover: hoverTarget === 'second'}"
 				:style="secondStyle"
 				ref="second"
 			/>
@@ -142,13 +142,13 @@ export default class InputRange extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-.wrapper
+.InputRange__root
 	position relative
 	height 2em
 
 $bar-width = 0.6em
 
-.slit
+.InputRange__slit
 	position absolute
 	top 0
 	right 0.5 * $bar-width
@@ -166,7 +166,7 @@ $bar-width = 0.6em
 		background var(--color-control)
 		content ' '
 
-.bar
+.InputRange__bar
 	position absolute
 	top 50%
 	margin-top -0.5 * $bar-width
@@ -188,7 +188,7 @@ $bar-width = 0.6em
 	&.dragging
 		box-shadow 0 0 0 1px var(--color-active), 0 0 0 2px var(--color-bg)
 
-.edge
+.InputRange__edge
 	position absolute
 	top 50%
 	box-sizing content-box

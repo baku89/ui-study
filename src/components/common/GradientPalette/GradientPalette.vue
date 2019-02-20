@@ -130,8 +130,3 @@ export default class GradientPalette extends Vue {
 	}
 }
 </script>
-
-<style lang="stylus" scoped>
-@import '../../../style/config.styl'
-</style>
-

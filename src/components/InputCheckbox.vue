@@ -1,7 +1,13 @@
 <template>
-	<div class="wrapper">
-		<input type="checkbox" :id="id" :value="value" @change="$emit('input', $event.target.checked)">
-		<label v-if="label !== undefined" :for="id">{{label}}</label>
+	<div class="InputCheckbox__root">
+		<input
+			class="InputCheckbox__input"
+			type="checkbox"
+			:id="id"
+			:value="value"
+			@change="$emit('input', $event.target.checked)"
+		>
+		<label class="InputCheckbox__label" v-if="label !== undefined" :for="id">{{label}}</label>
 	</div>
 </template>
 
@@ -22,13 +28,13 @@ export default class InputCheckbox extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.wrapper
+.InputCheckbox__root
 	position relative
 	display flex
 	height $input-height
 	// background red
 
-input
+.InputCheckbox__input
 	position relative
 	display block
 	input-border-style()
@@ -59,7 +65,7 @@ input
 		&:before
 			color var(--color-active)
 
-label
+.InputCheckbox__label
 	height $input-height
 	line-height $input-height
 </style>

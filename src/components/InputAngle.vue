@@ -1,7 +1,7 @@
 <template>
-	<div class="wrapper">
+	<div class="InputAngle__root">
 		<Draggable
-			:class="{knob: true, dragging: isDragging}"
+			:class="{InputAngle__knob: true, dragging: isDragging}"
 			@dragstart="onDragstart"
 			@drag="onDrag"
 			@dragend="onDragend"
@@ -70,12 +70,12 @@ export default class InputAngle extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.wrapper
+.InputAngle__root
 	position relative
 	width $input-height
 	height $input-height
 
-.knob
+.InputAngle__knob
 	position relative
 	top 10%
 	left 10%

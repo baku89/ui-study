@@ -1,6 +1,6 @@
 <template>
-	<div :class="{wrapper: true, simple: theme === 'simple'}">
-		<select :value="value" @change="onChange">
+	<div :class="{InputDropdown__root: true, simple: theme === 'simple'}">
+		<select class="InputDropdown__select" :value="value" @change="onChange">
 			<option
 				v-for="(value, index) in values"
 				:key="index"
@@ -37,7 +37,7 @@ export default class InputDropdown extends Vue {
 
 $right-arrow-width = 1em
 
-.wrapper
+.InputDropdown__root
 	position relative
 	height $input-height
 
@@ -60,7 +60,7 @@ $right-arrow-width = 1em
 		&:after
 			color var(--color-active)
 
-select
+.InputDropdown__select
 	width 100%
 	input-border-style()
 	input-field-style()

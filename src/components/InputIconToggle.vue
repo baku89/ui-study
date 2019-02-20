@@ -1,7 +1,12 @@
 <template>
-	<div class="wrapper">
-		<input type="checkbox" :value="value" @change="$emit('input', $event.target.checked)">
-		<div class="img" :style="imgStyle" ref="img">
+	<div class="InputIconToggle__root">
+		<input
+			class="InputIconToggle__input"
+			type="checkbox"
+			:value="value"
+			@change="$emit('input', $event.target.checked)"
+		>
+		<div class="InputIconToggle__img" :style="imgStyle" ref="img">
 			<slot/>
 		</div>
 	</div>
@@ -31,18 +36,18 @@ export default class InputCheckbox extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.wrapper
+.InputIconToggle__root
 	position relative
 	width $input-height
 	height $input-height
 
-input, .img
+.InputIconToggle__input, .InputIconToggle__img
 	top 10%
 	left 10%
 	width 80%
 	height 80%
 
-input
+.InputIconToggle__input
 	position relative
 	display block
 	border-radius $border-radius
@@ -53,16 +58,16 @@ input
 		& + .img
 			fill var(--color-control)
 
-.img
+.InputIconToggle__img
 	position absolute
 	transform-origin 0 0
 	pointer-events none
 	fill var(--color-border)
 
-input:checked + .img
-	fill var(--color-control-text)
+	.InputIconToggle__input:checked + &
+		fill var(--color-control-text)
 
-input:active + .img
-	fill var(--color-active)
+	.InputIconToggle__input:active + &
+		fill var(--color-active)
 </style>
 

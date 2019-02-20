@@ -1,21 +1,33 @@
 <template>
-	<div class="wrapper" :class="{editing: isEditing, dragging: isDragging}">
+	<div class="InputColorElement__root" :class="{editing: isEditing, dragging: isDragging}">
 		<Draggable
-			class="display"
+			class="InputColorElement__display"
 			:minDragDistance="3"
 			@dragstart="onDragstart"
 			@drag="onDrag"
 			@dragend="onDragend"
 			@click="onClick"
 		>
-			<div class="label" v-if="label">{{this.label}}</div>
+			<div class="InputColorElement__label" v-if="label">{{this.label}}</div>
 			{{element.toFixed(this.precision)}}
-			<span v-if="unit" class="unit">{{unit}}</span>
+			<span v-if="unit" class="InputColorElement__unit">{{unit}}</span>
 		</Draggable>
-		<input type="text" :value="element" @change="onChange" @blur="isEditing = false" ref="input">
+		<input
+			class="InputColorElement__input"
+			type="text"
+			:value="element"
+			@change="onChange"
+			@blur="isEditing = false"
+			ref="input"
+		>
 		<div class="svg-overlay" v-if="isDragging">
-			<GradientPalette class="slit" :color="[mode, value]" :varyings="[varying]" :style="slitStyle"/>
-			<div class="preview" :style="previewStyle"/>
+			<GradientPalette
+				class="InputColorElement__slit"
+				:color="[mode, value]"
+				:varyings="[varying]"
+				:style="slitStyle"
+			/>
+			<div class="InputColorElement__preview" :style="previewStyle"/>
 		</div>
 	</div>
 </template>
@@ -148,7 +160,7 @@ export default class InputColorElement extends Vue {
 <style lang="stylus" scoped>
 @import '../../style/config.styl'
 
-.wrapper
+.InputColorElement__root
 	input-border-style()
 	position relative
 	z-index 1
@@ -162,24 +174,24 @@ export default class InputColorElement extends Vue {
 		z-index 2
 		input-border-focus-style()
 
-.display, input
+.InputColorElement__display, .InputColorElement__input
 	input-field-style()
 	width 100%
 	height 100%
 	text-align right
 	font-family var(--font-monospace)
 
-.display
+.InputColorElement__display
 	position absolute
 	top 0
 	left 0
 	z-index 5
 	overflow hidden
 
-	.editing > &
+	.InputColorElement__wrapper.editing > &
 		visibility hidden
 
-.label
+.InputColorElement__label
 	position absolute
 	margin-left -0.05em
 	height 100%
@@ -187,25 +199,25 @@ export default class InputColorElement extends Vue {
 	font-size 0.9em
 	line-height $input-height * (1 / @font-size)
 
-.unit
+.InputColorElement__unit
 	margin-right -0.1em
 	margin-left -0.1em
 	color var(--color-border-text)
 	font-size 1em
 
-input
+.InputColorElement__input
 	opacity 0
 
 	.editing > &
 		opacity 1
 
-.slit
+.InputColorElement__slit
 	position absolute
 	width 3px
 	height 100px
 	border-radius 1.5px
 
-.preview
+.InputColorElement__preview
 	position absolute
 	margin-top -0.5 * $color-preview-size
 	margin-left -0.5 * $color-preview-size

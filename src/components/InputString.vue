@@ -1,5 +1,5 @@
 <template>
-	<input type="text" :value="value" @change="onChange" ref="input">
+	<input class="InputString__root" type="text" :value="value" @change="onChange" ref="input">
 </template>
 
 <script lang="ts">
@@ -34,7 +34,7 @@ export default class InputString extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-input
+.InputString__root
 	input-border-style()
 	input-field-style()
 	font-family var(--font-normal)

@@ -1,18 +1,25 @@
 <template>
-	<div class="wrapper" :class="{editing: isEditing, dragging: isDragging}">
+	<div class="InputNumber__root" :class="{editing: isEditing, dragging: isDragging}">
 		<Draggable
-			class="display"
+			class="InputNumber__display"
 			:minDragDistance="3"
 			@dragstart="onDragstart"
 			@drag="onDrag"
 			@dragend="onDragend"
 			@click="onClick"
 		>
-			<div class="label" v-if="label">{{this.label}}</div>
+			<div class="InputNumber__label" v-if="label">{{this.label}}</div>
 			{{value.toFixed(this.precision)}}
-			<span v-if="unit" class="unit">{{unit}}</span>
+			<span v-if="unit" class="InputNumber__unit">{{unit}}</span>
 		</Draggable>
-		<input type="text" :value="value" @change="onChange" @blur="isEditing = false" ref="input">
+		<input
+			class="InputNumber__input"
+			type="text"
+			:value="value"
+			@change="onChange"
+			@blur="isEditing = false"
+			ref="input"
+		>
 		<svg class="svg-overlay" v-if="isDragging">
 			<SvgArrow :from="dragFrom" :to="dragTo"></SvgArrow>
 		</svg>
@@ -100,7 +107,7 @@ export default class InputNumber extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.wrapper
+.InputNumber__root
 	input-border-style()
 	position relative
 	z-index 1
@@ -114,14 +121,14 @@ export default class InputNumber extends Vue {
 		z-index 2
 		input-border-focus-style()
 
-.display, input
+.InputNumber__display, .InputNumber__input
 	input-field-style()
 	width 100%
 	height 100%
 	text-align right
 	font-family var(--font-monospace)
 
-.display
+.InputNumber__display
 	position absolute
 	top 0
 	left 0
@@ -131,7 +138,7 @@ export default class InputNumber extends Vue {
 	.editing > &
 		visibility hidden
 
-.label
+.InputNumber__label
 	position absolute
 	margin-left -0.05em
 	height 100%
@@ -139,16 +146,16 @@ export default class InputNumber extends Vue {
 	font-size 0.9em
 	line-height $input-height * (1 / @font-size)
 
-.unit
+.InputNumber__unit
 	margin-right -0.1em
 	margin-left -0.1em
 	color var(--color-border-text)
 	font-size 1em
 
-input
+.InputNumber__input
 	opacity 0
 
-	.editing > &
+	.InputNumber__root.editing > &
 		opacity 1
 </style>
 

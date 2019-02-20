@@ -1,8 +1,8 @@
 <template>
-	<div class="wrapper">
+	<div class="InputMode__root">
 		<div
 			v-for="(v, index) in values"
-			:class="{option: true, active: values[index] === value}"
+			:class="{InputMode__option: true, active: values[index] === value}"
 			:key="index"
 			@click="$emit('input', v)"
 		>{{labels ? labels[index] : v}}</div>
@@ -25,7 +25,7 @@ export default class InputMode extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.wrapper
+.InputMode__root
 	position relative
 	display flex
 	height $input-height
@@ -33,7 +33,7 @@ export default class InputMode extends Vue {
 	border-radius $border-radius
 	background var(--color-border)
 
-.option
+.InputMode__option
 	position relative
 	z-index 1
 	margin -1px

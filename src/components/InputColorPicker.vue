@@ -1,8 +1,17 @@
 <template>
-	<div :class="{wrapper: true, dragging: isDragging}">
-		<Draggable class="draggable" @dragstart="onDrag" @drag="onDrag" @dragend="onDrag">
-			<GradientPalette class="gradient-palette" :color="gradientPaletteColor" :varyings="[1, 2]"/>
-			<div class="preview" :style="GradientPalettePreviewStyle"/>
+	<div :class="{InputColorPicker__root: true, dragging: isDragging}">
+		<Draggable
+			class="InputColorPicker__draggable"
+			@dragstart="onDrag"
+			@drag="onDrag"
+			@dragend="onDrag"
+		>
+			<GradientPalette
+				class="InputColorPicker__gradient-palette"
+				:color="gradientPaletteColor"
+				:varyings="[1, 2]"
+			/>
+			<div class="InputColorPicker__preview" :style="GradientPalettePreviewStyle"/>
 		</Draggable>
 	</div>
 </template>
@@ -97,26 +106,26 @@ export default class InputColorPicker extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.wrapper
+.InputColorPicker__root
 	position relative
 	border 1px solid var(--color-border)
 	border-radius $border-radius
 
-.draggable
+.InputColorPicker__draggable
 	width 100%
 	height 100%
 
-	.wrapper.dragging > &
+	.InputColorPicker__wrapper.dragging > &
 		overflow visible
 		cursor none
 
-.gradient-palette
+.InputColorPicker__gradient-palette
 	position relative
 	width 100%
 	height 100%
 	border-radius $border-radius
 
-.preview
+.InputColorPicker__preview
 	position absolute
 	margin -0.5em 0 0 -0.5em
 	width 1em
@@ -125,7 +134,7 @@ export default class InputColorPicker extends Vue {
 	border-radius 50%
 	background red
 
-	.wrapper.dragging > .draggable > &
+	.InputColorPicker__wrapper.dragging &
 		z-index 1000
 		margin-top -0.5 * $color-preview-size
 		margin-left -0.5 * $color-preview-size

@@ -1,5 +1,5 @@
 <template>
-	<button @click="$emit('click', $event)">{{label}}</button>
+	<button class="InputButton__root" @click="$emit('click', $event)">{{label}}</button>
 </template>
 
 <script lang="ts">
@@ -15,7 +15,7 @@ export default class InputButton extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-button
+.InputButton__root
 	height $input-height
 	input-border-style()
 	border-color var(--color-control)

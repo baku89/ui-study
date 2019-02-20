@@ -29,4 +29,4 @@ input-border-focus-style()
 input-field-style()
 	padding 0 0.3em
 	color var(--color-text)
-	line-height $input-height
+	line-height 'calc(%s - 2px)' % $input-height

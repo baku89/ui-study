@@ -68,17 +68,17 @@ $right-arrow-width = 1em
 	font-family var(--font-normal)
 	line-height 'calc(%s - 2px)' % $input-height
 
-	.wrapper.simple > &
+	.InputDropdown__root.simple > &
 		border none
 		background none
 
 		&:hover, &:active
 			color var(--color-active)
 
-	.wrapper:hover > &
+	.InputDropdown__root:hover > &
 		input-border-hover-style()
 
-	.wrapper:active > &
+	.InputDropdown__root:active > &
 		input-border-focus-style()
 </style>
 

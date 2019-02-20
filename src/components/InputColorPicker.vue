@@ -1,56 +1,34 @@
 <template>
-	<div class="wrapper">
-		<div class="preview" @click="openPicker" :style="previewStyle"/>
-		<div v-if="isPopupOpen" class="popup" ref="popup">
-			<div class="popup-content">
-				<Draggable
-					:class="{'color-pad-wrapper': true, 'dragging': isDraggingGradientPalette}"
-					@dragstart="onDragGradientPalette"
-					@drag="onDragGradientPalette"
-					@dragend="onDragGradientPalette"
-				>
-					<GradientPalette class="color-pad" :color="GradientPaletteColor" :varyings="[1, 2]" ref="pad"/>
-					<div class="color-pad-preview" :style="GradientPalettePreviewStyle"/>
-				</Draggable>
-				<div class="parameters">
-					<InputDropdown
-						class="color-mode"
-						theme="simple"
-						:value="value[0]"
-						:values="['hsl', 'rgb', 'hex']"
-						:labels="['HSL', 'RGB', 'HEX']"
-						@input="onChangeMode"
-					/>
-					<InputColor class="input-color" :value="value" @input="onInput"/>
-				</div>
-			</div>
-		</div>
+	<div :class="{wrapper: true, dragging: isDragging}">
+		<Draggable class="draggable" @dragstart="onDrag" @drag="onDrag" @dragend="onDrag">
+			<GradientPalette class="gradient-palette" :color="gradientPaletteColor" :varyings="[1, 2]"/>
+			<div class="preview" :style="GradientPalettePreviewStyle"/>
+		</Draggable>
 	</div>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import colorConvert from 'color-convert'
 import {vec2} from 'gl-matrix'
+import {clamp} from '@/math'
 import mezr from 'mezr'
 
-import {clamp} from '@/math'
-import {toCSSColor, convertColorElements} from '@/util'
 import {DataColor, DataColorMode, DataColorElements} from '@/data'
+import {toCSSColor, convertColorElements} from '@/util'
 
 import GradientPalette from '@/components/common/GradientPalette'
 import Draggable from '@/components/common/Draggable.vue'
-import InputColor from './InputColor'
-import InputDropdown from './InputDropdown.vue'
 
 @Component({
-	components: {GradientPalette, Draggable, InputColor, InputDropdown}
+	components: {
+		GradientPalette,
+		Draggable
+	}
 })
 export default class InputColorPicker extends Vue {
 	@Prop([Array]) private value!: DataColor
 
-	private isPopupOpen: boolean = false
-	private isDraggingGradientPalette: boolean = false
+	private isDragging: boolean = false
 
 	get mode(): DataColorMode {
 		return this.value[0]
@@ -60,12 +38,16 @@ export default class InputColorPicker extends Vue {
 		return this.value[1]
 	}
 
-	get cssColor(): string {
-		return toCSSColor(this.value)
+	get hsl(): number[] {
+		if (this.mode === 'hsl') {
+			return this.elements as number[]
+		} else {
+			return convertColorElements(this.mode, 'hsl', this.elements) as number[]
+		}
 	}
 
-	get previewStyle(): object {
-		return {background: this.cssColor}
+	get cssColor(): string {
+		return toCSSColor(this.value)
 	}
 
 	get GradientPalettePreviewStyle(): object {
@@ -77,15 +59,7 @@ export default class InputColorPicker extends Vue {
 		}
 	}
 
-	get hsl(): number[] {
-		if (this.mode === 'hsl') {
-			return this.elements as number[]
-		} else {
-			return convertColorElements(this.mode, 'hsl', this.elements) as number[]
-		}
-	}
-
-	get GradientPaletteColor(): DataColor {
+	get gradientPaletteColor(): DataColor {
 		if (this.mode === 'hsl') {
 			return this.value
 		} else {
@@ -93,39 +67,15 @@ export default class InputColorPicker extends Vue {
 		}
 	}
 
-	private openPicker() {
-		this.isPopupOpen = true
-
-		const closePicker = (e: Event) => {
-			// @ts-ignore
-			if (e.path.indexOf(this.$refs.popup) === -1) {
-				this.isPopupOpen = false
-				window.removeEventListener('mousedown', closePicker)
-			}
-		}
-		window.addEventListener('mousedown', closePicker)
-	}
-
-	private onChangeMode(mode: DataColorMode) {
-		const newElements = convertColorElements(this.mode, mode, this.elements)
-		const newValue = [mode, newElements]
-
-		this.$emit('input', newValue)
-	}
-
-	private onInput(color: DataColor) {
-		this.$emit('input', color)
-	}
-
-	private onDragGradientPalette(e: {
+	private onDrag(e: {
 		current: vec2
 		currentTarget: HTMLElement
 		eventName: string
 	}) {
 		if (e.eventName === 'dragstart') {
-			this.isDraggingGradientPalette = true
+			this.isDragging = true
 		} else if (e.eventName === 'dragend') {
-			this.isDraggingGradientPalette = false
+			this.isDragging = false
 		}
 
 		const {left, top} = mezr.rect(e.currentTarget)
@@ -144,64 +94,29 @@ export default class InputColorPicker extends Vue {
 }
 </script>
 
-
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
 .wrapper
 	position relative
-	width $input-height
-	height $input-height
+	border 1px solid var(--color-border)
+	border-radius $border-radius
 
-.preview
-	position relative
-	display block
-	input-border-style()
+.draggable
 	width 100%
 	height 100%
 
-	&:hover
-		input-border-hover-style()
-
-	&:active
-		input-border-focus-style()
-
-.popup
-	position fixed
-	top 0
-	left 0
-	z-index 1000
-	width 16em
-	border 1px solid var(--color-border)
-	border-radius $border-radius
-	background var(--color-bg)
-	box-shadow 0 0 10px 0 rgba(black, 0.1)
-
-.popup-content
-	position relative
-	margin 0.3em
-
-.color-pad-wrapper
-	position relative
-	overflow hidden
-	margin-bottom 0.3em
-	padding-top 100%
-	height 0
-
-	&.dragging
+	.wrapper.dragging > &
 		overflow visible
 		cursor none
 
-.color-pad
-	position absolute
-	top 0
-	left 0
+.gradient-palette
+	position relative
 	width 100%
 	height 100%
-	border 1px solid var(--color-border)
 	border-radius $border-radius
 
-.color-pad-preview
+.preview
 	position absolute
 	margin -0.5em 0 0 -0.5em
 	width 1em
@@ -210,21 +125,11 @@ export default class InputColorPicker extends Vue {
 	border-radius 50%
 	background red
 
-	.color-pad-wrapper.dragging > &
+	.wrapper.dragging > .draggable > &
 		z-index 1000
 		margin-top -0.5 * $color-preview-size
 		margin-left -0.5 * $color-preview-size
 		width $color-preview-size
 		height $color-preview-size
-
-.parameters
-	display flex
-
-.color-mode
-	margin-right 0.3em
-	width 4.5em
-
-.input-color
-	width 100%
 </style>
 

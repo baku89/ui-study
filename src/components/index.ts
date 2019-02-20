@@ -2,7 +2,7 @@ import InputAngle from './InputAngle.vue'
 import InputButton from './InputButton.vue'
 import InputCheckbox from './InputCheckbox.vue'
 import InputColor from './InputColor'
-import InputColorPicker from './InputColorPicker.vue'
+import InputColorButton from './InputColorButton.vue'
 import InputDropdown from './InputDropdown.vue'
 import InputIconToggle from './InputIconToggle.vue'
 import InputMode from './InputMode.vue'
@@ -18,7 +18,7 @@ export default {
 	InputButton,
 	InputCheckbox,
 	InputColor,
-	InputColorPicker,
+	InputColorButton,
 	InputDropdown,
 	InputIconToggle,
 	InputMode,

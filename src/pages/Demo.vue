@@ -27,7 +27,7 @@
 		</div>
 
 		<div class="column">
-			<InputColorPicker v-model="color" style="margin-right: .5em;"/>
+			<InputColorButton v-model="color" style="margin-right: .5em;"/>
 			<InputColor v-model="color" style="width: 12em;"/>
 		</div>
 

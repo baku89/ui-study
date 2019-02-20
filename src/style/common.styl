@@ -1,0 +1,76 @@
+flex-version = flex
+@import 'nib'
+
+global-reset()
+
+@import './config.styl'
+
+// Variables
+:root
+	--color-active #63acf9
+	--color-border #e0e0e0
+	--color-border-text #bbbbbb
+	--color-control #bbbbbb
+	--color-control-text #999999
+	--color-bg #f0f0f0
+	--color-field #f9f9f9
+	--color-text #444444
+	--font-monospace 'Roboto Condensed', monospace, sans-serif
+	--font-normal 'Roboto', Helvetica, Arial, sans-serif
+
+*, ::after, ::before
+	box-sizing border-box
+	outline none
+	user-select none
+	-webkit-tap-highlight-color transparent
+
+html
+	font-size 12px
+	-webkit-font-smoothing antialiased
+	-moz-osx-font-smoothing grayscale
+
+body
+	color var(--color-text)
+	font-family var(--font-normal)
+
+// Reset form elements
+input, button, select
+	margin 0
+	outline none
+	border 0
+	background transparent
+	color inherit
+	font-size inherit
+	appearance none
+
+	&::-webkit-outer-spin-button, &::-webkit-inner-spin-button
+		margin 0
+		-webkit-appearance none
+
+.svg-overlay
+	position fixed
+	top 0
+	left 0
+	z-index 100
+	width 100vw
+	height 100vh
+
+	svg
+		position absolute
+		top 0
+		left 0
+		width 100%
+		height 100%
+
+	.guide
+		stroke var(--color-border)
+		stroke-width 1px
+		fill none
+
+	.stroke
+		stroke var(--color-active)
+		stroke-width 3px
+		fill none
+
+	.fill
+		fill var(--color-active)

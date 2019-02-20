@@ -1,22 +1,23 @@
 {
 	"compilerOptions": {
-		"allowSyntheticDefaultImports": true,
-		"module": "commonjs",
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
+		"target": "es6",
+		"module": "esnext",
+		"strict": true,
+		"jsx": "preserve",
+		"importHelpers": true,
 		"moduleResolution": "node",
+		"experimentalDecorators": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
 		"sourceMap": true,
-		"target": "es5",
-		"jsx": "react",
-		"lib": [
-			"dom",
-			"es2015",
-			"es2015.promise",
-			"es5"
-		]
+		"baseUrl": ".",
+		"types": ["webpack-env"],
+		"paths": {
+			"@/*": ["src/*"]
+		},
+		"lib": ["esnext", "dom", "dom.iterable", "scripthost"]
 	},
-	"include": [
-		"./src/**/*"
-	],
-	"compileOnSave": false
+	"files": ["node_modules/@types/webgl2/index.d.ts"],
+	"include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+	"exclude": ["node_modules"]
 }

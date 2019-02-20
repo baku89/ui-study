@@ -12,15 +12,13 @@ The motivation of this project is described here: [Study of UI](http://baku89.co
 
 ### Transpiler languages
 
- - JavaScript: [TypeScript](https://www.typescriptlang.org/) + [JSX](https://reactjs.org/docs/introducing-jsx.html)
- - HTML: [Pug](https://pugjs.org)
- - CSS: [Stylus](http://stylus-lang.com/)
+- JavaScript: [TypeScript](https://www.typescriptlang.org/)
+- CSS: [Stylus](http://stylus-lang.com/)
 
 ### Build tools
 
- - Yarn
- - Gulp
- - Webpack (for only JS)
+- Yarn
+- Vue CLI 3
 
 ### To transpile and debug:
 
@@ -31,7 +29,7 @@ gulp -o
 
 ## Relating Documents
 
- - [Classified Table of Parameter Controls](https://docs.google.com/spreadsheets/d/1iyjMUTgJAZhPu4Rg2aV1QPgwSUWBAfuuRCwx0Yki4XM/edit#gid=0)
+- [Classified Table of Parameter Controls](https://docs.google.com/spreadsheets/d/1iyjMUTgJAZhPu4Rg2aV1QPgwSUWBAfuuRCwx0Yki4XM/edit#gid=0)
 
 ## License
 

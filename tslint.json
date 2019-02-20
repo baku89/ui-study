@@ -1,10 +1,15 @@
 {
-	"extends": ["tslint-react"],
+	"defaultSeverity": "warning",
+	"extends": ["tslint:recommended", "tslint-config-prettier"],
+	"linterOptions": {
+		"exclude": ["node_modules/**"]
+	},
 	"rules": {
-		"indent": [true, "tabs"],
-		"quotemark": [true, "single"],
-		"semicolon": [true, "never"],
-		"jsx-no-multiline-js": [false],
-		"jsx-alignment": [true]
+		"interface-name": false,
+		"ordered-imports": false,
+		"object-literal-sort-keys": false,
+		"no-consecutive-blank-lines": false,
+		"no-console": false,
+		"variable-name": [true, "allow-leading-underscore", "allow-pascal-case"]
 	}
 }

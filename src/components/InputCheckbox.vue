@@ -1,0 +1,66 @@
+<template>
+	<div class="wrapper">
+		<input type="checkbox" :id="id" :value="value" @change="$emit('input', $event.target.checked)">
+		<label v-if="label !== undefined" :for="id">{{label}}</label>
+	</div>
+</template>
+
+<script lang="ts">
+import {Component, Prop, Vue} from 'vue-property-decorator'
+import uid from 'uid'
+
+@Component
+export default class InputCheckbox extends Vue {
+	@Prop(Boolean) private value!: boolean
+	@Prop(String) private label!: string
+
+	private id: string = uid(10)
+}
+</script>
+
+
+<style lang="stylus" scoped>
+@import '../style/config.styl'
+
+.wrapper
+	position relative
+	display flex
+	height $input-height
+	// background red
+
+input
+	position relative
+	display block
+	input-border-style()
+	margin-top $input-height * 0.2
+	margin-right 0.4em
+	width $input-height * 0.6
+	height $input-height * 0.6
+
+	&:hover
+		input-border-hover-style()
+
+	&:active
+		input-border-focus-style()
+
+	&:checked:before
+		position absolute
+		top 0
+		left 0
+		width 100%
+		height 100%
+		color var(--color-control-text)
+		content '✓'
+		text-align center
+		font-size 1.1em
+		line-height 1em
+
+	&:hover, &:active
+		&:before
+			color var(--color-active)
+
+label
+	height $input-height
+	line-height $input-height
+</style>
+

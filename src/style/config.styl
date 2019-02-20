@@ -1,0 +1,32 @@
+$border-radius = 3px
+$color-preview-size = 60px
+$input-height = 2em
+
+input-border-style()
+	height $input-height
+	border 1px solid var(--color-border)
+	border-radius $border-radius
+	background var(--color-field)
+
+	&.left
+		margin-right -1px
+		border-radius $border-radius 0 0 $border-radius
+
+	&.middle
+		margin-right -1px
+		border-radius 0
+
+	&.right
+		border-radius 0 $border-radius $border-radius 0
+
+input-border-hover-style()
+	border-color var(--color-active)
+
+input-border-focus-style()
+	border-color var(--color-active)
+	box-shadow 0 0 0 1px @border-color
+
+input-field-style()
+	padding 0 0.3em
+	color var(--color-text)
+	line-height $input-height

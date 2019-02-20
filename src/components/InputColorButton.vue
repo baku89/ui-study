@@ -15,7 +15,12 @@
 						:labels="['HSL', 'RGB', 'HEX']"
 						@input="onChangeMode"
 					/>
-					<InputColor class="InputColorButton__elements" :value="value" @input="onInput"/>
+					<InputColor
+						class="InputColorButton__elements"
+						:value="value"
+						:showLabel="false"
+						@input="onInput"
+					/>
 				</div>
 			</div>
 		</div>

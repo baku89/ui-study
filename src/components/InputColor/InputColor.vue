@@ -15,7 +15,7 @@
 				:mode="value[0]"
 				:min="0"
 				:max="elementMax[1]"
-				:label="elementLabels[1]"
+				:label="showLabel ? elementLabels[1] : undefined"
 				:unit="elementUnits[1]"
 				@input="onInputElement(1, $event)"
 			/>
@@ -28,7 +28,7 @@
 				:mode="value[0]"
 				:min="0"
 				:max="elementMax[0]"
-				:label="elementLabels[0]"
+				:label="showLabel ? elementLabels[0] : undefined"
 				:unit="elementUnits[0]"
 				@input="onInputElement(0, $event)"
 			/>
@@ -39,7 +39,7 @@
 				:mode="value[0]"
 				:min="0"
 				:max="elementMax[1]"
-				:label="elementLabels[1]"
+				:label="showLabel ? elementLabels[1] : undefined"
 				:unit="elementUnits[1]"
 				@input="onInputElement(1, $event)"
 			/>
@@ -50,7 +50,7 @@
 				:mode="value[0]"
 				:min="0"
 				:max="elementMax[2]"
-				:label="elementLabels[2]"
+				:label="showLabel ? elementLabels[2] : undefined"
 				:unit="elementUnits[2]"
 				@input="onInputElement(2, $event)"
 			/>
@@ -62,7 +62,7 @@
 				:mode="value[0]"
 				:min="0"
 				:max="elementMax[3]"
-				:label="elementLabels[3]"
+				:label="showLabel ? elementLabels[3] : undefined"
 				:unit="elementUnits[3]"
 				@input="onInputElement(3, $event)"
 			/>
@@ -83,27 +83,28 @@ import {DataColor, DataColorMode, DataColorInfo} from '@/data'
 })
 export default class InputColor extends Vue {
 	@Prop(Array) private value!: DataColor
+	@Prop({type: Boolean, default: true}) private showLabel!: boolean
 
-	get elementMax(): number[] {
+	private get elementMax(): number[] {
 		const mode = this.value[0]
 		return DataColorInfo.maxValue[mode]
 	}
 
-	get elementLabels(): string[] {
+	private get elementLabels(): string[] {
 		const mode = this.value[0]
 		return DataColorInfo.label[mode]
 	}
 
-	get elementUnits(): Array<string | undefined> {
+	private get elementUnits(): Array<string | undefined> {
 		const mode = this.value[0]
 		return DataColorInfo.unit[mode]
 	}
 
-	get hasAlpha(): boolean {
+	private get hasAlpha(): boolean {
 		return this.value[0].indexOf('a') !== -1
 	}
 
-	get isHex(): boolean {
+	private get isHex(): boolean {
 		return this.value[0].indexOf('hex') !== -1
 	}
 

@@ -61,7 +61,7 @@ const ConstantMax = {
 }
 
 @Component
-export default class ColorPad extends Vue {
+export default class GradientPalette extends Vue {
 	@Prop(Array) private color!: DataColor
 	@Prop(Array) private varyings!: number[]
 
@@ -76,8 +76,8 @@ export default class ColorPad extends Vue {
 			gl = renderCanvas.getContext('webgl') as WebGLRenderingContext
 
 			programInfo = twgl.createProgramInfo(gl, [
-				require('!raw-loader!./color-pad.vert'),
-				require('!raw-loader!./color-pad.frag')
+				require('./gradient-palette.vert'),
+				require('./gradient-palette.frag')
 			])
 
 			const arrays = {
@@ -132,6 +132,6 @@ export default class ColorPad extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-@import '../../style/config.styl'
+@import '../../../style/config.styl'
 </style>
 

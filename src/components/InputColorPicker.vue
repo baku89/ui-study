@@ -4,13 +4,13 @@
 		<div v-if="isPopupOpen" class="popup" ref="popup">
 			<div class="popup-content">
 				<Draggable
-					:class="{'color-pad-wrapper': true, 'dragging': isDraggingColorPad}"
-					@dragstart="onDragColorPad"
-					@drag="onDragColorPad"
-					@dragend="onDragColorPad"
+					:class="{'color-pad-wrapper': true, 'dragging': isDraggingGradientPalette}"
+					@dragstart="onDragGradientPalette"
+					@drag="onDragGradientPalette"
+					@dragend="onDragGradientPalette"
 				>
-					<ColorPad class="color-pad" :color="colorPadColor" :varyings="[1, 2]" ref="pad"/>
-					<div class="color-pad-preview" :style="colorPadPreviewStyle"/>
+					<GradientPalette class="color-pad" :color="GradientPaletteColor" :varyings="[1, 2]" ref="pad"/>
+					<div class="color-pad-preview" :style="GradientPalettePreviewStyle"/>
 				</Draggable>
 				<div class="parameters">
 					<InputDropdown
@@ -38,19 +38,19 @@ import {clamp} from '@/math'
 import {toCSSColor, convertColorElements} from '@/util'
 import {DataColor, DataColorMode, DataColorElements} from '@/data'
 
-import ColorPad from './ColorPad'
-import Draggable from './common/Draggable.vue'
+import GradientPalette from '@/components/common/GradientPalette'
+import Draggable from '@/components/common/Draggable.vue'
 import InputColor from './InputColor'
 import InputDropdown from './InputDropdown.vue'
 
 @Component({
-	components: {ColorPad, Draggable, InputColor, InputDropdown}
+	components: {GradientPalette, Draggable, InputColor, InputDropdown}
 })
 export default class InputColorPicker extends Vue {
 	@Prop([Array]) private value!: DataColor
 
 	private isPopupOpen: boolean = false
-	private isDraggingColorPad: boolean = false
+	private isDraggingGradientPalette: boolean = false
 
 	get mode(): DataColorMode {
 		return this.value[0]
@@ -68,7 +68,7 @@ export default class InputColorPicker extends Vue {
 		return {background: this.cssColor}
 	}
 
-	get colorPadPreviewStyle(): object {
+	get GradientPalettePreviewStyle(): object {
 		const hsl = this.hsl
 		return {
 			left: `${hsl[1]}%`,
@@ -85,7 +85,7 @@ export default class InputColorPicker extends Vue {
 		}
 	}
 
-	get colorPadColor(): DataColor {
+	get GradientPaletteColor(): DataColor {
 		if (this.mode === 'hsl') {
 			return this.value
 		} else {
@@ -117,15 +117,15 @@ export default class InputColorPicker extends Vue {
 		this.$emit('input', color)
 	}
 
-	private onDragColorPad(e: {
+	private onDragGradientPalette(e: {
 		current: vec2
 		currentTarget: HTMLElement
 		eventName: string
 	}) {
 		if (e.eventName === 'dragstart') {
-			this.isDraggingColorPad = true
+			this.isDraggingGradientPalette = true
 		} else if (e.eventName === 'dragend') {
-			this.isDraggingColorPad = false
+			this.isDraggingGradientPalette = false
 		}
 
 		const {left, top} = mezr.rect(e.currentTarget)

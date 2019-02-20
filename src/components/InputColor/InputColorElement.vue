@@ -14,7 +14,7 @@
 		</Draggable>
 		<input type="text" :value="element" @change="onChange" @blur="isEditing = false" ref="input">
 		<div class="svg-overlay" v-if="isDragging">
-			<ColorPad class="slit" :color="[mode, value]" :varyings="[varying]" :style="slitStyle"/>
+			<GradientPalette class="slit" :color="[mode, value]" :varyings="[varying]" :style="slitStyle"/>
 			<div class="preview" :style="previewStyle"/>
 		</div>
 	</div>
@@ -32,7 +32,7 @@ import {toCSSColor} from '@/util'
 
 import Draggable from '@/components/common/Draggable.vue'
 import SvgArrow from '@/components/common/SvgArrow.vue'
-import ColorPad from '@/components/ColorPad'
+import GradientPalette from '@/components/common/GradientPalette'
 
 const SLIT_HEIGHT = 200
 const SLIT_WIDTH = 6
@@ -41,7 +41,7 @@ const SLIT_WIDTH = 6
 	components: {
 		Draggable,
 		SvgArrow,
-		ColorPad
+		GradientPalette
 	}
 })
 export default class InputColorElement extends Vue {

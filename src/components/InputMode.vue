@@ -52,7 +52,6 @@ export default class InputMode extends Vue {
 	&:hover
 		z-index 2
 		border-color var(--color-active)
-		color var(--color-active)
 
 	&:active
 		background var(--color-active)

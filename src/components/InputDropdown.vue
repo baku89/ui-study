@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper">
+	<div :class="{wrapper: true, simple: theme === 'simple'}">
 		<select :value="value" @change="onChange">
 			<option
 				v-for="(value, index) in values"
@@ -13,13 +13,14 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-type ValueType = string | number | symbol
+type ValueType = string | number
 
 @Component
 export default class InputDropdown extends Vue {
-	@Prop() private value!: ValueType
+	@Prop([String, Number]) private value!: ValueType
 	@Prop(Array) private values!: ValueType[]
 	@Prop(Array) private labels!: string[]
+	@Prop(String) private theme!: string
 
 	private onChange(e: Event) {
 		const {selectedIndex} = e.target as HTMLSelectElement
@@ -66,6 +67,13 @@ select
 	padding-right $right-arrow-width
 	font-family var(--font-normal)
 	line-height 'calc(%s - 2px)' % $input-height
+
+	.wrapper.simple > &
+		border none
+		background none
+
+		&:hover, &:active
+			color var(--color-active)
 
 	.wrapper:hover > &
 		input-border-hover-style()

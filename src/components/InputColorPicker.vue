@@ -15,6 +15,7 @@
 				<div class="parameters">
 					<InputDropdown
 						class="color-mode"
+						theme="simple"
 						:value="value[0]"
 						:values="['hsl', 'rgb', 'hex']"
 						:labels="['HSL', 'RGB', 'HEX']"

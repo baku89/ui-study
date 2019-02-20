@@ -14,7 +14,7 @@
 		</Draggable>
 		<input type="text" :value="element" @change="onChange" @blur="isEditing = false" ref="input">
 		<div class="svg-overlay" v-if="isDragging">
-			<div class="slit" :style="slitStyle"/>
+			<ColorPad class="slit" :color="[mode, value]" :varyings="[varying]" :style="slitStyle"/>
 			<div class="preview" :style="previewStyle"/>
 		</div>
 	</div>
@@ -23,7 +23,6 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
-import hexRgb from 'hex-rgb'
 
 import {parseNumber} from '@/math'
 import {getDOMCenter} from '@/util'
@@ -33,6 +32,7 @@ import {toCSSColor} from '@/util'
 
 import Draggable from '@/components/common/Draggable.vue'
 import SvgArrow from '@/components/common/SvgArrow.vue'
+import ColorPad from '@/components/ColorPad'
 
 const SLIT_HEIGHT = 200
 const SLIT_WIDTH = 6
@@ -40,7 +40,8 @@ const SLIT_WIDTH = 6
 @Component({
 	components: {
 		Draggable,
-		SvgArrow
+		SvgArrow,
+		ColorPad
 	}
 })
 export default class InputColorElement extends Vue {
@@ -66,37 +67,10 @@ export default class InputColorElement extends Vue {
 	}
 
 	get slitStyle() {
-		const numStep = 20
-		let value: number[]
-		let varying: number
-		let mode: DataColorMode
-
-		if (this.mode === 'hexa') {
-			value = hexRgb(this.value[0] as string, {format: 'array'})
-			value[3] = this.value[1] as number
-			varying = 3
-			mode = 'rgba'
-		} else {
-			value = Array.from(this.value) as number[]
-			varying = this.varying
-			mode = this.mode
-		}
-		const steps = []
-
-		for (let i = 0; i <= numStep; i++) {
-			const t = i / numStep
-			value[varying] = lerp(this.min, this.max, t)
-			const cssColor = toCSSColor([mode, value as DataColorElements])
-			steps.push(`${cssColor} ${t * 100}%`)
-		}
-
-		const background = `linear-gradient(0deg, ${steps.join(', ')})`
-
 		return {
 			left: this.slitLeft - SLIT_WIDTH * 0.5 + 'px',
 			top: this.slitMaxY - SLIT_WIDTH * 0.5 + 'px',
-			height: this.slitMinY - this.slitMaxY + SLIT_WIDTH + 'px',
-			background
+			height: this.slitMinY - this.slitMaxY + SLIT_WIDTH + 'px'
 		}
 	}
 

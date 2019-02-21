@@ -1,7 +1,7 @@
 <template>
 	<div class="InputColorButton__root">
-		<div class="InputColorButton__preview" @click="isPopupOpen = true" :style="previewStyles"/>
-		<Popup class="InputColorButton__popup" :active.sync="isPopupOpen">
+		<div class="InputColorButton__preview" @click="isPopoverOpen = true" :style="previewStyles"/>
+		<Popover class="InputColorButton__popup" :active.sync="isPopoverOpen">
 			<div class="InputColorButton__popup-content">
 				<InputColorPicker class="InputColorButton__color-picker" :value="value" @input="onInput"/>
 				<div class="InputColorButton__parameters">
@@ -21,7 +21,7 @@
 					/>
 				</div>
 			</div>
-		</Popup>
+		</Popover>
 	</div>
 </template>
 
@@ -35,11 +35,11 @@ import {DataColor, DataColorMode, DataColorElements} from '@/data'
 import InputColor from './InputColor'
 import InputColorPicker from './InputColorPicker.vue'
 import InputDropdown from './InputDropdown.vue'
-import Popup from '@/components/common/Popup.vue'
+import Popover from '@/components/common/Popover.vue'
 
 @Component({
 	components: {
-		Popup,
+		Popover,
 		InputColor,
 		InputColorPicker,
 		InputDropdown
@@ -48,7 +48,7 @@ import Popup from '@/components/common/Popup.vue'
 export default class InputColorButton extends Vue {
 	@Prop([Array]) private value!: DataColor
 
-	private isPopupOpen: boolean = false
+	private isPopoverOpen: boolean = false
 
 	get mode(): DataColorMode {
 		return this.value[0]

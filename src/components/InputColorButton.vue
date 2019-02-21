@@ -1,7 +1,7 @@
 <template>
 	<div class="InputColorButton__root">
-		<div class="InputColorButton__preview" @click="openPicker" :style="previewStyle"/>
-		<div v-if="isPopupOpen" class="InputColorButton__popup" ref="popup">
+		<div class="InputColorButton__preview" @click="isPopupOpen = true" :style="previewStyle"/>
+		<Popup class="InputColorButton__popup" :active.sync="isPopupOpen">
 			<div class="InputColorButton__popup-content">
 				<InputColorPicker class="InputColorButton__color-picker" :value="value" @input="onInput"/>
 				<div class="InputColorButton__parameters">
@@ -21,7 +21,7 @@
 					/>
 				</div>
 			</div>
-		</div>
+		</Popup>
 	</div>
 </template>
 
@@ -35,9 +35,11 @@ import {DataColor, DataColorMode, DataColorElements} from '@/data'
 import InputColor from './InputColor'
 import InputColorPicker from './InputColorPicker.vue'
 import InputDropdown from './InputDropdown.vue'
+import Popup from '@/components/common/Popup.vue'
 
 @Component({
 	components: {
+		Popup,
 		InputColor,
 		InputColorPicker,
 		InputDropdown
@@ -70,19 +72,6 @@ export default class InputColorButton extends Vue {
 		} else {
 			return convertColorElements(this.mode, 'hsl', this.elements) as number[]
 		}
-	}
-
-	private openPicker() {
-		this.isPopupOpen = true
-
-		const closePicker = (e: Event) => {
-			// @ts-ignore
-			if (e.path.indexOf(this.$refs.popup) === -1) {
-				this.isPopupOpen = false
-				window.removeEventListener('mousedown', closePicker)
-			}
-		}
-		window.addEventListener('mousedown', closePicker)
 	}
 
 	private onChangeMode(mode: DataColorMode) {
@@ -121,10 +110,6 @@ export default class InputColorButton extends Vue {
 		input-border-focus-style()
 
 .InputColorButton__popup
-	position fixed
-	top 0
-	left 0
-	z-index 1000
 	width 16em
 	border 1px solid var(--color-border)
 	border-radius $border-radius

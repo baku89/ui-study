@@ -1,13 +1,19 @@
 <template>
-	<div v-if="active" class="Popover__root">
-		<slot ref="slot"/>
-	</div>
+	<Portal>
+		<div v-if="active" class="Popover__root">
+			<slot ref="slot"/>
+		</div>
+	</Portal>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 
-@Component
+import Portal from '@/components/common/Portal'
+
+@Component({
+	components: {Portal}
+})
 export default class Popover extends Vue {
 	@Prop(Boolean) private active!: boolean
 
@@ -33,10 +39,10 @@ export default class Popover extends Vue {
 <style lang="stylus" scoped>
 @import '../../style/config.styl'
 
-.InputColorButton__popup
+.Popover__root
 	position fixed
 	top 0
 	left 0
-	z-index 1000
+	z-index 90
 </style>
 

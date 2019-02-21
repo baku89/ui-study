@@ -20,23 +20,28 @@
 			@blur="isEditing = false"
 			ref="input"
 		>
-		<svg class="svg-overlay" v-if="isDragging">
-			<SvgArrow :from="dragFrom" :to="dragTo"></SvgArrow>
-		</svg>
+		<Portal>
+			<svg class="svg-overlay" v-if="isDragging">
+				<SvgArrow :from="dragFrom" :to="dragTo"></SvgArrow>
+			</svg>
+		</Portal>
 	</div>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import Draggable from './common/Draggable.vue'
-import SvgArrow from './common/SvgArrow.vue'
 import {parseNumber} from '@/math'
 import {getDOMCenter} from '@/util'
 import {vec2} from 'gl-matrix'
 
+import Draggable from './common/Draggable.vue'
+import Portal from './common/Portal'
+import SvgArrow from './common/SvgArrow.vue'
+
 @Component({
 	components: {
 		Draggable,
+		Portal,
 		SvgArrow
 	}
 })

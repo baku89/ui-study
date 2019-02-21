@@ -20,15 +20,17 @@
 			@blur="isEditing = false"
 			ref="input"
 		>
-		<div class="svg-overlay" v-if="isDragging">
-			<GradientPalette
-				class="InputColorElement__slit"
-				:color="[mode, value]"
-				:varyings="[varying]"
-				:style="slitStyles"
-			/>
-			<div class="InputColorElement__preview" :style="previewStyles"/>
-		</div>
+		<Portal>
+			<div class="svg-overlay" v-if="isDragging">
+				<GradientPalette
+					class="InputColorElement__slit"
+					:color="[mode, value]"
+					:varyings="[varying]"
+					:style="slitStyles"
+				/>
+				<div class="InputColorElement__preview" :style="previewStyles"/>
+			</div>
+		</Portal>
 	</div>
 </template>
 
@@ -43,6 +45,7 @@ import {DataColorMode, DataColorElements} from '@/data'
 import {toCSSColor} from '@/util'
 
 import Draggable from '@/components/common/Draggable.vue'
+import Portal from '@/components/common/Portal'
 import SvgArrow from '@/components/common/SvgArrow.vue'
 import GradientPalette from '@/components/common/GradientPalette'
 
@@ -52,6 +55,7 @@ const SLIT_WIDTH = 6
 @Component({
 	components: {
 		Draggable,
+		Portal,
 		SvgArrow,
 		GradientPalette
 	}

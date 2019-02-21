@@ -7,23 +7,28 @@
 			@dragend="onDragend"
 			:style="{transform: `rotate(${this.value}deg)`}"
 		/>
-		<svg class="svg-overlay" v-if="isDragging">
-			<line class="guide" :x1="dragFrom[0]" :y1="dragFrom[1]" :x2="dragTo[0]" :y2="dragTo[1]"></line>
-			<SvgArcArrow :center="dragFrom" :radius="100" :start="0" :end="this.value"></SvgArcArrow>
-		</svg>
+		<Portal>
+			<svg class="svg-overlay" v-if="isDragging">
+				<line class="guide" :x1="dragFrom[0]" :y1="dragFrom[1]" :x2="dragTo[0]" :y2="dragTo[1]"></line>
+				<SvgArcArrow :center="dragFrom" :radius="100" :start="0" :end="this.value"></SvgArcArrow>
+			</svg>
+		</Portal>
 	</div>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import Draggable from './common/Draggable.vue'
-import SvgArcArrow from './common/SvgArcArrow.vue'
 import {vec2} from 'gl-matrix'
 import {getDOMCenter, RoteryDrag} from '@/util'
+
+import Draggable from './common/Draggable.vue'
+import Portal from './common/Portal'
+import SvgArcArrow from './common/SvgArcArrow.vue'
 
 @Component({
 	components: {
 		Draggable,
+		Portal,
 		SvgArcArrow
 	}
 })

@@ -1,17 +1,34 @@
 <template>
-	<div :class="{InputColorPicker__root: true, dragging: isDragging}">
+	<div class="InputColorPicker__root">
 		<Draggable
-			class="InputColorPicker__draggable"
-			@dragstart="onDrag"
-			@drag="onDrag"
-			@dragend="onDrag"
+			:class="{InputColorPicker__sl: true, dragging: isDraggingSL}"
+			coord="normalized"
+			@dragstart="onDragSL"
+			@drag="onDragSL"
+			@dragend="onDragSL"
+		>
+			<div class="InputColorPicker__sl-inner">
+				<GradientPalette
+					class="InputColorPicker__palette"
+					:color="gradientPaletteColor"
+					:varyings="[1, 2]"
+				/>
+				<div class="InputColorPicker__sl-preview" :style="SLPreviewStyle"/>
+			</div>
+		</Draggable>
+		<Draggable
+			:class="{InputColorPicker__hue: true, dragging: isDraggingHue}"
+			coord="normalized"
+			@dragstart="onDragHue"
+			@drag="onDragHue"
+			@dragend="onDragHue"
 		>
 			<GradientPalette
-				class="InputColorPicker__gradient-palette"
+				class="InputColorPicker__palette"
 				:color="gradientPaletteColor"
-				:varyings="[1, 2]"
+				:varyings="[0]"
 			/>
-			<div class="InputColorPicker__preview" :style="GradientPalettePreviewStyle"/>
+			<div class="InputColorPicker__hue-preview" :style="HuePreviewStyle"/>
 		</Draggable>
 	</div>
 </template>
@@ -37,17 +54,18 @@ import Draggable from '@/components/common/Draggable.vue'
 export default class InputColorPicker extends Vue {
 	@Prop([Array]) private value!: DataColor
 
-	private isDragging: boolean = false
+	private isDraggingSL: boolean = false
+	private isDraggingHue: boolean = false
 
-	get mode(): DataColorMode {
+	private get mode(): DataColorMode {
 		return this.value[0]
 	}
 
-	get elements(): DataColorElements {
+	private get elements(): DataColorElements {
 		return this.value[1]
 	}
 
-	get hsl(): number[] {
+	private get hsl(): number[] {
 		if (this.mode === 'hsl') {
 			return this.elements as number[]
 		} else {
@@ -55,20 +73,26 @@ export default class InputColorPicker extends Vue {
 		}
 	}
 
-	get cssColor(): string {
+	private get cssColor(): string {
 		return toCSSColor(this.value)
 	}
 
-	get GradientPalettePreviewStyle(): object {
-		const hsl = this.hsl
+	private get SLPreviewStyle(): object {
 		return {
-			left: `${hsl[1]}%`,
-			top: `${100 - hsl[2]}%`,
+			left: `${this.hsl[1]}%`,
+			top: `${100 - this.hsl[2]}%`,
 			background: this.cssColor
 		}
 	}
 
-	get gradientPaletteColor(): DataColor {
+	private get HuePreviewStyle(): object {
+		return {
+			top: `${(1 - this.hsl[0] / 360) * 100}%`,
+			background: this.cssColor
+		}
+	}
+
+	private get gradientPaletteColor(): DataColor {
 		if (this.mode === 'hsl') {
 			return this.value
 		} else {
@@ -76,28 +100,32 @@ export default class InputColorPicker extends Vue {
 		}
 	}
 
-	private onDrag(e: {
-		current: vec2
-		currentTarget: HTMLElement
-		eventName: string
-	}) {
+	private onDragSL(e: {current: vec2; eventName: string}) {
 		if (e.eventName === 'dragstart') {
-			this.isDragging = true
+			this.isDraggingSL = true
 		} else if (e.eventName === 'dragend') {
-			this.isDragging = false
+			this.isDraggingSL = false
 		}
 
-		const {left, top} = mezr.rect(e.currentTarget)
-		const width = e.currentTarget.clientWidth
-		const height = e.currentTarget.clientHeight
+		const s = e.current[0] * 100
+		const l = (1 - e.current[1]) * 100
+		this.emitNewHSL(this.hsl[0], s, l)
+	}
 
-		const x = clamp((e.current[0] - left) / width, 0, 1)
-		const y = clamp(1 - (e.current[1] - top) / height, 0, 1)
-		const newHSL = [this.hsl[0], x * 100, y * 100]
-		const newElements = convertColorElements('hsl', this.mode, newHSL)
+	private onDragHue(e: {current: vec2; eventName: string}) {
+		if (e.eventName === 'dragstart') {
+			this.isDraggingHue = true
+		} else if (e.eventName === 'dragend') {
+			this.isDraggingHue = false
+		}
 
+		const h = (1 - e.current[1]) * 360
+		this.emitNewHSL(h, this.hsl[1], this.hsl[2])
+	}
+
+	private emitNewHSL(h: number, s: number, l: number) {
+		const newElements = convertColorElements('hsl', this.mode, [h, s, l])
 		const newValue = [this.mode, newElements]
-
 		this.$emit('input', newValue)
 	}
 }
@@ -108,37 +136,57 @@ export default class InputColorPicker extends Vue {
 
 .InputColorPicker__root
 	position relative
-	border 1px solid var(--color-border)
-	border-radius $border-radius
+	display flex
+	// border 1px solid var(--color-border)
+	// border-radius $border-radius
 
-.InputColorPicker__draggable
-	width 100%
-	height 100%
+.InputColorPicker__sl, .InputColorPicker__hue
+	overflow hidden
 
-	.InputColorPicker__wrapper.dragging > &
+	&.dragging
 		overflow visible
 		cursor none
 
-.InputColorPicker__gradient-palette
+.InputColorPicker__sl
 	position relative
+	flex-grow 1
+
+.InputColorPicker__sl-inner
+	position relative
+	padding-top 100%
+	height 0
+
+.InputColorPicker__hue
+	position relative
+	margin-left 0.5em
+	width 1em
+
+.InputColorPicker__palette
+	position absolute
+	top 0
+	left 0
 	width 100%
 	height 100%
 	border-radius $border-radius
 
-.InputColorPicker__preview
+.InputColorPicker__sl-preview, .InputColorPicker__hue-preview
 	position absolute
-	margin -0.5em 0 0 -0.5em
 	width 1em
 	height 1em
 	border 1px solid var(--color-border)
 	border-radius 50%
-	background red
 
-	.InputColorPicker__wrapper.dragging &
+	.dragging > * > &, .dragging > &
 		z-index 1000
 		margin-top -0.5 * $color-preview-size
 		margin-left -0.5 * $color-preview-size
 		width $color-preview-size
 		height $color-preview-size
+
+.InputColorPicker__sl-preview
+	margin -0.5em 0 0 -0.5em
+
+.InputColorPicker__hue-preview
+	margin-top -0.5em
 </style>
 

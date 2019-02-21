@@ -1,8 +1,13 @@
 <template>
 	<div class="InputColorButton__root">
 		<div class="InputColorButton__preview" @click="isPopoverOpen = true" :style="previewStyles"/>
-		<Popover class="InputColorButton__popup" :active.sync="isPopoverOpen">
-			<div class="InputColorButton__popup-content">
+		<Popover
+			class="InputColorButton__popover popper"
+			:active.sync="isPopoverOpen"
+			placement="right-start"
+		>
+			<div class="popper__arrow"/>
+			<div class="InputColorButton__popover-content">
 				<InputColorPicker class="InputColorButton__color-picker" :value="value" @input="onInput"/>
 				<div class="InputColorButton__parameters">
 					<InputDropdown
@@ -109,16 +114,17 @@ export default class InputColorButton extends Vue {
 	&:active
 		input-border-focus-style()
 
-.InputColorButton__popup
-	width 16em
-	border 1px solid var(--color-border)
+.InputColorButton__popover
+	margin-left 0.3em
+	width 20em
+	border 1px solid var(--color-border-text)
 	border-radius $border-radius
 	background var(--color-bg)
-	box-shadow 0 0 10px 0 rgba(black, 0.1)
+	box-shadow 0 0 1em 0 rgba(black, 0.1)
 
-.InputColorButton__popup-content
+.InputColorButton__popover-content
 	position relative
-	margin 0.3em
+	margin 0.5em
 
 .InputColorButton__color-picker
 	margin-bottom 0.3em

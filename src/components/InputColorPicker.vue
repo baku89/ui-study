@@ -137,11 +137,12 @@ export default class InputColorPicker extends Vue {
 .InputColorPicker__root
 	position relative
 	display flex
-	// border 1px solid var(--color-border)
-	// border-radius $border-radius
 
 .InputColorPicker__sl, .InputColorPicker__hue
 	overflow hidden
+	box-sizing content-box
+	border 1px solid var(--color-border)
+	border-radius $border-radius
 
 	&.dragging
 		overflow visible
@@ -158,7 +159,7 @@ export default class InputColorPicker extends Vue {
 
 .InputColorPicker__hue
 	position relative
-	margin-left 0.5em
+	margin-left 0.3em
 	width 1em
 
 .InputColorPicker__palette
@@ -171,6 +172,7 @@ export default class InputColorPicker extends Vue {
 
 .InputColorPicker__sl-preview, .InputColorPicker__hue-preview
 	position absolute
+	margin -0.5em 0 0 -0.5em
 	width 1em
 	height 1em
 	border 1px solid var(--color-field)
@@ -186,10 +188,7 @@ export default class InputColorPicker extends Vue {
 		border none
 		box-shadow none
 
-.InputColorPicker__sl-preview
-	margin -0.5em 0 0 -0.5em
-
 .InputColorPicker__hue-preview
-	margin-top -0.5em
+	left 50%
 </style>
 

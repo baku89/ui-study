@@ -173,8 +173,9 @@ export default class InputColorPicker extends Vue {
 	position absolute
 	width 1em
 	height 1em
-	border 1px solid var(--color-border)
+	border 1px solid var(--color-field)
 	border-radius 50%
+	box-shadow 0 0 0 0.5px var(--color-text)
 
 	.dragging > * > &, .dragging > &
 		z-index 1000
@@ -182,6 +183,8 @@ export default class InputColorPicker extends Vue {
 		margin-left -0.5 * $color-preview-size
 		width $color-preview-size
 		height $color-preview-size
+		border none
+		box-shadow none
 
 .InputColorPicker__sl-preview
 	margin -0.5em 0 0 -0.5em

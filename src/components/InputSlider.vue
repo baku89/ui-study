@@ -7,7 +7,7 @@
 			@dragend="onDragend"
 		>
 			<div class="InputSlider__accum" :style="{width: percent}"/>
-			<div class="InputSlider__knob" ref="knob" :style="{left: percent}"/>
+			<div :class="{InputSlider__knob: true, exceed}" ref="knob" :style="{left: percent}"/>
 		</Draggable>
 	</div>
 </template>
@@ -33,8 +33,12 @@ export default class InputSlider extends Vue {
 
 	private isDragging: boolean = false
 
-	get percent() {
+	get percent(): string {
 		return `${ratio(this.value, this.min, this.max, true) * 100}%`
+	}
+
+	get exceed(): boolean {
+		return this.value < this.min || this.max < this.value
 	}
 
 	private onDragstart(e: {
@@ -116,8 +120,15 @@ $size = 1em
 	background var(--color-control)
 	box-shadow 0 0 0 1px var(--color-bg)
 
+	&.exceed
+		border 1px solid var(--color-control)
+		background var(--color-bg) !important
+
 	.InputSlider__slit:hover &, .InputSlider__slit.dragging > &
 		background var(--color-active)
+
+		&.exceed
+			border-color var(--color-active)
 
 	.InputSlider__slit.dragging > &
 		box-shadow 0 0 0 1px var(--color-active), 0 0 0 2px var(--color-bg)

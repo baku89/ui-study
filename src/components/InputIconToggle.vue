@@ -55,7 +55,7 @@ export default class InputCheckbox extends Vue {
 	&:hover
 		background var(--color-border)
 
-		& + .img
+		& + .InputIconToggle__img
 			fill var(--color-control)
 
 .InputIconToggle__img

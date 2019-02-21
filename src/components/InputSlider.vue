@@ -116,10 +116,10 @@ $size = 1em
 	background var(--color-control)
 	box-shadow 0 0 0 1px var(--color-bg)
 
-	.slit:hover &, .dragging > &
+	.InputSlider__slit:hover &, .InputSlider__slit.dragging > &
 		background var(--color-active)
 
-	.dragging > &
+	.InputSlider__slit.dragging > &
 		box-shadow 0 0 0 1px var(--color-active), 0 0 0 2px var(--color-bg)
 </style>
 

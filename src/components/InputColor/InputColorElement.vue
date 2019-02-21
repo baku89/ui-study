@@ -188,7 +188,7 @@ export default class InputColorElement extends Vue {
 	z-index 5
 	overflow hidden
 
-	.InputColorElement__wrapper.editing > &
+	.InputColorElement__root.editing > &
 		visibility hidden
 
 .InputColorElement__label

@@ -3,9 +3,7 @@
 		<div class="InputColorButton__preview" @click="openPicker" :style="previewStyle"/>
 		<div v-if="isPopupOpen" class="InputColorButton__popup" ref="popup">
 			<div class="InputColorButton__popup-content">
-				<div class="InputColorButton__color-picker-wrapper">
-					<InputColorPicker class="InputColorButton__color-picker" :value="value" @input="onInput"/>
-				</div>
+				<InputColorPicker class="InputColorButton__color-picker" :value="value" @input="onInput"/>
 				<div class="InputColorButton__parameters">
 					<InputDropdown
 						class="InputColorButton__mode"
@@ -137,18 +135,8 @@ export default class InputColorButton extends Vue {
 	position relative
 	margin 0.3em
 
-.InputColorButton__color-picker-wrapper
-	position relative
-	margin-bottom 0.3em
-	padding-top 100%
-	height 0
-
 .InputColorButton__color-picker
-	position absolute
-	top 0
-	left 0
-	width 100%
-	height 100%
+	margin-bottom 0.3em
 
 .InputColorButton__parameters
 	display flex

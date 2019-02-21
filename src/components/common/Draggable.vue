@@ -1,5 +1,5 @@
 <template>
-	<div @mousedown.left="onMousedown" ref="self">
+	<div @mousedown.left="onMousedown" ref="root">
 		<slot/>
 	</div>
 </template>
@@ -8,10 +8,14 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 import mezr from 'mezr'
+import {clamp} from '@/math'
 
 @Component
 export default class Draggable extends Vue {
 	@Prop({type: Number, default: 0}) private minDragDistance!: number
+	@Prop({type: String, default: 'absolute'}) private coord!:
+		| 'absolute'
+		| 'normalized'
 
 	private dragStarted!: boolean
 	private origin!: vec2
@@ -28,7 +32,7 @@ export default class Draggable extends Vue {
 	}
 
 	private onMousedown(e: MouseEvent) {
-		vec2.set(this.origin, e.pageX, e.pageY)
+		this.setCoord(this.origin, e)
 		vec2.copy(this.prev, this.origin)
 		vec2.set(this.delta, 0, 0)
 		window.addEventListener('mousemove', this.onMousemove)
@@ -37,7 +41,7 @@ export default class Draggable extends Vue {
 			origin: this.origin,
 			current: this.origin,
 			delta: this.delta,
-			currentTarget: this.$refs.self,
+			currentTarget: this.$refs.root,
 			originalEvent: e,
 			eventName: 'dragstart'
 		}
@@ -51,7 +55,7 @@ export default class Draggable extends Vue {
 	}
 
 	private onMousemove(e: MouseEvent) {
-		vec2.set(this.current, e.pageX, e.pageY)
+		this.setCoord(this.current, e)
 
 		// Fire dragstart event at first when dragging distance exceeds minDragDistance
 		if (
@@ -63,7 +67,7 @@ export default class Draggable extends Vue {
 				origin: this.origin,
 				current: this.current,
 				delta: this.delta,
-				currentTarget: this.$refs.self,
+				currentTarget: this.$refs.root,
 				originalEvent: e,
 				eventName: 'dragstart'
 			}
@@ -79,7 +83,7 @@ export default class Draggable extends Vue {
 					origin: this.origin,
 					current: this.current,
 					delta: this.delta,
-					currentTarget: this.$refs.self,
+					currentTarget: this.$refs.root,
 					originalEvent: e,
 					eventName: 'drag'
 				}
@@ -94,7 +98,7 @@ export default class Draggable extends Vue {
 		window.removeEventListener('mousemove', this.onMousemove)
 		window.removeEventListener('mouseup', this.onMouseup)
 
-		vec2.set(this.current, e.pageX, e.pageY)
+		this.setCoord(this.current, e)
 		vec2.sub(this.delta, this.current, this.prev)
 
 		if (this.dragStarted) {
@@ -102,13 +106,25 @@ export default class Draggable extends Vue {
 				origin: this.origin,
 				current: this.current,
 				delta: this.delta,
-				currentTarget: this.$refs.self,
+				currentTarget: this.$refs.root,
 				originalEvent: e,
 				eventName: 'dragend'
 			}
 			this.$emit('dragend', event)
 		} else {
 			this.$emit('click', e)
+		}
+	}
+
+	private setCoord(coord: vec2, e: MouseEvent) {
+		if (this.coord === 'normalized') {
+			const root = this.$refs.root as HTMLElement
+			const {left, top, width, height} = mezr.rect(root)
+			const x = (e.pageX - left) / width
+			const y = (e.pageY - top) / height
+			vec2.set(coord, clamp(x, 0, 1), clamp(y, 0, 1))
+		} else {
+			vec2.set(coord, e.pageX, e.pageY)
 		}
 	}
 }

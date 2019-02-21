@@ -1,5 +1,5 @@
 <template>
-	<div @mousedown.left="onMousedown" ref="root">
+	<div @mousedown.left="onMousedown">
 		<slot/>
 	</div>
 </template>
@@ -41,7 +41,7 @@ export default class Draggable extends Vue {
 			origin: this.origin,
 			current: this.origin,
 			delta: this.delta,
-			currentTarget: this.$refs.root,
+			currentTarget: this.$el,
 			originalEvent: e,
 			eventName: 'dragstart'
 		}
@@ -67,7 +67,7 @@ export default class Draggable extends Vue {
 				origin: this.origin,
 				current: this.current,
 				delta: this.delta,
-				currentTarget: this.$refs.root,
+				currentTarget: this.$el,
 				originalEvent: e,
 				eventName: 'dragstart'
 			}
@@ -83,7 +83,7 @@ export default class Draggable extends Vue {
 					origin: this.origin,
 					current: this.current,
 					delta: this.delta,
-					currentTarget: this.$refs.root,
+					currentTarget: this.$el,
 					originalEvent: e,
 					eventName: 'drag'
 				}
@@ -106,7 +106,7 @@ export default class Draggable extends Vue {
 				origin: this.origin,
 				current: this.current,
 				delta: this.delta,
-				currentTarget: this.$refs.root,
+				currentTarget: this.$el,
 				originalEvent: e,
 				eventName: 'dragend'
 			}
@@ -118,7 +118,7 @@ export default class Draggable extends Vue {
 
 	private setCoord(coord: vec2, e: MouseEvent) {
 		if (this.coord === 'normalized') {
-			const root = this.$refs.root as HTMLElement
+			const root = this.$el as HTMLElement
 			const {left, top, width, height} = mezr.rect(root)
 			const x = (e.pageX - left) / width
 			const y = (e.pageY - top) / height

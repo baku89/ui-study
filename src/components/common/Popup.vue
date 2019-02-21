@@ -1,5 +1,5 @@
 <template>
-	<div v-if="active" class="Popup__root" ref="root">
+	<div v-if="active" class="Popup__root">
 		<slot ref="slot"/>
 	</div>
 </template>
@@ -13,11 +13,13 @@ export default class Popup extends Vue {
 
 	@Watch('active')
 	private onActiveChanged(active: boolean) {
-		if (!active) return
+		if (!active) {
+			return
+		}
 
 		const close = (e: Event) => {
 			// @ts-ignore
-			if (e.path.indexOf(this.$refs.root) === -1) {
+			if (e.path.indexOf(this.$el) === -1) {
 				window.removeEventListener('mousedown', close)
 				this.$emit('update:active', false)
 			}

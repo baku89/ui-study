@@ -1,6 +1,6 @@
 <template>
 	<div class="InputColorButton__root">
-		<div class="InputColorButton__preview" @click="isPopupOpen = true" :style="previewStyle"/>
+		<div class="InputColorButton__preview" @click="isPopupOpen = true" :style="previewStyles"/>
 		<Popup class="InputColorButton__popup" :active.sync="isPopupOpen">
 			<div class="InputColorButton__popup-content">
 				<InputColorPicker class="InputColorButton__color-picker" :value="value" @input="onInput"/>
@@ -62,7 +62,7 @@ export default class InputColorButton extends Vue {
 		return toCSSColor(this.value)
 	}
 
-	get previewStyle(): object {
+	get previewStyles(): object {
 		return {background: this.cssColor}
 	}
 

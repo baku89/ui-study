@@ -25,9 +25,9 @@
 				class="InputColorElement__slit"
 				:color="[mode, value]"
 				:varyings="[varying]"
-				:style="slitStyle"
+				:style="slitStyles"
 			/>
-			<div class="InputColorElement__preview" :style="previewStyle"/>
+			<div class="InputColorElement__preview" :style="previewStyles"/>
 		</div>
 	</div>
 </template>
@@ -78,7 +78,7 @@ export default class InputColorElement extends Vue {
 		return this.value[this.varying] as number
 	}
 
-	get slitStyle() {
+	get slitStyles() {
 		return {
 			left: this.slitLeft - SLIT_WIDTH * 0.5 + 'px',
 			top: this.slitMaxY - SLIT_WIDTH * 0.5 + 'px',
@@ -86,7 +86,7 @@ export default class InputColorElement extends Vue {
 		}
 	}
 
-	get previewStyle() {
+	get previewStyles() {
 		return {
 			background: this.previewColor,
 			left: `${this.slitLeft}px`,

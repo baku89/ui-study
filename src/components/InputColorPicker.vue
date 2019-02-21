@@ -13,7 +13,7 @@
 					:color="gradientPaletteColor"
 					:varyings="[1, 2]"
 				/>
-				<div class="InputColorPicker__sl-preview" :style="SLPreviewStyle"/>
+				<div class="InputColorPicker__sl-preview" :style="SLPreviewStyles"/>
 			</div>
 		</Draggable>
 		<Draggable
@@ -28,7 +28,7 @@
 				:color="gradientPaletteColor"
 				:varyings="[0]"
 			/>
-			<div class="InputColorPicker__hue-preview" :style="HuePreviewStyle"/>
+			<div class="InputColorPicker__hue-preview" :style="HuePreviewStyles"/>
 		</Draggable>
 	</div>
 </template>
@@ -77,7 +77,7 @@ export default class InputColorPicker extends Vue {
 		return toCSSColor(this.value)
 	}
 
-	private get SLPreviewStyle(): object {
+	private get SLPreviewStyles(): object {
 		return {
 			left: `${this.hsl[1]}%`,
 			top: `${100 - this.hsl[2]}%`,
@@ -85,7 +85,7 @@ export default class InputColorPicker extends Vue {
 		}
 	}
 
-	private get HuePreviewStyle(): object {
+	private get HuePreviewStyles(): object {
 		return {
 			top: `${(1 - this.hsl[0] / 360) * 100}%`,
 			background: this.cssColor

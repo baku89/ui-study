@@ -6,7 +6,7 @@
 			:value="value"
 			@change="$emit('input', $event.target.checked)"
 		>
-		<div class="InputIconToggle__img" :style="imgStyle" ref="img">
+		<div class="InputIconToggle__img" :style="imgStyles" ref="img">
 			<slot/>
 		</div>
 	</div>
@@ -20,14 +20,14 @@ export default class InputCheckbox extends Vue {
 	@Prop(Boolean) private value!: boolean
 	@Prop(String) private src!: string
 
-	private imgStyle: object = {}
+	private imgStyles: object = {}
 
 	private mounted() {
 		const imgWrapper = this.$refs.img as HTMLElement
 		const img = imgWrapper.firstChild as HTMLElement
 		const scale = imgWrapper.clientWidth / img.clientWidth
 
-		this.imgStyle = {transform: `scale(${scale})`}
+		this.imgStyles = {transform: `scale(${scale})`}
 	}
 }
 </script>

@@ -11,17 +11,17 @@
 		>
 			<div
 				:class="{InputRange__bar: true, inverted: this.value[0] > this.value[1], dragging: dragMode === 'bar', hover: hoverTarget === 'bar'}"
-				:style="barStyle"
+				:style="barStyles"
 				ref="bar"
 			/>
 			<div
 				:class="{InputRange__edge: true, first: true, dragging: dragMode === 'first', hover: hoverTarget === 'first'}"
-				:style="firstStyle"
+				:style="firstStyles"
 				ref="first"
 			/>
 			<div
 				:class="{InputRange__edge: true, second: true, dragging: dragMode === 'second', hover: hoverTarget === 'second'}"
-				:style="secondStyle"
+				:style="secondStyles"
 				ref="second"
 			/>
 		</Draggable>
@@ -56,7 +56,7 @@ export default class InputRange extends Vue {
 		return Math.max(this.value[0], this.value[1])
 	}
 
-	get barStyle() {
+	get barStyles() {
 		const lower = Math.min(this.value[0], this.value[1])
 		const upper = Math.max(this.value[0], this.value[1])
 
@@ -67,12 +67,12 @@ export default class InputRange extends Vue {
 			right: `${right}%`
 		}
 	}
-	get firstStyle() {
+	get firstStyles() {
 		const left = ratio(this.value[0], this.min, this.max, true) * 100
 		return {left: `${left}%`}
 	}
 
-	get secondStyle() {
+	get secondStyles() {
 		const left = ratio(this.value[1], this.min, this.max, true) * 100
 		return {left: `${left}%`}
 	}

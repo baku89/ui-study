@@ -5,6 +5,8 @@
 			:key="index"
 			:class="index == 0 ? 'left' : (index == value.length - 1 ? 'right' : 'middle')"
 			:value="v"
+			:min="min instanceof Array ? min[index] : min"
+			:max="max instanceof Array ? max[index] : max"
 			:precision="precision"
 			:label="labels ? labels[index] : undefined"
 			:unit="unit"
@@ -21,8 +23,10 @@ import InputNumber from './InputNumber.vue'
 	components: {InputNumber}
 })
 export default class InputVector extends Vue {
-	@Prop(Array) private value!: number[]
+	@Prop({type: Array, required: true}) private value!: number[]
 	@Prop(Number) private precision!: number
+	@Prop([Number, Array]) private min!: number | number[]
+	@Prop([Number, Array]) private max!: number | number[]
 	@Prop(Array) private labels!: string[]
 	@Prop(String) private unit!: string
 

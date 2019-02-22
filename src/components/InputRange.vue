@@ -41,9 +41,9 @@ import {lerp, clamp, ratio} from '@/math'
 	}
 })
 export default class InputRange extends Vue {
-	@Prop(Array) private value!: [number, number]
-	@Prop(Number) private min!: number
-	@Prop(Number) private max!: number
+	@Prop({type: Array, required: true}) private value!: [number, number]
+	@Prop({type: Number, required: true}) private min!: number
+	@Prop({type: Number, required: true}) private max!: number
 
 	private hoverTarget: 'bar' | 'first' | 'second' | null = null
 	private dragMode: 'bar' | 'first' | 'second' | null = null
@@ -115,6 +115,14 @@ export default class InputRange extends Vue {
 			} else if (this.upper + inc > this.max) {
 				inc = this.max - this.upper
 			}
+		} else if (this.dragMode === 'first') {
+			if (0 < inc && this.upper < this.lower + inc) {
+				inc = this.upper - this.lower
+			}
+		} else if (this.dragMode === 'second') {
+			if (inc < 0 && this.upper + inc < this.lower) {
+				inc = this.lower - this.upper
+			}
 		}
 
 		const newValue = Array.from(this.value)
@@ -142,6 +150,8 @@ export default class InputRange extends Vue {
 </script>
 
 <style lang="stylus" scoped>
+@import '../style/config.styl'
+
 .InputRange__root
 	position relative
 	height 2em
@@ -189,15 +199,22 @@ $bar-width = 0.6em
 		box-shadow 0 0 0 1px var(--color-active), 0 0 0 2px var(--color-bg)
 
 .InputRange__edge
+	$extend = 0 * $bar-width
 	position absolute
 	top 50%
 	box-sizing content-box
 	margin 'calc(%s - 1px)' % ($bar-width / -2)
-	width $bar-width * 1
+	width $bar-width
 	height $bar-width
 	border 1px solid transparent
-	border-radius 50%
-	$extend = 0 * $bar-width
+
+	&:before
+		position absolute
+		top ($input-height - $bar-width) * -0.5
+		display block
+		width 300%
+		height $input-height
+		content ' '
 
 	&.hover, &.dragging
 		border-color var(--color-active)
@@ -210,9 +227,18 @@ $bar-width = 0.6em
 
 	&.first
 		left $extend
+		border-radius 50% 0 0 50%
+
+		&:before
+			right 0
 
 	&.second
 		right $extend
+
+		&:before
+			left 0
+
+	border-radius 0 50% 50% 0
 </style>
 
 

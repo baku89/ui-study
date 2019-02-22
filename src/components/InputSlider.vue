@@ -25,9 +25,9 @@ import {lerp, clamp, ratio} from '@/math'
 	}
 })
 export default class InputSlider extends Vue {
-	@Prop(Number) private value!: number
-	@Prop(Number) private min!: number
-	@Prop(Number) private max!: number
+	@Prop({type: Number, required: true}) private value!: number
+	@Prop({type: Number, required: true}) private min!: number
+	@Prop({type: Number, required: true}) private max!: number
 
 	private knobOffset!: number
 

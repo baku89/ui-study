@@ -3,6 +3,8 @@
 		<InputNumber
 			:value="value"
 			:precision="precision"
+			:min="min"
+			:max="max"
 			:unit="unit"
 			@input="onInput"
 			style="width: 6em; margin-right: 0.5em;"
@@ -27,10 +29,10 @@ import InputSlider from './InputSlider.vue'
 	components: {InputNumber, InputSlider}
 })
 export default class ParameterSlider extends Vue {
-	@Prop(Number) private value!: number
+	@Prop({type: Number, required: true}) private value!: number
+	@Prop({type: Number, required: true}) private min!: number
+	@Prop({type: Number, required: true}) private max!: number
 	@Prop(Number) private precision!: number
-	@Prop(Number) private min!: number
-	@Prop(Number) private max!: number
 	@Prop(String) private label!: string
 	@Prop(String) private unit!: string
 

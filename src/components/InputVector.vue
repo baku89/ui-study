@@ -7,7 +7,7 @@
 			:value="v"
 			:precision="precision"
 			:label="labels ? labels[index] : undefined"
-			:unit="units ? units[index] : undefined"
+			:unit="unit"
 			@input="onInput(index, $event)"
 		/>
 	</div>
@@ -22,9 +22,9 @@ import InputNumber from './InputNumber.vue'
 })
 export default class InputVector extends Vue {
 	@Prop(Array) private value!: number[]
-	@Prop({type: Number, default: 1}) private precision!: number
+	@Prop(Number) private precision!: number
 	@Prop(Array) private labels!: string[]
-	@Prop(Array) private units!: string[]
+	@Prop(Number) private unit!: string
 
 	private onInput(index: number, value: number) {
 		const newValue = Array.from(this.value)

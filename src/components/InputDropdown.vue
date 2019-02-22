@@ -65,6 +65,7 @@ $right-arrow-width = 1em
 	input-border-style()
 	input-field-style()
 	padding-right $right-arrow-width
+	padding-left 0.4em
 	font-family var(--font-normal)
 	line-height 'calc(%s - 2px)' % $input-height
 

@@ -149,7 +149,7 @@ export default class InputNumber extends Vue {
 	height 100%
 	color var(--color-border-text)
 	font-size 0.9em
-	line-height $input-height * (1 / @font-size)
+	line-height $input-height * 1.1
 
 .InputNumber__unit
 	margin-right -0.1em

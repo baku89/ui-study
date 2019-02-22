@@ -24,7 +24,7 @@ export default class InputVector extends Vue {
 	@Prop(Array) private value!: number[]
 	@Prop(Number) private precision!: number
 	@Prop(Array) private labels!: string[]
-	@Prop(Number) private unit!: string
+	@Prop(String) private unit!: string
 
 	private onInput(index: number, value: number) {
 		const newValue = Array.from(this.value)

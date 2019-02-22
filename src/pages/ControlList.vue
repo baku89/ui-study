@@ -1,5 +1,5 @@
 <template>
-	<div id="demo">
+	<div class="page-content">
 		<div class="column">
 			<InputNumber v-model="scalar" unit="%" style="width: 6em; margin-right: 1em;"/>
 			<InputSlider v-model="scalar" :min="0" :max="100" style="width: 12em"/>
@@ -134,16 +134,12 @@ export default class App extends Vue {
 </script>
 
 <style lang="stylus">
-@import '../style/common.styl'
-
-html, body
-	height 100%
-
-#demo
+.page-content
 	padding 2rem
 	width 100%
 	height 100%
 	background var(--color-bg)
+	user-select none
 
 .column
 	display flex

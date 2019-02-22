@@ -1,5 +1,7 @@
 flex-version = flex
+
 @import 'nib'
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500')
 
 global-reset()
 
@@ -21,7 +23,6 @@ global-reset()
 *, ::after, ::before
 	box-sizing border-box
 	outline none
-	user-select none
 	-webkit-tap-highlight-color transparent
 
 html
@@ -46,6 +47,11 @@ input, button, select
 	&::-webkit-outer-spin-button, &::-webkit-inner-spin-button
 		margin 0
 		-webkit-appearance none
+
+a
+	&:link, &:visited
+		color inherit
+		text-decoration none
 
 .svg-overlay
 	position fixed

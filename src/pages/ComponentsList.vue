@@ -104,7 +104,7 @@ import Components from '@/components'
 		}
 	}
 })
-export default class App extends Vue {
+export default class ComponentsList extends Vue {
 	private onScaleChanged(value: number[], index: number) {
 		const scale = this.$data.scale
 

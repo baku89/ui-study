@@ -19,7 +19,7 @@
 				</section>
 
 				<section class="PageLink">
-					<router-link class="PageLink__link" to="/control-list" @click.native="isNavOpened = false">
+					<router-link class="PageLink__link" to="/components-list" @click.native="isNavOpened = false">
 						<h2 class="PageLink__title">1. List of Components</h2>
 						<p
 							class="PageLink__desc"

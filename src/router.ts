@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import ControlList from './pages/ControlList.vue'
+import ComponentsList from './pages/ComponentsList.vue'
 
 Vue.use(Router)
 
@@ -9,9 +9,9 @@ export default new Router({
 	base: process.env.BASE_URL,
 	routes: [
 		{
-			path: '/control-list',
-			name: 'control-list',
-			component: ControlList
+			path: '/components-list',
+			name: 'components-list',
+			component: ComponentsList
 		}
 	]
 })

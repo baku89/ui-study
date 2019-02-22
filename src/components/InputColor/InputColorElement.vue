@@ -9,7 +9,7 @@
 			@click="onClick"
 		>
 			<div class="InputColorElement__label" v-if="label">{{this.label}}</div>
-			{{element.toFixed(this.precision)}}
+			{{element.toFixed(0)}}
 			<span v-if="unit" class="InputColorElement__unit">{{unit}}</span>
 		</Draggable>
 		<input
@@ -64,7 +64,6 @@ export default class InputColorElement extends Vue {
 	@Prop(Array) private value!: number[] | [string, number]
 	@Prop(String) private mode!: DataColorMode
 	@Prop(Number) private varying!: number
-	@Prop({type: Number, default: 0}) private precision!: number
 	@Prop(String) private label!: string
 	@Prop(String) private unit!: string
 	@Prop(Number) private min!: number
@@ -109,7 +108,7 @@ export default class InputColorElement extends Vue {
 			value = clamp(value, this.min, this.max)
 			this.$emit('input', value)
 		} else {
-			input.value = this.element.toFixed(this.precision)
+			input.value = this.element.toFixed(0)
 		}
 
 		this.isEditing = false

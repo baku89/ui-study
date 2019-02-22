@@ -22,7 +22,7 @@ import InputAngle from './InputAngle.vue'
 	components: {InputNumber, InputAngle}
 })
 export default class ParameterAngle extends Vue {
-	@Prop(Number) private value!: number[]
+	@Prop(Number) private value!: number
 	@Prop(Number) private precision!: number
 	@Prop(String) private label!: string
 

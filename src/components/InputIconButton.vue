@@ -1,12 +1,7 @@
 <template>
-	<div class="InputIconToggle">
-		<input
-			class="InputIconToggle__input"
-			type="checkbox"
-			:value="value"
-			@change="$emit('input', $event.target.checked)"
-		>
-		<div class="InputIconToggle__img" :style="imgStyles" ref="img">
+	<div class="InputIconButton__root">
+		<button class="InputIconButton__input" v-on="$listeners"/>
+		<div class="InputIconButton__img" :style="imgStyles" ref="img">
 			<slot/>
 		</div>
 	</div>
@@ -16,9 +11,7 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
 @Component
-export default class InputIconToggle extends Vue {
-	@Prop({type: Boolean, required: true}) private value!: boolean
-
+export default class InputCheckbox extends Vue {
 	private imgStyles: object = {}
 
 	private mounted() {
@@ -35,18 +28,18 @@ export default class InputIconToggle extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.InputIconToggle
+.InputIconButton__root
 	position relative
 	width $input-height
 	height $input-height
 
-.InputIconToggle__input, .InputIconToggle__img
+.InputIconButton__input, .InputIconButton__img
 	top 10%
 	left 10%
 	width 80%
 	height 80%
 
-.InputIconToggle__input
+.InputIconButton__input
 	position relative
 	display block
 	border-radius $border-radius
@@ -54,19 +47,19 @@ export default class InputIconToggle extends Vue {
 	&:hover
 		background var(--color-border)
 
-		& + .InputIconToggle__img
+		& + .InputIconButton__img
 			fill var(--color-control)
 
-.InputIconToggle__img
+.InputIconButton__img
 	position absolute
 	transform-origin 0 0
 	pointer-events none
 	fill var(--color-border)
 
-	.InputIconToggle__input:checked + &
+	.InputIconButton__input:checked + &
 		fill var(--color-control-text)
 
-	.InputIconToggle__input:active + &
+	.InputIconButton__input:active + &
 		fill var(--color-active)
 </style>
 

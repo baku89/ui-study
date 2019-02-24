@@ -16,6 +16,7 @@
 			class="InputColorElement__input"
 			type="text"
 			:value="element"
+			@focus="isEditing = true"
 			@change="onChange"
 			@blur="isEditing = false"
 			ref="input"

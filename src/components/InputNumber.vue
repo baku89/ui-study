@@ -16,6 +16,7 @@
 			class="InputNumber__input"
 			type="text"
 			:value="value"
+			@focus="isEditing = true"
 			@change="onChange"
 			@blur="isEditing = false"
 			ref="input"

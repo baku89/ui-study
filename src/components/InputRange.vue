@@ -1,5 +1,5 @@
 <template>
-	<div class="InputRange__root">
+	<div class="InputRange">
 		<Draggable
 			class="InputRange__slit"
 			@dragstart="onDragstart"
@@ -152,7 +152,7 @@ export default class InputRange extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.InputRange__root
+.InputRange
 	position relative
 	height 2em
 

@@ -1,5 +1,5 @@
 <template>
-	<div class="InputIconButton__root">
+	<div class="InputIconButton">
 		<button class="InputIconButton__input" v-on="$listeners"/>
 		<div class="InputIconButton__img" :style="imgStyles" ref="img">
 			<slot/>
@@ -28,7 +28,7 @@ export default class InputCheckbox extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.InputIconButton__root
+.InputIconButton
 	position relative
 	width $input-height
 	height $input-height

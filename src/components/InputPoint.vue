@@ -1,5 +1,5 @@
 <template>
-	<div class="InputPoint__root">
+	<div class="InputPoint">
 		<Draggable
 			:class="{InputPoint__knob: true, dragging: isDragging}"
 			@dragstart="onDragstart"
@@ -70,7 +70,7 @@ export default class InputPoint extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.InputPoint__root
+.InputPoint
 	position relative
 	width $input-height
 	height $input-height

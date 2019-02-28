@@ -1,5 +1,5 @@
 <template>
-	<div class="InputAngle__root">
+	<div class="InputAngle">
 		<Draggable
 			:class="{InputAngle__knob: true, dragging: isDragging}"
 			@dragstart="onDragstart"
@@ -75,7 +75,7 @@ export default class InputAngle extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.InputAngle__root
+.InputAngle
 	position relative
 	width $input-height
 	height $input-height

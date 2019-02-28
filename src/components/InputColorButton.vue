@@ -1,5 +1,5 @@
 <template>
-	<div class="InputColorButton__root">
+	<div class="InputColorButton">
 		<div class="InputColorButton__preview" @click="isPopoverOpen = true" :style="previewStyles"/>
 		<Popover
 			class="InputColorButton__popover popper"
@@ -96,7 +96,7 @@ export default class InputColorButton extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.InputColorButton__root
+.InputColorButton
 	position relative
 	width $input-height
 	height $input-height

@@ -1,6 +1,6 @@
 <template>
 	<Portal @initial-parent="setOriginalParent" @destroy="killPopper">
-		<div v-if="active" class="Popover__root popper">
+		<div v-if="active" class="Popover popper">
 			<slot/>
 		</div>
 	</Portal>
@@ -85,7 +85,7 @@ export default class Popover extends Vue {
 <style lang="stylus" scoped>
 @import '../../style/config.styl'
 
-.Popover__root
+.Popover
 	z-index 90
 </style>
 

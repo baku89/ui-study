@@ -1,5 +1,5 @@
 <template>
-	<div class="InputColorElement__root" :class="{editing: isEditing, dragging: isDragging}">
+	<div class="InputColorElement" :class="{editing: isEditing, dragging: isDragging}">
 		<Draggable
 			class="InputColorElement__display"
 			:minDragDistance="3"
@@ -180,7 +180,7 @@ export default class InputColorElement extends Vue {
 <style lang="stylus" scoped>
 @import '../../style/config.styl'
 
-.InputColorElement__root
+.InputColorElement
 	input-border-style()
 	position relative
 	z-index 1
@@ -208,7 +208,7 @@ export default class InputColorElement extends Vue {
 	z-index 5
 	overflow hidden
 
-	.InputColorElement__root.editing > &
+	.InputColorElement.editing > &
 		visibility hidden
 
 .InputColorElement__label

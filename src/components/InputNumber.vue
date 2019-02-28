@@ -1,5 +1,5 @@
 <template>
-	<div class="InputNumber__root" :class="{editing: isEditing, dragging: isDragging}">
+	<div class="InputNumber" :class="{editing: isEditing, dragging: isDragging}">
 		<Draggable
 			class="InputNumber__display"
 			:minDragDistance="3"
@@ -194,7 +194,7 @@ export default class InputNumber extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.InputNumber__root
+.InputNumber
 	input-border-style()
 	position relative
 	z-index 1
@@ -242,7 +242,7 @@ export default class InputNumber extends Vue {
 .InputNumber__input
 	opacity 0
 
-	.InputNumber__root.editing > &
+	.InputNumber.editing > &
 		opacity 1
 </style>
 

@@ -1,5 +1,5 @@
 <template>
-	<div class="InputMode__root">
+	<div class="InputMode">
 		<div
 			v-for="(v, index) in values"
 			:class="{InputMode__option: true, active: values[index] === value}"
@@ -25,7 +25,7 @@ export default class InputMode extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.InputMode__root
+.InputMode
 	position relative
 	display flex
 	height $input-height

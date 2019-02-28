@@ -1,5 +1,5 @@
 <template>
-	<div class="InputColorPicker__root">
+	<div class="InputColorPicker">
 		<Draggable
 			:class="{InputColorPicker__sl: true, dragging: isDraggingSL}"
 			coord="normalized"
@@ -134,7 +134,7 @@ export default class InputColorPicker extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.InputColorPicker__root
+.InputColorPicker
 	position relative
 	display flex
 

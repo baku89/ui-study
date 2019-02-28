@@ -1,5 +1,5 @@
 <template>
-	<div class="InputSlider__root">
+	<div class="InputSlider">
 		<Draggable
 			:class="{InputSlider__slit: true, dragging: isDragging}"
 			@dragstart="onDragstart"
@@ -98,7 +98,7 @@ export default class InputSlider extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-.InputSlider__root
+.InputSlider
 	position relative
 	height 2em
 

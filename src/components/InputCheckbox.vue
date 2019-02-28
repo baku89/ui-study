@@ -1,5 +1,5 @@
 <template>
-	<div class="InputCheckbox__root">
+	<div class="InputCheckbox">
 		<input
 			class="InputCheckbox__input"
 			type="checkbox"
@@ -28,7 +28,7 @@ export default class InputCheckbox extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.InputCheckbox__root
+.InputCheckbox
 	position relative
 	display flex
 	height $input-height

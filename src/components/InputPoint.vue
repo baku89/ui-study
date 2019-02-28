@@ -54,7 +54,7 @@ export default class InputPoint extends Vue {
 	}
 
 	private onDrag(e: {delta: vec2; current: vec2; currentTarget: HTMLElement}) {
-		const newValue = [this.value[0] + e.delta[0], this.value[0] + e.delta[1]]
+		const newValue = [this.value[0] + e.delta[0], this.value[1] + e.delta[1]]
 		this.dragFrom = getDOMCenter(e.currentTarget)
 		this.dragTo[0] = e.current[0] - this.knobOffset[0]
 		this.dragTo[1] = e.current[1] - this.knobOffset[1]

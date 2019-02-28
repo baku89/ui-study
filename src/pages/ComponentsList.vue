@@ -86,7 +86,7 @@
 				</div>
 				<div class="column">
 					<label>Edge</label>
-					<InputMode class="input no-grow" v-model="ex3.edge" :values="['Rounded', 'Circle', 'Grow']"/>
+					<InputMode class="input no-grow" v-model="ex3.edge" :values="['Rounded', 'Circle', 'Glow']"/>
 				</div>
 			</div>
 			<div class="preview">
@@ -235,7 +235,7 @@ export default class ComponentsList extends Vue {
 			&.Circle
 				border-radius 50%
 
-			&.Grow
+			&.Glow
 				box-shadow 0 0 10px 3px orange
 
 			.dice

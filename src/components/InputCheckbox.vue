@@ -4,7 +4,7 @@
 			class="InputCheckbox__input"
 			type="checkbox"
 			:id="id"
-			:value="value"
+			:checked="value"
 			@change="$emit('input', $event.target.checked)"
 		>
 		<label class="InputCheckbox__label" v-if="label !== undefined" :for="id">{{label}}</label>

@@ -3,7 +3,7 @@
 		<input
 			class="InputIconToggle__input"
 			type="checkbox"
-			:value="value"
+			:checked="value"
 			@change="$emit('input', $event.target.checked)"
 		>
 		<div class="InputIconToggle__img" :style="imgStyles" ref="img">

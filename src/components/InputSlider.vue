@@ -6,8 +6,8 @@
 			@drag="onDrag"
 			@dragend="onDragend"
 		>
-			<div class="InputSlider__accum" :style="{width: percent}"/>
-			<div :class="{InputSlider__knob: true, exceed}" ref="knob" :style="{left: percent}"/>
+			<div class="InputSlider__accum" :style="accumStyles"/>
+			<div :class="{InputSlider__knob: true, exceed}" ref="knob" :style="knobStyles"/>
 		</Draggable>
 	</div>
 </template>
@@ -33,12 +33,36 @@ export default class InputSlider extends Vue {
 
 	private isDragging: boolean = false
 
-	get percent(): string {
-		return `${ratio(this.value, this.min, this.max, true) * 100}%`
+	private get percent(): number {
+		return ratio(this.value, this.min, this.max, true) * 100
 	}
 
-	get exceed(): boolean {
+	private get accumStyles(): object {
+		const crossZero = this.min * this.max < 0
+		const startPercent = crossZero
+			? ratio(0, this.min, this.max, true) * 100
+			: 0
+
+		return {
+			left: `${Math.min(startPercent, this.percent)}%`,
+			right: `${100 - Math.max(startPercent, this.percent)}%`
+		}
+	}
+
+	private get knobStyles(): object {
+		return {
+			left: `${this.percent}%`
+		}
+	}
+
+	private get exceed(): boolean {
 		return this.value < this.min || this.max < this.value
+	}
+
+	private get zeroStyles(): object {
+		return {
+			left: `${ratio(0, this.min, this.max) * 100}%`
+		}
 	}
 
 	private onDragstart(e: {

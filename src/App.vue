@@ -1,32 +1,48 @@
 <template>
-	<div class="App__root">
+	<div class="App">
 		<div class="App__title-bar" @click="onClickMenu">
-			<button class="App__hamburger">三 MENU</button>
+			<button class="App__hamburger">
+				<span class="mark">{{isNavOpened ? '✕' : '三'}}</span> MENU
+			</button>
 		</div>
 		<div :class="{App__nav: true, open: isNavOpened}">
-			<div class="App__nav-content article">
-				<h1>Concurrent UI</h1>
+			<div class="App__nav-content">
+				<div class="article">
+					<h1>Perceptive Design</h1>
 
-				<section>
-					<p>
-						<em>Concurrent UI</em> is a design language considering ideal interfaces for all designing processes, which
-						<a
-							href="https://baku89.com"
-							target="_blank"
-						>Baku Hashimoto</a> has been developing since 2019.
-						The several demos showing below explain the way of thinking behind Concurrent UI and how it actually works.
-					</p>
-				</section>
+					<section>
+						<p>
+							<em>Perceptive Design</em> is a UX language considering ideal interfaces for all designing processes that
+							<a
+								href="https://baku89.com"
+								target="_blank"
+							>Baku Hashimoto</a> has been developing since 2019.
+							The several demos showing below explain the way of thinking behind Perceptive Design and how it actually works.
+						</p>
+					</section>
 
-				<section class="PageLink">
-					<router-link class="PageLink__link" to="/components-list" @click.native="isNavOpened = false">
-						<h2 class="PageLink__title">1. List of Components</h2>
-						<p
-							class="PageLink__desc"
-						>Input fields to adjust parameters such as a slider, number input, rotery knob, and more.</p>
-						<img class="PageLink__img" src="./assets/page-link_01.png">
-					</router-link>
-				</section>
+					<section class="PageLink">
+						<router-link class="PageLink__link" to="/components-list" @click.native="isNavOpened = false">
+							<h2 class="PageLink__title">1. List of Components</h2>
+							<p
+								class="PageLink__desc"
+							>Input fields to adjust parameters such as a slider, number input, rotery knob, and more.</p>
+							<img class="PageLink__img" src="./assets/page-link_01.png">
+						</router-link>
+					</section>
+
+					<section class="PageLink">
+						<router-link
+							class="PageLink__link"
+							to="/parameter-control"
+							@click.native="isNavOpened = false"
+						>
+							<h2 class="PageLink__title">2. Parameter Control</h2>
+							<p class="PageLink__desc">A simple example to control parameters of an image effect.</p>
+							<img class="PageLink__img" src="./assets/page-link_02.png">
+						</router-link>
+					</section>
+				</div>
 			</div>
 		</div>
 		<div class="App__view">
@@ -44,7 +60,11 @@ export default class App extends Vue {
 		return this.$route.path === '/'
 	}
 	private onClickMenu() {
-		this.$router.push('/')
+		if (this.isNavOpened) {
+			this.$router.back()
+		} else {
+			this.$router.push('/')
+		}
 	}
 }
 </script>
@@ -59,7 +79,7 @@ $title-bar-height = 3em
 html, body
 	height 100%
 
-.App__root
+.App
 	position relative
 	width 100%
 	height 100%
@@ -95,9 +115,9 @@ html, body
 		content ' '
 
 .App__nav-content
-	margin 0 auto
+	overflow scroll
 	padding-top 3em
-	max-width 40em
+	height 100%
 
 .App__title-bar
 	position fixed
@@ -115,6 +135,16 @@ html, body
 	color white
 	letter-spacing 0.3em
 	cursor pointer
+
+	.mark
+		display inline-block
+		overflow hidden
+		width 1.2em
+		height 1.2em
+		vertical-align middle
+		text-align center
+		letter-spacing 0
+		line-height 1em
 
 	&:hover
 		background var(--color-active)
@@ -135,11 +165,7 @@ html, body
 	&:active
 		box-shadow 0 0 0 1px var(--color-active)
 
-	h2&__title
-		margin-top 0.5em
-		margin-bottom 0.7em
-		font-size 1.2em
-
+	// h2&__title
 	&__img
 		display block
 		width 100%

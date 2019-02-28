@@ -3,11 +3,14 @@
 		<InputVector
 			:value="value"
 			:precision="precision"
+			:max="max"
+			:min="min"
+			:labels="labels"
 			:unit="unit"
 			@input="onInput"
 			style="width: 12em; margin-right: 0.5em;"
 		/>
-		<InputIconToggle :value="keepProportion" @input="$emit('update:keepProportion', $event)">
+		<InputIconToggle :value="_keepProportion" @input="onChangeKeepProportion">
 			<img svg-inline src="../assets/icon_chain.svg">
 		</InputIconToggle>
 	</div>
@@ -23,14 +26,30 @@ import InputIconToggle from './InputIconToggle.vue'
 	components: {InputVector, InputIconToggle}
 })
 export default class ParameterScale extends Vue {
-	@Prop(Array) private value!: number[]
+	@Prop({type: Array, required: true}) private value!: number[]
+	@Prop([Number, Array]) private min!: number | number[]
+	@Prop([Number, Array]) private max!: number | number[]
 	@Prop(Number) private precision!: number
-	@Prop(String) private label!: string
+	@Prop(Array) private labels!: string[]
 	@Prop(String) private unit!: string
-	@Prop({type: Boolean, default: true}) private keepProportion!: boolean
+	@Prop({type: Boolean, default: null}) private keepProportion!: boolean | null
+
+	private internalKeepProportion: boolean | null = null
+
+	private created() {
+		if (this.keepProportion === null) {
+			this.internalKeepProportion = true
+		}
+	}
+
+	private get _keepProportion(): boolean {
+		return this.keepProportion !== null
+			? this.keepProportion
+			: (this.internalKeepProportion as boolean)
+	}
 
 	private onInput(newValue: number[], index: number) {
-		if (this.keepProportion) {
+		if (this._keepProportion) {
 			const proportion = newValue[index] / this.value[index]
 
 			if (isFinite(proportion)) {
@@ -46,6 +65,14 @@ export default class ParameterScale extends Vue {
 		}
 
 		this.$emit('input', newValue)
+	}
+
+	private onChangeKeepProportion(newValue: boolean) {
+		if (this.keepProportion !== null) {
+			this.$emit('update:keepProportion', newValue)
+		} else {
+			this.internalKeepProportion = newValue
+		}
 	}
 }
 </script>

@@ -3,7 +3,12 @@
 		<div class="param">
 			<div class="param__column">
 				<div class="input-label param__label">Intensity</div>
-				<ParameterSlider class="param__input" v-model="intensity" :min="0" :max="200" unit="%"/>
+				<ParameterSlider class="param__input" v-model="intensity" :min="0" :max="100"/>
+			</div>
+
+			<div class="param__column">
+				<div class="input-label param__label">Iteration</div>
+				<ParameterSlider class="param__input" v-model="iteration" :min="1" :max="5" :precision="0"/>
 			</div>
 
 			<div class="param__column">
@@ -22,15 +27,20 @@
 			</div>
 
 			<div class="param__column">
+				<div class="input-label param__label">Angle</div>
+				<ParameterAngle class="param__input" v-model="angle"/>
+			</div>
+
+			<div class="param__column">
 				<div class="input-label param__label">Crop</div>
 				<ParameterScale
 					v-model="crop"
 					:precision="0"
-					:max="100"
+					:max="50"
 					:min="0"
 					:labels="['T', 'R', 'B', 'L']"
 					unit="%"
-					style="width: 16em;"
+					class="crop"
 				/>
 			</div>
 
@@ -40,42 +50,12 @@
 			</div>
 
 			<div class="param__column">
-				<div class="input-label param__label">Range</div>
-				<ParameterRange class="param__input" v-model="range" unit="%" :min="0" :max="100"/>
+				<div class="input-label param__label">Noise Type</div>
+				<InputMode v-model="noiseType" :labels="['Simplex', 'Periodic']" :values="[0, 1]"/>
 			</div>
 
 			<div class="param__column">
-				<div class="input-label param__label">Angle</div>
-				<ParameterAngle class="param__input" v-model="angle"/>
-			</div>
-
-			<div class="param__column">
-				<div class="input-label param__label">Seed</div>
-				<InputRandomSeed class="param__input" v-model="seed"/>
-			</div>
-
-			<div class="param__column">
-				<div class="input-label param__label">Feedback</div>
-				<InputCheckbox v-model="checkbox"/>
-			</div>
-
-			<div class="param__column">
-				<div class="input-label param__label">Coordinate</div>
-				<InputMode v-model="direction" :labels="['Rect', 'Polar']" :values="[0, 1]"/>
-			</div>
-
-			<div class="param__column">
-				<div class="input-label param__label">Direction</div>
-				<InputDropdown
-					v-model="dropdown"
-					:labels="['Top', 'Right', 'Bottom', 'Left']"
-					:values="['top', 'right', 'bottom', 'left']"
-					style="width:6em"
-				/>
-			</div>
-
-			<div class="param__column">
-				<InputButton :label="'Reset'"/>
+				<InputButton label="Reset" @click="time = 0"/>
 			</div>
 		</div>
 		<div class="preview">
@@ -99,26 +79,21 @@ import {convertColorElements} from '@/util'
 import Components from '@/components'
 
 @Component({
-	components: Components,
-	data() {
-		return {
-			range: [10, 70],
-			dropdown: 'bottom',
-			angle: 0,
-			checkbox: true,
-			seed: 1705734,
-			direction: 0
-		}
-	}
+	components: Components
 })
 export default class ParameterControl extends Vue {
-	private intensity = 50
+	private intensity = 20
+	private iteration = 2
 	private speed = 1
 	private offset = [0, 0]
-	private scale = [100, 100]
+	private scale = [30, 30]
+	private angle = 0
 	private keepProportion = true
-	private crop = [10, 10, 10, 10]
-	private frameColor: DataColor = ['hsl', [20, 30, 20]]
+	private crop = [5, 5, 5, 5]
+	private frameColor: DataColor = ['hsl', [28, 100, 87]]
+	private noiseType: number = 0
+
+	private time!: number
 
 	private renderer!: ISFRenderer
 
@@ -128,28 +103,27 @@ export default class ParameterControl extends Vue {
 		this.renderer = new ISFRenderer(gl)
 		this.renderer.loadSource(require('./polar-disp.frag'))
 
-		const img = new Image()
-		img.src = './assets/page-link_01.png'
-		img.onload = () => {
-			console.log(img)
-			this.renderer.setValue('inputImage', img)
-		}
-
+		this.updateIntensity()
+		this.updateIteration()
+		this.updateOffset()
+		this.updateScale()
+		this.updateAngle()
 		this.updateCrop()
 		this.updateFrameColor()
+		this.updateNoiseType()
 
 		let lastTime = performance.now()
 		let deltaTime = 0
-		let time = 0
+		this.time = 0
 
 		const draw = (currentTime: number) => {
 			deltaTime = currentTime - lastTime
-			time += (deltaTime * this.speed) / 4000000
+			this.time += (deltaTime * this.speed) / 10000
 			twgl.resizeCanvasToDisplaySize(canvas)
-			this.renderer.setValue('time', time)
+			this.renderer.setValue('time', this.time)
 			this.renderer.draw(canvas)
 
-			lastTime = time
+			lastTime = currentTime
 			raf(draw)
 		}
 		draw(performance.now())
@@ -164,6 +138,11 @@ export default class ParameterControl extends Vue {
 		this.renderer.setValue('intensity', this.intensity / 100)
 	}
 
+	@Watch('iteration')
+	private updateIteration() {
+		this.renderer.setValue('iteration', Math.round(this.iteration))
+	}
+
 	@Watch('offset')
 	private updateOffset() {
 		this.renderer.setValue('offset', [
@@ -175,6 +154,11 @@ export default class ParameterControl extends Vue {
 	@Watch('scale')
 	private updateScale() {
 		this.renderer.setValue('scale', [this.scale[0] / 100, this.scale[1] / 100])
+	}
+
+	@Watch('angle')
+	private updateAngle() {
+		this.renderer.setValue('angle', (this.angle / 180) * Math.PI)
 	}
 
 	@Watch('crop')
@@ -195,10 +179,15 @@ export default class ParameterControl extends Vue {
 		color = (color as number[]).map((x: number) => x / 255)
 		this.renderer.setValue('frameColor', [...color, 1])
 	}
+
+	@Watch('noiseType')
+	private updateNoiseType() {
+		this.renderer.setValue('noiseType', this.noiseType)
+	}
 }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .page-content
 	display flex
 	padding 2rem
@@ -222,6 +211,9 @@ export default class ParameterControl extends Vue {
 	&__input
 		flex-grow 1
 
+	.crop .InputVector
+		width 16em !important
+
 .preview
 	position relative
 	flex-grow 1
@@ -237,5 +229,4 @@ export default class ParameterControl extends Vue {
 		left 0
 		width 100%
 		height 100%
-		background red
 </style>

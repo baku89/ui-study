@@ -19,6 +19,7 @@
 			@focus="isEditing = true"
 			@change="onChange"
 			@blur="isEditing = false"
+			@keydown="onKeydown"
 			ref="input"
 		>
 		<Portal>
@@ -50,6 +51,7 @@ import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import {parseNumber} from '@/math'
 import {getDOMCenter} from '@/util'
 import {vec2} from 'gl-matrix'
+import KeyCode from 'keycode-js'
 
 import Draggable from './common/Draggable.vue'
 import Portal from './common/Portal'
@@ -120,6 +122,25 @@ export default class InputNumber extends Vue {
 			}
 		}
 		window.addEventListener('mousedown', forceBlur)
+	}
+
+	private onKeydown({keyCode, shiftKey, altKey}: KeyboardEvent) {
+		if (keyCode === KeyCode.KEY_UP || keyCode === KeyCode.KEY_DOWN) {
+			let inc = keyCode === KeyCode.KEY_UP ? 1 : -1
+
+			if (shiftKey) inc *= 10
+			else if (altKey) inc /= 10
+
+			let newValue = this.value + inc
+
+			if (this.hasMin) {
+				newValue = Math.max(this.min, newValue)
+			}
+			if (this.hasMax) {
+				newValue = Math.min(this.max, newValue)
+			}
+			this.$emit('input', newValue)
+		}
 	}
 
 	private onDragstart(e: {current: vec2}) {

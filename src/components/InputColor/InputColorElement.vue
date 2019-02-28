@@ -19,6 +19,7 @@
 			@focus="isEditing = true"
 			@change="onChange"
 			@blur="isEditing = false"
+			@keydown="onKeydown"
 			ref="input"
 		>
 		<Portal>
@@ -38,6 +39,7 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
+import KeyCode from 'keycode-js'
 
 import {parseNumber} from '@/math'
 import {getDOMCenter} from '@/util'
@@ -113,6 +115,20 @@ export default class InputColorElement extends Vue {
 		}
 
 		this.isEditing = false
+	}
+
+	private onKeydown({keyCode, shiftKey, altKey}: KeyboardEvent) {
+		if (keyCode === KeyCode.KEY_UP || keyCode === KeyCode.KEY_DOWN) {
+			let inc = keyCode === KeyCode.KEY_UP ? 1 : -1
+
+			if (shiftKey) inc *= 10
+			else if (altKey) inc /= 10
+
+			let newElement = this.element + inc
+
+			newElement = clamp(newElement, this.min, this.max)
+			this.$emit('input', newElement)
+		}
 	}
 
 	private onClick() {

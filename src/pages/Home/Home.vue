@@ -24,7 +24,6 @@
 
 		<PageLink
 			title="0. Abstract"
-			thumb="./assets/page-link_abstract.png"
 		>This section explains what Perceptive Design is aiming and how it changes the way of designing.</PageLink>
 
 		<PageLink
@@ -77,12 +76,14 @@ export default class Home extends Vue {}
 
 <style lang="stylus" scoped>
 p.highlight
-	padding 0.3em 0.5em
+	padding 0.5em 0.8em
 	border 1px solid darken(#eef9fb, 30)
 	border-radius 0.5em
 	background #eef9fb
 	font-size 0.9em
 
 	em
+		display inline-block
+		margin-bottom 0.5em
 		color darken(#eef9fb, 60)
 </style>

@@ -11,7 +11,7 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
 @Component
-export default class InputCheckbox extends Vue {
+export default class InputIconButton extends Vue {
 	private imgStyles: object = {}
 
 	private mounted() {

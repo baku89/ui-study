@@ -1,8 +1,8 @@
 # UI Study
 
-![](./doc/thumbnail.gif)
+![](./public/assets/page-link_parameter-control.png)
 
-**[Demo](http://s.baku89.com/ui)**
+**[Demo](http://ui.baku89.com)**
 
 Study of patameter controls UI for creative-purpose softwares. (Such as AfterEffects, Cinema4D)
 
@@ -24,7 +24,7 @@ The motivation of this project is described here: [Study of UI](http://baku89.co
 
 ```
 yarn install
-gulp -o
+yarn serve
 ```
 
 ## Relating Documents

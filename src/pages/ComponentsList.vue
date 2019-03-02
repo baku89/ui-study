@@ -113,6 +113,12 @@
 				</div>
 			</div>
 		</div>
+
+		<h2>Example 5</h2>
+		<p>Code Editor.</p>
+		<div class="example">
+			<InputCodeEditor class="code" v-model="ex5.code" lang="javascript"/>
+		</div>
 	</div>
 </template>
 
@@ -146,6 +152,9 @@ import Components from '@/components'
 			},
 			ex4: {
 				seed: 1
+			},
+			ex5: {
+				code: 'console.log("Hello World")'
 			}
 		}
 	},
@@ -243,4 +252,8 @@ export default class ComponentsList extends Vue {
 				top 0
 				width 600%
 				height 100%
+
+	.code
+		width 100%
+		height 10em
 </style>

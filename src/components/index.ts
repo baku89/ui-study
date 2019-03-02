@@ -1,5 +1,6 @@
 import InputAngle from './InputAngle.vue'
 import InputButton from './InputButton.vue'
+import InputCodeEditor from './InputCodeEditor'
 import InputCheckbox from './InputCheckbox.vue'
 import InputColor from './InputColor'
 import InputColorButton from './InputColorButton.vue'
@@ -24,6 +25,7 @@ import ParameterSlider from './ParameterSlider.vue'
 export default {
 	InputAngle,
 	InputButton,
+	InputCodeEditor,
 	InputCheckbox,
 	InputColor,
 	InputColorButton,

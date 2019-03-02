@@ -6,7 +6,7 @@
 
 Study of patameter controls UI for creative-purpose softwares. (Such as AfterEffects, Cinema4D)
 
-The motivation of this project is described here: [Study of UI](http://baku89.com/ui)
+The motivation of this project is described here: [Study of UI](http://baku89.com/ui-study)
 
 ## Development Environment
 

@@ -128,8 +128,11 @@ export default class InputNumber extends Vue {
 		if (keyCode === KeyCode.KEY_UP || keyCode === KeyCode.KEY_DOWN) {
 			let inc = keyCode === KeyCode.KEY_UP ? 1 : -1
 
-			if (shiftKey) inc *= 10
-			else if (altKey) inc /= 10
+			if (shiftKey) {
+				inc *= 10
+			} else if (altKey) {
+				inc /= 10
+			}
 
 			let newValue = this.value + inc
 

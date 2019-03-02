@@ -121,8 +121,11 @@ export default class InputColorElement extends Vue {
 		if (keyCode === KeyCode.KEY_UP || keyCode === KeyCode.KEY_DOWN) {
 			let inc = keyCode === KeyCode.KEY_UP ? 1 : -1
 
-			if (shiftKey) inc *= 10
-			else if (altKey) inc /= 10
+			if (shiftKey) {
+				inc *= 10
+			} else if (altKey) {
+				inc /= 10
+			}
 
 			let newElement = this.element + inc
 

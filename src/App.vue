@@ -7,42 +7,7 @@
 		</div>
 		<div :class="{App__nav: true, open: isNavOpened}">
 			<div class="App__nav-content">
-				<div class="article">
-					<h1>Perceptive Design</h1>
-
-					<section>
-						<p>
-							<em>Perceptive Design</em> is a UX language considering ideal interfaces for all designing processes that
-							<a
-								href="https://baku89.com"
-								target="_blank"
-							>Baku Hashimoto</a> has been developing since 2019.
-							The several demos showing below explain the way of thinking behind Perceptive Design and how it actually works.
-						</p>
-					</section>
-
-					<section class="PageLink">
-						<router-link class="PageLink__link" to="/components-list" @click.native="isNavOpened = false">
-							<h2 class="PageLink__title">1. List of Components</h2>
-							<p
-								class="PageLink__desc"
-							>Input fields to adjust parameters such as a slider, number input, rotery knob, and more.</p>
-							<img class="PageLink__img" src="./assets/page-link_01.png">
-						</router-link>
-					</section>
-
-					<section class="PageLink">
-						<router-link
-							class="PageLink__link"
-							to="/parameter-control"
-							@click.native="isNavOpened = false"
-						>
-							<h2 class="PageLink__title">2. Parameter Control</h2>
-							<p class="PageLink__desc">A simple example to control parameters of an image effect.</p>
-							<img class="PageLink__img" src="./assets/page-link_02.png">
-						</router-link>
-					</section>
-				</div>
+				<Home/>
 			</div>
 		</div>
 		<div class="App__view">
@@ -54,7 +19,11 @@
 <script lang="ts">
 import {Component, Vue, Watch} from 'vue-property-decorator'
 
-@Component
+import Home from '@/pages/Home'
+
+@Component({
+	components: {Home}
+})
 export default class App extends Vue {
 	private get isNavOpened(): boolean {
 		return this.$route.path === '/'
@@ -72,7 +41,6 @@ export default class App extends Vue {
 
 <style lang="stylus">
 @import './style/common.styl'
-@import './style/article.styl'
 
 $title-bar-height = 3em
 
@@ -85,7 +53,7 @@ html, body
 	height 100%
 
 .App__nav
-	$dur = 0.15s
+	$dur = 0.3s
 	$easing = cubic-bezier(0.26, 0, 0.17, 1)
 	position fixed
 	top $title-bar-height
@@ -152,26 +120,4 @@ html, body
 .App__view
 	padding-top $title-bar-height
 	height 100%
-
-.PageLink
-	padding 0.5em
-	border 1px solid transparent
-	border-radius $border-radius-large
-
-	&:hover
-		border-color var(--color-active)
-		color var(--color-active)
-
-	&:active
-		box-shadow 0 0 0 1px var(--color-active)
-
-	// h2&__title
-	&__img
-		display block
-		width 100%
-		border-radius $border-radius-large
-
-	p&__desc
-		margin-bottom 1.2em
-		color inherit
 </style>

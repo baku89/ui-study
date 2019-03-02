@@ -1,7 +1,10 @@
 {
 	"name": "ui-study",
 	"version": "2.0.0",
-	"author": "Baku Hashimoto <mail@baku89.com>",
+	"author": {
+		"name": "Baku Hashimoto",
+		"email": "mail@baku89.com"
+	},
 	"scripts": {
 		"serve": "vue-cli-service serve",
 		"build": "vue-cli-service build",
@@ -11,6 +14,7 @@
 		"color-convert": "^2.0.0",
 		"gl-matrix": "^3.0.0",
 		"hex-rgb": "^4.0.0",
+		"interactive-shader-format": "^2.9.0",
 		"keycode-js": "^1.0.4",
 		"mezr": "^0.6.2",
 		"popper.js": "^1.14.7",

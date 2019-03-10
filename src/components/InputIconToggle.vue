@@ -1,13 +1,16 @@
 <template>
 	<div class="InputIconToggle">
-		<input
-			class="InputIconToggle__input"
-			type="checkbox"
-			:checked="value"
-			@change="$emit('input', $event.target.checked)"
-		>
-		<div class="InputIconToggle__img" :style="imgStyles" ref="img">
-			<slot/>
+		<ButtonWrapper>
+			<input
+				class="InputIconToggle__input"
+				type="checkbox"
+				:checked="value"
+				@change="$emit('input', $event.target.checked)"
+			>
+		</ButtonWrapper>
+		<div class="InputIconToggle__icon">
+			<slot v-if="value" name="checked"/>
+			<slot v-else name="unchecked"/>
 		</div>
 	</div>
 </template>
@@ -15,19 +18,13 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-@Component
+import ButtonWrapper from '@/components/common/ButtonWrapper'
+
+@Component({
+	components: {ButtonWrapper}
+})
 export default class InputIconToggle extends Vue {
 	@Prop({type: Boolean, required: true}) private value!: boolean
-
-	private imgStyles: object = {}
-
-	private mounted() {
-		const imgWrapper = this.$refs.img as HTMLElement
-		const img = imgWrapper.firstChild as HTMLElement
-		const scale = imgWrapper.clientWidth / img.clientWidth
-
-		this.imgStyles = {transform: `scale(${scale})`}
-	}
 }
 </script>
 
@@ -40,33 +37,33 @@ export default class InputIconToggle extends Vue {
 	width $input-height
 	height $input-height
 
-.InputIconToggle__input, .InputIconToggle__img
-	top 10%
-	left 10%
-	width 80%
-	height 80%
+	&__input, &__icon
+		top 10%
+		left 10%
+		width 80%
+		height 80%
 
-.InputIconToggle__input
-	position relative
-	display block
-	border-radius $border-radius
+	&__input
+		position relative
+		display block
+		border-radius $border-radius
 
-	&:hover
-		background var(--color-border)
+		&:hover, &:focus
+			background var(--color-border)
 
-		& + .InputIconToggle__img
-			fill var(--color-control)
+	&__icon
+		position absolute
+		pointer-events none
+		fill var(--color-control)
 
-.InputIconToggle__img
-	position absolute
-	transform-origin 0 0
-	pointer-events none
-	fill var(--color-border)
+		& > *
+			width 100%
+			height 100%
 
-	.InputIconToggle__input:checked + &
-		fill var(--color-control-text)
+		^[0]__input:checked + &
+			fill var(--color-control-text)
 
-	.InputIconToggle__input:active + &
-		fill var(--color-active)
+		^[0]__input:hover + &, ^[0]__input:focus + &, ^[0]__input:active + &
+			fill var(--color-active)
 </style>
 

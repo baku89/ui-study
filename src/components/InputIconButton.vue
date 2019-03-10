@@ -1,7 +1,9 @@
 <template>
 	<div class="InputIconButton">
-		<button class="InputIconButton__input" v-on="$listeners"/>
-		<div class="InputIconButton__img" :style="imgStyles" ref="img">
+		<ButtonWrapper>
+			<button class="InputIconButton__input" v-on="$listeners"/>
+		</ButtonWrapper>
+		<div class="InputIconButton__icon">
 			<slot/>
 		</div>
 	</div>
@@ -10,18 +12,12 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-@Component
-export default class InputIconButton extends Vue {
-	private imgStyles: object = {}
+import ButtonWrapper from '@/components/common/ButtonWrapper'
 
-	private mounted() {
-		const imgWrapper = this.$refs.img as HTMLElement
-		const img = imgWrapper.firstChild as HTMLElement
-		const scale = imgWrapper.clientWidth / img.clientWidth
-
-		this.imgStyles = {transform: `scale(${scale})`}
-	}
-}
+@Component({
+	components: {ButtonWrapper}
+})
+export default class InputIconButton extends Vue {}
 </script>
 
 
@@ -33,33 +29,37 @@ export default class InputIconButton extends Vue {
 	width $input-height
 	height $input-height
 
-.InputIconButton__input, .InputIconButton__img
-	top 10%
-	left 10%
-	width 80%
-	height 80%
+	&__input, &__icon
+		top 10%
+		left 10%
+		width 80%
+		height 80%
 
-.InputIconButton__input
-	position relative
-	display block
-	border-radius $border-radius
+	&__input
+		position relative
+		display block
+		border-radius $border-radius
 
-	&:hover
-		background var(--color-border)
+		&:hover, &:focus
+			background var(--color-border)
 
-		& + .InputIconButton__img
-			fill var(--color-control)
+		&:active
+			background var(--color-active)
 
-.InputIconButton__img
-	position absolute
-	transform-origin 0 0
-	pointer-events none
-	fill var(--color-border)
+	&__icon
+		position absolute
+		transform-origin 0 0
+		pointer-events none
+		fill var(--color-control)
 
-	.InputIconButton__input:checked + &
-		fill var(--color-control-text)
+		& + *
+			width 100%
+			height 100%
 
-	.InputIconButton__input:active + &
-		fill var(--color-active)
+		^[0]__input:hover + &, ^[0]__input:focus + &
+			fill var(--color-active)
+
+		^[0]__input:active + &
+			fill var(--color-bg)
 </style>
 

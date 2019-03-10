@@ -1,14 +1,20 @@
 <template>
-	<button class="InputButton" @click="$emit('click', $event)">{{label}}</button>
+	<ButtonWrapper>
+		<button class="InputButton">
+			<slot/>
+		</button>
+	</ButtonWrapper>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-@Component
-export default class InputButton extends Vue {
-	@Prop(String) private label!: string
-}
+import ButtonWrapper from '@/components/common/ButtonWrapper'
+
+@Component({
+	components: {ButtonWrapper}
+})
+export default class InputButton extends Vue {}
 </script>
 
 
@@ -22,7 +28,7 @@ export default class InputButton extends Vue {
 	background transparent
 	color var(--color-control-text)
 
-	&:hover
+	&:hover, &:focus
 		input-border-hover-style()
 
 	&:active

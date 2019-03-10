@@ -11,7 +11,8 @@
 			style="width: 12em; margin-right: 0.5em;"
 		/>
 		<InputIconToggle :value="_keepProportion" @input="onChangeKeepProportion">
-			<img svg-inline src="../assets/icon_chain.svg">
+			<img slot="checked" svg-inline src="../assets/icon_chain.svg">
+			<img slot="unchecked" svg-inline src="../assets/icon_unlinked-chain.svg">
 		</InputIconToggle>
 	</div>
 </template>

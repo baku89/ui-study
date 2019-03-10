@@ -1,11 +1,6 @@
 <template>
 	<div class="ParamFieldSeed">
-		<InputNumber
-			:value="value"
-			:precision="0"
-			@input="onInput"
-			style="width: 6em; margin-right: 0.5em;"
-		/>
+		<InputNumber class="param-field--1w" :value="value" :precision="0" @input="onInput"/>
 		<InputIconButton @click="generateRandomSeed">
 			<img svg-inline src="../assets/icon_refresh.svg">
 		</InputIconButton>

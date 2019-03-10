@@ -1,11 +1,11 @@
 <template>
 	<div class="ParamFieldPoint">
 		<InputVector
+			class="param-field--2w"
 			:value="value"
 			:precision="precision"
 			:unit="unit"
 			@input="onInput"
-			style="width: 12em; margin-right: 0.5em;"
 		/>
 		<InputPoint :value="value" @input="onInput"/>
 	</div>

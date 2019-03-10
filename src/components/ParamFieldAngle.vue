@@ -1,12 +1,12 @@
 <template>
 	<div class="ParamFieldAngle">
 		<InputNumber
+			class="param-field--1w"
 			:value="value"
 			:precision="precision"
 			:label="label"
 			@input="onInput"
 			unit="°"
-			style="width: 6em; margin-right: 0.5em;"
 		/>
 		<InputAngle :value="value" @input="onInput"/>
 	</div>

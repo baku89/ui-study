@@ -1,13 +1,13 @@
 <template>
 	<div class="ParamFieldRange">
 		<InputVector
+			class="param-field--1w"
 			:value="value"
 			:precision="precision"
 			:min="[min, value[0]]"
 			:max="[value[1], max]"
 			:unit="unit"
 			@input="onInputVector"
-			style="width: 6em; margin-right: 0.5em;"
 		/>
 		<InputRange class="ParamFieldRange__range" :value="value" :min="min" :max="max" @input="onInput"/>
 	</div>

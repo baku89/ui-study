@@ -1,13 +1,13 @@
 <template>
 	<div class="ParamFieldSlider">
 		<InputNumber
+			class="param-field--1w"
 			:value="value"
 			:precision="precision"
 			:min="min"
 			:max="max"
 			:unit="unit"
 			@input="onInput"
-			style="width: 6em; margin-right: 0.5em;"
 		/>
 		<InputSlider
 			class="ParamFieldSlider__slider"

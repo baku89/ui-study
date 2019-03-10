@@ -21,6 +21,10 @@ global-reset()
 	--font-monospace 'Roboto Condensed', monospace, sans-serif
 	--font-code 'Fira Code', monospace, sans-serif
 	--font-normal 'Roboto', Helvetica, Arial, sans-serif
+	// ParamField
+	--param-field-1w 6em
+	--param-field-gap-widget 0.5em
+	--param-field-gap-box 0.3em
 
 *, ::after, ::before
 	box-sizing border-box
@@ -55,10 +59,32 @@ a
 		color inherit
 		text-decoration none
 
+// Parameter
 .input-label
 	padding-right 1em
 	line-height $input-height
 
+.param-field
+	&--color-button
+		margin-right var(--param-field-gap-box)
+		width 'calc(%s / 1.5 - %s)' % (var(--param-field-1w) var(--param-field-gap-box)) !important
+
+	&--1w, &--2w, &--3n, &--4n
+		margin-right var(--param-field-gap-widget)
+
+	&--1w
+		width var(--param-field-1w)
+
+	&--2w
+		width 'calc(%s * 2)' % var(--param-field-1w)
+
+	&--3n
+		width 'calc(%s / 1.5 * 3)' % var(--param-field-1w)
+
+	&--4n
+		width 'calc(%s / 1.5 * 4)' % var(--param-field-1w)
+
+// SVG
 .svg-overlay
 	position fixed
 	top 0

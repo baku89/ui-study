@@ -1,6 +1,7 @@
 <template>
 	<div class="ParamFieldScale">
 		<InputVector
+			class="param-field--2w"
 			:value="value"
 			:precision="precision"
 			:max="max"
@@ -8,7 +9,6 @@
 			:labels="labels"
 			:unit="unit"
 			@input="onInput"
-			style="width: 12em; margin-right: 0.5em;"
 		/>
 		<InputIconToggle :value="_keepProportion" @input="onChangeKeepProportion">
 			<img slot="checked" svg-inline src="../assets/icon_chain.svg">

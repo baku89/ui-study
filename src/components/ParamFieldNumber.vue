@@ -1,13 +1,13 @@
 <template>
 	<div class="ParamFieldNumber">
 		<InputNumber
+			class="param-field--1w"
 			:value="value"
 			:precision="precision"
 			:min="min"
 			:max="max"
 			:unit="unit"
 			@input="onInput"
-			style="width: 6em"
 		/>
 	</div>
 </template>

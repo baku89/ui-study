@@ -1,7 +1,7 @@
 <template>
 	<div class="ParamFieldColor">
-		<InputColorButton :value="value" @input="onInput" style="width: 3.7em; margin-right: 0.3em;"/>
-		<InputColor :value="value" @input="onInput" style="width: 12em;"/>
+		<InputColorButton class="param-field--color-button" :value="value" @input="onInput"/>
+		<InputColor class="param-field--3n" :value="value" @input="onInput"/>
 	</div>
 </template>
 

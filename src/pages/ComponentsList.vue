@@ -102,7 +102,7 @@
 			<div class="param">
 				<div class="column">
 					<label>Roll</label>
-					<InputRandomSeed v-model="ex4.seed" :min="1" :max="6" :step="1"/>
+					<ParamFieldSeed v-model="ex4.seed" :min="1" :max="6" :step="1"/>
 				</div>
 				<div class="column">
 					<InputButton @click="ex4.seed = (ex4.seed % 6) + 1">Increment</InputButton>

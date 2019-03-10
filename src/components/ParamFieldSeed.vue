@@ -1,5 +1,5 @@
 <template>
-	<div class="InputRandomSeed">
+	<div class="ParamFieldSeed">
 		<InputNumber
 			:value="value"
 			:precision="0"
@@ -23,7 +23,7 @@ import InputIconButton from './InputIconButton.vue'
 @Component({
 	components: {InputNumber, InputIconButton}
 })
-export default class InputRandomSeed extends Vue {
+export default class ParamFieldSeed extends Vue {
 	@Prop({type: Number, required: false}) private value!: number
 	@Prop({type: Number, default: 0}) private min!: number
 	@Prop({type: Number, default: 1000000}) private max!: number
@@ -52,6 +52,6 @@ export default class InputRandomSeed extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.InputRandomSeed
+.ParamFieldSeed
 	display flex
 </style>

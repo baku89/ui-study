@@ -11,7 +11,7 @@ import InputIconToggle from './InputIconToggle.vue'
 import InputMode from './InputMode.vue'
 import InputNumber from './InputNumber.vue'
 import InputPoint from './InputPoint.vue'
-import InputRandomSeed from './InputRandomSeed.vue'
+import ParamFieldSeed from './ParamFieldSeed.vue'
 import InputRange from './InputRange.vue'
 import InputSlider from './InputSlider.vue'
 import InputString from './InputString.vue'
@@ -38,7 +38,7 @@ export default {
 	InputMode,
 	InputNumber,
 	InputPoint,
-	InputRandomSeed,
+	ParamFieldSeed,
 	InputRange,
 	InputSlider,
 	InputString,

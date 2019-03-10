@@ -8,6 +8,7 @@ import InputDropdown from './InputDropdown.vue'
 import InputIconAction from './InputIconAction'
 import InputIconButton from './InputIconButton.vue'
 import InputIconToggle from './InputIconToggle.vue'
+import InputMatrix from './InputMatrix.vue'
 import InputMode from './InputMode.vue'
 import InputNumber from './InputNumber.vue'
 import InputPoint from './InputPoint.vue'
@@ -16,6 +17,7 @@ import InputRange from './InputRange.vue'
 import InputSlider from './InputSlider.vue'
 import InputString from './InputString.vue'
 import InputVector from './InputVector.vue'
+import ParamFieldAffine from './ParamFieldAffine.vue'
 import ParamFieldAngle from './ParamFieldAngle.vue'
 import ParamFieldColor from './ParamFieldColor.vue'
 import ParamFieldNumber from './ParamFieldNumber.vue'
@@ -35,6 +37,7 @@ export default {
 	InputIconAction,
 	InputIconButton,
 	InputIconToggle,
+	InputMatrix,
 	InputMode,
 	InputNumber,
 	InputPoint,
@@ -43,6 +46,7 @@ export default {
 	InputSlider,
 	InputString,
 	InputVector,
+	ParamFieldAffine,
 	ParamFieldAngle,
 	ParamFieldColor,
 	ParamFieldNumber,

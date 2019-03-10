@@ -1,8 +1,6 @@
 <template>
 	<div class="InputIconButton">
-		<ButtonWrapper>
-			<button class="InputIconButton__input" v-on="$listeners"/>
-		</ButtonWrapper>
+		<button class="InputIconButton__input" v-on="$listeners"/>
 		<div class="InputIconButton__icon">
 			<slot/>
 		</div>

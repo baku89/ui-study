@@ -1,19 +1,13 @@
 <template>
-	<ButtonWrapper>
-		<button class="InputButton">
-			<slot/>
-		</button>
-	</ButtonWrapper>
+	<button class="InputButton">
+		<slot/>
+	</button>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import ButtonWrapper from '@/components/common/ButtonWrapper'
-
-@Component({
-	components: {ButtonWrapper}
-})
+@Component
 export default class InputButton extends Vue {}
 </script>
 

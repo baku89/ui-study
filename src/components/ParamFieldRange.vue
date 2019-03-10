@@ -1,5 +1,5 @@
 <template>
-	<div class="ParameterRange">
+	<div class="ParamFieldRange">
 		<InputVector
 			:value="value"
 			:precision="precision"
@@ -9,7 +9,7 @@
 			@input="onInputVector"
 			style="width: 6em; margin-right: 0.5em;"
 		/>
-		<InputRange class="ParameterRange__range" :value="value" :min="min" :max="max" @input="onInput"/>
+		<InputRange class="ParamFieldRange__range" :value="value" :min="min" :max="max" @input="onInput"/>
 	</div>
 </template>
 
@@ -22,7 +22,7 @@ import InputRange from './InputRange.vue'
 @Component({
 	components: {InputVector, InputRange}
 })
-export default class ParameterRange extends Vue {
+export default class ParamFieldRange extends Vue {
 	@Prop({type: Array, required: true}) private value!: [number, number]
 	@Prop({type: Number, required: true}) private min!: number
 	@Prop({type: Number, required: true}) private max!: number
@@ -49,7 +49,7 @@ export default class ParameterRange extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.ParameterRange
+.ParamFieldRange
 	display flex
 
 	&__range

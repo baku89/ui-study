@@ -1,5 +1,5 @@
 <template>
-	<div class="ParameterPoint">
+	<div class="ParamFieldPoint">
 		<InputVector
 			:value="value"
 			:precision="precision"
@@ -20,7 +20,7 @@ import InputPoint from './InputPoint.vue'
 @Component({
 	components: {InputVector, InputPoint}
 })
-export default class ParameterPoint extends Vue {
+export default class ParamFieldPoint extends Vue {
 	@Prop(Array) private value!: number[]
 	@Prop(Number) private precision!: number
 	@Prop(String) private label!: string
@@ -37,6 +37,6 @@ export default class ParameterPoint extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.ParameterPoint
+.ParamFieldPoint
 	display flex
 </style>

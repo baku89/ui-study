@@ -6,19 +6,19 @@
 			<div class="param">
 				<div class="column">
 					<label>Radius</label>
-					<ParameterSlider class="input" v-model="ex1.radius" :min="0" :max="50"/>
+					<ParamFieldSlider class="input" v-model="ex1.radius" :min="0" :max="50"/>
 				</div>
 				<div class="column">
 					<label>Scale</label>
-					<ParameterScale class="input" v-model="ex1.scale" unit="%"/>
+					<ParamFieldScale class="input" v-model="ex1.scale" unit="%"/>
 				</div>
 				<div class="column">
 					<label>Position</label>
-					<ParameterPoint class="input" v-model="ex1.position" :min="0" :max="100" unit="%"/>
+					<ParamFieldPoint class="input" v-model="ex1.position" :min="0" :max="100" unit="%"/>
 				</div>
 				<div class="column">
 					<label>Color</label>
-					<ParameterColor class="input" v-model="ex1.color"/>
+					<ParamFieldColor class="input" v-model="ex1.color"/>
 				</div>
 			</div>
 			<div class="preview">
@@ -46,11 +46,11 @@
 				</div>
 				<div class="column">
 					<label>Angle</label>
-					<ParameterAngle class="input" v-model="ex2.rotation"/>
+					<ParamFieldAngle class="input" v-model="ex2.rotation"/>
 				</div>
 				<div class="column">
 					<label>Trim</label>
-					<ParameterRange class="input" v-model="ex2.trim" :min="0" :max="100" unit="%"/>
+					<ParamFieldRange class="input" v-model="ex2.trim" :min="0" :max="100" unit="%"/>
 				</div>
 			</div>
 			<div class="preview">

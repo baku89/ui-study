@@ -16,12 +16,12 @@ import InputRange from './InputRange.vue'
 import InputSlider from './InputSlider.vue'
 import InputString from './InputString.vue'
 import InputVector from './InputVector.vue'
-import ParameterAngle from './ParameterAngle.vue'
-import ParameterColor from './ParameterColor.vue'
-import ParameterPoint from './ParameterPoint.vue'
-import ParameterRange from './ParameterRange.vue'
-import ParameterScale from './ParameterScale.vue'
-import ParameterSlider from './ParameterSlider.vue'
+import ParamFieldAngle from './ParamFieldAngle.vue'
+import ParamFieldColor from './ParamFieldColor.vue'
+import ParamFieldPoint from './ParamFieldPoint.vue'
+import ParamFieldRange from './ParamFieldRange.vue'
+import ParamFieldScale from './ParamFieldScale.vue'
+import ParamFieldSlider from './ParamFieldSlider.vue'
 
 export default {
 	InputAngle,
@@ -42,10 +42,10 @@ export default {
 	InputSlider,
 	InputString,
 	InputVector,
-	ParameterAngle,
-	ParameterColor,
-	ParameterPoint,
-	ParameterRange,
-	ParameterScale,
-	ParameterSlider
+	ParamFieldAngle,
+	ParamFieldColor,
+	ParamFieldPoint,
+	ParamFieldRange,
+	ParamFieldScale,
+	ParamFieldSlider
 }

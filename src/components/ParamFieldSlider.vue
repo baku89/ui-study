@@ -1,5 +1,5 @@
 <template>
-	<div class="ParameterSlider">
+	<div class="ParamFieldSlider">
 		<InputNumber
 			:value="value"
 			:precision="precision"
@@ -10,7 +10,7 @@
 			style="width: 6em; margin-right: 0.5em;"
 		/>
 		<InputSlider
-			class="ParameterSlider__slider"
+			class="ParamFieldSlider__slider"
 			:value="value"
 			:min="min"
 			:max="max"
@@ -28,7 +28,7 @@ import InputSlider from './InputSlider.vue'
 @Component({
 	components: {InputNumber, InputSlider}
 })
-export default class ParameterSlider extends Vue {
+export default class ParamFieldSlider extends Vue {
 	@Prop({type: Number, required: true}) private value!: number
 	@Prop({type: Number, required: true}) private min!: number
 	@Prop({type: Number, required: true}) private max!: number
@@ -46,7 +46,7 @@ export default class ParameterSlider extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.ParameterSlider
+.ParamFieldSlider
 	display flex
 
 	&__slider

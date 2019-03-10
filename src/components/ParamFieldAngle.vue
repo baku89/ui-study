@@ -1,5 +1,5 @@
 <template>
-	<div class="ParameterAngle">
+	<div class="ParamFieldAngle">
 		<InputNumber
 			:value="value"
 			:precision="precision"
@@ -21,7 +21,7 @@ import InputAngle from './InputAngle.vue'
 @Component({
 	components: {InputNumber, InputAngle}
 })
-export default class ParameterAngle extends Vue {
+export default class ParamFieldAngle extends Vue {
 	@Prop(Number) private value!: number
 	@Prop(Number) private precision!: number
 	@Prop(String) private label!: string
@@ -36,6 +36,6 @@ export default class ParameterAngle extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.ParameterAngle
+.ParamFieldAngle
 	display flex
 </style>

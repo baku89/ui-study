@@ -1,5 +1,5 @@
 <template>
-	<div class="ParameterScale">
+	<div class="ParamFieldScale">
 		<InputVector
 			:value="value"
 			:precision="precision"
@@ -26,7 +26,7 @@ import InputIconToggle from './InputIconToggle.vue'
 @Component({
 	components: {InputVector, InputIconToggle}
 })
-export default class ParameterScale extends Vue {
+export default class ParamFieldScale extends Vue {
 	@Prop({type: Array, required: true}) private value!: number[]
 	@Prop([Number, Array]) private min!: number | number[]
 	@Prop([Number, Array]) private max!: number | number[]
@@ -82,6 +82,6 @@ export default class ParameterScale extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.ParameterScale
+.ParamFieldScale
 	display flex
 </style>

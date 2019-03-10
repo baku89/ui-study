@@ -3,37 +3,37 @@
 		<div class="param">
 			<div class="param__column">
 				<div class="input-label param__label">Intensity</div>
-				<ParameterSlider class="param__input" v-model="intensity" :min="0" :max="100"/>
+				<ParamFieldSlider class="param__input" v-model="intensity" :min="0" :max="100"/>
 			</div>
 
 			<div class="param__column">
 				<div class="input-label param__label">Iteration</div>
-				<ParameterSlider class="param__input" v-model="iteration" :min="1" :max="5" :precision="0"/>
+				<ParamFieldSlider class="param__input" v-model="iteration" :min="1" :max="5" :precision="0"/>
 			</div>
 
 			<div class="param__column">
 				<div class="input-label param__label">Speed</div>
-				<ParameterSlider class="param__input" v-model="speed" :min="-10" :max="10"/>
+				<ParamFieldSlider class="param__input" v-model="speed" :min="-10" :max="10"/>
 			</div>
 
 			<div class="param__column">
 				<div class="input-label param__label">Offset</div>
-				<ParameterPoint v-model="offset" :precision="1" unit="%"/>
+				<ParamFieldPoint v-model="offset" :precision="1" unit="%"/>
 			</div>
 
 			<div class="param__column">
 				<div class="input-label param__label">Scale</div>
-				<ParameterScale v-model="scale" :keepProportion.sync="keepProportion"/>
+				<ParamFieldScale v-model="scale" :keepProportion.sync="keepProportion"/>
 			</div>
 
 			<div class="param__column">
 				<div class="input-label param__label">Angle</div>
-				<ParameterAngle class="param__input" v-model="angle"/>
+				<ParamFieldAngle class="param__input" v-model="angle"/>
 			</div>
 
 			<div class="param__column">
 				<div class="input-label param__label">Crop</div>
-				<ParameterScale
+				<ParamFieldScale
 					v-model="crop"
 					:precision="0"
 					:max="50"
@@ -46,7 +46,7 @@
 
 			<div class="param__column">
 				<div class="input-label param__label">Frame Color</div>
-				<ParameterColor v-model="frameColor"/>
+				<ParamFieldColor v-model="frameColor"/>
 			</div>
 
 			<div class="param__column">

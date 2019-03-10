@@ -1,5 +1,5 @@
 <template>
-	<div class="ParameterColor">
+	<div class="ParamFieldColor">
 		<InputColorButton :value="value" @input="onInput" style="width: 3.7em; margin-right: 0.3em;"/>
 		<InputColor :value="value" @input="onInput" style="width: 12em;"/>
 	</div>
@@ -16,7 +16,7 @@ import InputColorButton from './InputColorButton.vue'
 @Component({
 	components: {InputColor, InputColorButton}
 })
-export default class ParameterColor extends Vue {
+export default class ParamFieldColor extends Vue {
 	@Prop(Array) private value!: DataColor
 
 	private onInput(newValue: number[]) {
@@ -29,6 +29,6 @@ export default class ParameterColor extends Vue {
 <style lang="stylus" scoped>
 @import '../style/config.styl'
 
-.ParameterColor
+.ParamFieldColor
 	display flex
 </style>

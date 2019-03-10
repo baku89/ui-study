@@ -18,6 +18,7 @@ import InputString from './InputString.vue'
 import InputVector from './InputVector.vue'
 import ParamFieldAngle from './ParamFieldAngle.vue'
 import ParamFieldColor from './ParamFieldColor.vue'
+import ParamFieldNumber from './ParamFieldNumber.vue'
 import ParamFieldPoint from './ParamFieldPoint.vue'
 import ParamFieldRange from './ParamFieldRange.vue'
 import ParamFieldScale from './ParamFieldScale.vue'
@@ -44,6 +45,7 @@ export default {
 	InputVector,
 	ParamFieldAngle,
 	ParamFieldColor,
+	ParamFieldNumber,
 	ParamFieldPoint,
 	ParamFieldRange,
 	ParamFieldScale,

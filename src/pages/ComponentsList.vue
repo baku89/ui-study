@@ -97,12 +97,15 @@
 		</div>
 
 		<h2>Example 4</h2>
-		<p>Random seed.</p>
+		<p>Random seed, Button.</p>
 		<div class="example">
 			<div class="param">
 				<div class="column">
 					<label>Roll</label>
 					<InputRandomSeed v-model="ex4.seed" :min="1" :max="6" :step="1"/>
+				</div>
+				<div class="column">
+					<InputButton @click="ex4.seed = (ex4.seed % 6) + 1">Increment</InputButton>
 				</div>
 			</div>
 			<div class="preview">

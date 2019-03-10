@@ -55,7 +55,7 @@
 			</div>
 
 			<div class="param__column">
-				<InputButton label="Reset" @click="time = 0"/>
+				<InputButton @click="time = 0">Reset</InputButton>
 			</div>
 		</div>
 		<div class="preview">

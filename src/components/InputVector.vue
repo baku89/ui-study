@@ -3,7 +3,7 @@
 		<InputNumber
 			v-for="(v, index) in value"
 			:key="index"
-			:class="index == 0 ? 'left' : (index == value.length - 1 ? 'right' : 'middle')"
+			:class="index == 0 ? 'left' : (index == value.length - 1 ? 'right' : 'center')"
 			:value="v"
 			:min="min instanceof Array ? min[index] : min"
 			:max="max instanceof Array ? max[index] : max"

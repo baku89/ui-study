@@ -11,14 +11,29 @@ input-border-style()
 
 	&.left
 		margin-right -1px
-		border-radius $border-radius 0 0 $border-radius
+		border-top-right-radius 0
+		border-bottom-right-radius 0
 
-	&.middle
+	&.center
 		margin-right -1px
 		border-radius 0
 
 	&.right
-		border-radius 0 $border-radius $border-radius 0
+		border-top-left-radius 0
+		border-bottom-left-radius 0
+
+	&.top
+		margin-bottom -1px
+		border-bottom-right-radius 0
+		border-bottom-left-radius 0
+
+	&.middle
+		margin-bottom -1px
+		border-radius 0
+
+	&.bottom
+		border-top-left-radius 0
+		border-top-right-radius 0
 
 input-border-hover-style()
 	border-color var(--color-active)

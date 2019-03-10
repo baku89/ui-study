@@ -12,12 +12,14 @@
 	},
 	"dependencies": {
 		"brace": "^0.11.1",
+		"change-case": "^3.1.0",
 		"color-convert": "^2.0.0",
 		"gl-matrix": "^3.0.0",
 		"hex-rgb": "^4.0.0",
 		"interactive-shader-format": "^2.9.0",
 		"keycode-js": "^1.0.4",
 		"mezr": "^0.6.2",
+		"mouse-event": "^1.0.5",
 		"popper.js": "^1.14.7",
 		"raf": "^3.4.1",
 		"twgl.js": "^4.8.2",
@@ -25,7 +27,8 @@
 		"vue": "^2.5.21",
 		"vue-class-component": "^6.0.0",
 		"vue-property-decorator": "^7.0.0",
-		"vue-router": "^3.0.1"
+		"vue-router": "^3.0.1",
+		"vuedraggable": "^2.18.1"
 	},
 	"devDependencies": {
 		"@types/color-convert": "^1.9.0",

@@ -41,4 +41,12 @@ function parseNumber(str: string): number {
 	return parseFloat(str)
 }
 
-export {lerp, clamp, parseNumber, ratio, mod}
+function toRadians(degrees: number) {
+	return (degrees * Math.PI) / 180
+}
+
+function toDegrees(radians: number) {
+	return (radians * 180) / Math.PI
+}
+
+export {lerp, clamp, parseNumber, ratio, mod, toRadians, toDegrees}

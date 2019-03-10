@@ -29,7 +29,6 @@ export default class ButtonWrapper extends Vue {
 				window.addEventListener(
 					'mouseup',
 					() => {
-						console.log(buttonElement)
 						buttonElement.blur()
 					},
 					{once: true}

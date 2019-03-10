@@ -12,7 +12,6 @@ import InputMatrix from './InputMatrix.vue'
 import InputMode from './InputMode.vue'
 import InputNumber from './InputNumber.vue'
 import InputPoint from './InputPoint.vue'
-import ParamFieldSeed from './ParamFieldSeed.vue'
 import InputRange from './InputRange.vue'
 import InputSlider from './InputSlider.vue'
 import InputString from './InputString.vue'
@@ -24,6 +23,7 @@ import ParamFieldNumber from './ParamFieldNumber.vue'
 import ParamFieldPoint from './ParamFieldPoint.vue'
 import ParamFieldRange from './ParamFieldRange.vue'
 import ParamFieldScale from './ParamFieldScale.vue'
+import ParamFieldSeed from './ParamFieldSeed.vue'
 import ParamFieldSlider from './ParamFieldSlider.vue'
 
 export default {
@@ -41,7 +41,6 @@ export default {
 	InputMode,
 	InputNumber,
 	InputPoint,
-	ParamFieldSeed,
 	InputRange,
 	InputSlider,
 	InputString,
@@ -52,6 +51,7 @@ export default {
 	ParamFieldNumber,
 	ParamFieldPoint,
 	ParamFieldRange,
+	ParamFieldSeed,
 	ParamFieldScale,
 	ParamFieldSlider
 }

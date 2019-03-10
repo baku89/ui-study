@@ -5,6 +5,7 @@ import InputCheckbox from './InputCheckbox.vue'
 import InputColor from './InputColor'
 import InputColorButton from './InputColorButton.vue'
 import InputDropdown from './InputDropdown.vue'
+import InputIconAction from './InputIconAction'
 import InputIconButton from './InputIconButton.vue'
 import InputIconToggle from './InputIconToggle.vue'
 import InputMode from './InputMode.vue'
@@ -30,6 +31,7 @@ export default {
 	InputColor,
 	InputColorButton,
 	InputDropdown,
+	InputIconAction,
 	InputIconButton,
 	InputIconToggle,
 	InputMode,

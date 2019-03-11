@@ -1,11 +1,7 @@
 <template>
 	<div class="InputColorButton">
 		<div class="InputColorButton__preview" @click="isPopoverOpen = true" :style="previewStyles"/>
-		<Popover
-			class="InputColorButton__popover popper"
-			:active.sync="isPopoverOpen"
-			placement="right-start"
-		>
+		<Popover class="InputColorButton__popover" :active.sync="isPopoverOpen" placement="right-start">
 			<div class="popper__arrow"/>
 			<div class="InputColorButton__popover-content">
 				<InputColorPicker class="InputColorButton__color-picker" :value="value" @input="onInput"/>

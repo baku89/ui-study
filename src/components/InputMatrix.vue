@@ -1,16 +1,16 @@
 <template>
-	<div class="InputMatrix">
+	<div :class="['InputMatrix', direction]" :style="{height: `calc(var(--input-height) * ${rows}`}">
 		<InputNumber
 			v-for="(v, index) in value"
-			:key="index"
-			:class="inputClasses[index]"
+			:key="index + 1"
+			:class="elmAttrs[index].classes"
 			:value="v"
 			:min="min instanceof Array ? min[index] : min"
 			:max="max instanceof Array ? max[index] : max"
 			:precision="precision"
 			:label="labels ? labels[index] : undefined"
 			:unit="unit"
-			:style="inputStyles"
+			:style="elmAttrs[index].styles"
 			@input="onInput(index, $event)"
 		/>
 	</div>
@@ -27,42 +27,53 @@ export default class InputMatrix extends Vue {
 	@Prop({type: Array, required: true}) private value!: number[]
 	@Prop({type: Number, required: true}) private columns!: number
 	@Prop({type: Number, required: true}) private rows!: number
+	@Prop({type: String, default: 'row'}) private direction!: 'row' | 'column'
 	@Prop(Number) private precision!: number
 	@Prop([Number, Array]) private min!: number | number[]
 	@Prop([Number, Array]) private max!: number | number[]
 	@Prop(Array) private labels!: string[]
 	@Prop(String) private unit!: string
 
-	private get inputClasses(): string[] {
-		const classes = []
+	private get elmAttrs(): object[] {
+		return Array(this.columns * this.rows)
+			.fill(null)
+			.map((v, i) => {
+				let x, y
+				let classes = ['InputMatrix__elm']
 
-		for (let i = 0; i < this.rows; i++) {
-			let rowClass = 'InputMatrix__elm '
-			if (i === 0) {
-				rowClass += 'top'
-			} else if (i === this.rows - 1) {
-				rowClass += 'bottom'
-			} else {
-				rowClass += 'middle'
-			}
-			for (let j = 0; j < this.columns; j++) {
-				let cls = rowClass + ' '
-				if (j === 0) {
-					cls += 'left'
-				} else if (j === this.columns - 1) {
-					cls += 'right'
+				if (this.direction === 'row') {
+					x = i % this.columns
+					y = Math.floor(i / this.columns)
 				} else {
-					cls += 'center'
+					x = Math.floor(i / this.rows)
+					y = i % this.rows
 				}
-				classes.push(cls)
-			}
-		}
 
-		return classes
-	}
+				if (x === 0) {
+					classes.push('left')
+				} else if (x === this.columns - 1) {
+					classes.push('right')
+				} else {
+					classes.push('center')
+				}
 
-	private get inputStyles(): object {
-		return {width: `${100 / this.columns}%`}
+				if (y === 0) {
+					classes.push('top')
+				} else if (y === this.rows - 1) {
+					classes.push('bottom')
+				} else {
+					classes.push('middle')
+				}
+
+				return {
+					classes,
+					styles: {
+						width: `calc(100% / ${this.columns})`,
+						'grid-column': x + 1,
+						'grid-row': y + 1
+					}
+				}
+			})
 	}
 
 	private onInput(index: number, value: number) {
@@ -74,10 +85,16 @@ export default class InputMatrix extends Vue {
 </script>
 
 <style lang="stylus" scoped>
+@import '../style/config.styl'
+
 .InputMatrix
 	display flex
 	flex-wrap wrap
+	--input-height $input-height
 
-	&__elm
-		flex-grow 1
+	&.row
+		flex-direction row
+
+	&.column
+		flex-direction column
 </style>

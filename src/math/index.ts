@@ -41,6 +41,13 @@ function parseNumber(str: string): number {
 	return parseFloat(str)
 }
 
+function toFixed(value: number, precision: number): string {
+	const fixed = (+value).toFixed(precision)
+	return fixed === '0'
+		? fixed
+		: fixed.replace(/^(.+\.[1-9]*)0+$/, '$1').replace(/\.$/, '')
+}
+
 function toRadians(degrees: number) {
 	return (degrees * Math.PI) / 180
 }
@@ -49,4 +56,4 @@ function toDegrees(radians: number) {
 	return (radians * 180) / Math.PI
 }
 
-export {lerp, clamp, parseNumber, ratio, mod, toRadians, toDegrees}
+export {lerp, clamp, parseNumber, toFixed, ratio, mod, toRadians, toDegrees}

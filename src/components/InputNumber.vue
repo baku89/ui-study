@@ -9,13 +9,13 @@
 			@click="onClick"
 		>
 			<div class="InputNumber__label" v-if="label">{{this.label}}</div>
-			{{value.toFixed(this.precision)}}
+			{{displayValue}}
 			<span v-if="unit" class="InputNumber__unit">{{unit}}</span>
 		</Draggable>
 		<input
 			class="InputNumber__input"
 			type="text"
-			:value="value"
+			:value="value.toString()"
 			@focus="isEditing = true"
 			@change="onChange"
 			@blur="isEditing = false"
@@ -53,6 +53,8 @@ import {getDOMCenter} from '@/util'
 import {vec2} from 'gl-matrix'
 import KeyCode from 'keycode-js'
 
+import {toFixed} from '@/math'
+
 import Draggable from './common/Draggable.vue'
 import Portal from './common/Portal'
 import SvgArrow from './common/SvgArrow.vue'
@@ -81,6 +83,10 @@ export default class InputNumber extends Vue {
 
 	@Inject({from: 'dragSpeed', default: 0.5}) private dragSpeed!: number
 
+	private get displayValue(): string {
+		return toFixed(this.value, this.precision)
+	}
+
 	private get hasMin() {
 		return this.min !== undefined
 	}
@@ -95,7 +101,7 @@ export default class InputNumber extends Vue {
 		let value: number = parseNumber(strValue)
 
 		if (isNaN(value)) {
-			input.value = this.value.toFixed(this.precision)
+			input.value = this.value.toString()
 		} else {
 			if (this.hasMin) {
 				value = Math.max(this.min, value)

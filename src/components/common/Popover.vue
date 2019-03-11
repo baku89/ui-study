@@ -9,6 +9,7 @@
 <script lang="ts">
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import Popper from 'popper.js'
+import keycode from 'keycode'
 
 import Portal from '@/components/common/Portal'
 
@@ -31,14 +32,22 @@ export default class Popover extends Vue {
 		if (!active) {
 			return
 		}
-		const close = (e: Event) => {
+		const onMousedown = (e: Event) => {
 			// @ts-ignore
 			if (e.path.indexOf(this.$el) === -1) {
-				window.removeEventListener('mousedown', close)
+				window.removeEventListener('mousedown', onMousedown)
 				this.$emit('update:active', false)
 			}
 		}
-		window.addEventListener('mousedown', close)
+		window.addEventListener('mousedown', onMousedown)
+
+		const onKeydown = (e: KeyboardEvent) => {
+			if (keycode.isEventKey(e, 'esc')) {
+				window.removeEventListener('keydown', onKeydown)
+				this.$emit('update:active', false)
+			}
+		}
+		window.addEventListener('keydown', onKeydown)
 
 		this.bindPopper()
 	}

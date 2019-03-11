@@ -5,8 +5,9 @@
 			:value="value"
 			:columns="3"
 			:rows="2"
+			direction="column"
 			:precision="1"
-			:labels="['xx', null, 'tx', null, null, 'ty']"
+			:labels="['a', 'b', 'c', 'd', 'tx', 'ty']"
 			@input="onInput"
 		/>
 	</div>
@@ -33,7 +34,4 @@ export default class ParamFieldAffine extends Vue {
 
 <style lang="stylus" scoped>
 @import '../style/config.styl'
-
-.ParamFieldAffine
-	display flex
 </style>

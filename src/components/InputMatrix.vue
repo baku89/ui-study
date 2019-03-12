@@ -39,7 +39,7 @@ export default class InputMatrix extends Vue {
 			.fill(null)
 			.map((v, i) => {
 				let x, y
-				let classes = ['InputMatrix__elm']
+				const classes = ['InputMatrix__elm']
 
 				if (this.direction === 'row') {
 					x = i % this.columns

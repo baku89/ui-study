@@ -40,6 +40,7 @@
 
 		<PageLink
 			title="3. Transformation Matrix"
+			to="/transformation-matrix"
 			thumb="./assets/page-link_transformation-matrix.png"
 		>A new paradigm to transform objects by stacking transform functions in any order, instead of fixed fields of position/scale/rotation.</PageLink>
 

@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 import ComponentsList from './pages/ComponentsList.vue'
 import ParameterControl from './pages/ParameterControl'
-import TransformationMatrix from './pages/TransformationMatrix.vue'
+import TransformationMatrix from './pages/TransformationMatrix'
 
 Vue.use(Router)
 

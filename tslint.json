@@ -10,6 +10,7 @@
 		"object-literal-sort-keys": false,
 		"no-consecutive-blank-lines": false,
 		"no-console": false,
-		"variable-name": [true, "allow-leading-underscore", "allow-pascal-case"]
+		"variable-name": [true, "allow-leading-underscore", "allow-pascal-case"],
+		"one-variable-per-declaration": false
 	}
 }

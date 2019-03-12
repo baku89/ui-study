@@ -10,10 +10,12 @@
 			:unit="unit"
 			@input="onInput"
 		/>
-		<InputIconToggle :value="_keepProportion" @input="onChangeKeepProportion">
-			<img slot="checked" svg-inline src="../assets/icon_chain.svg">
-			<img slot="unchecked" svg-inline src="../assets/icon_unlinked-chain.svg">
-		</InputIconToggle>
+		<InputIconToggle
+			:value="_keepProportion"
+			@input="onChangeKeepProportion"
+			src-on="./assets/icon_chain.svg"
+			src-off="./assets/icon_unlinked-chain.svg"
+		/>
 	</div>
 </template>
 

@@ -8,9 +8,8 @@
 				@change="$emit('input', $event.target.checked)"
 			>
 		</ButtonWrapper>
-		<div class="InputIconToggle__icon">
-			<slot v-if="value" name="checked"/>
-			<slot v-else name="unchecked"/>
+		<Icon class="InputIconToggle__icon" v-if="value" :src="srcOn"/>
+		<Icon class="InputIconToggle__icon" v-else :src="srcOff"/>
 		</div>
 	</div>
 </template>
@@ -19,12 +18,15 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
 import ButtonWrapper from '@/components/common/ButtonWrapper'
+import Icon from '@/components/common/Icon.vue'
 
 @Component({
-	components: {ButtonWrapper}
+	components: {ButtonWrapper, Icon}
 })
 export default class InputIconToggle extends Vue {
 	@Prop({type: Boolean, required: true}) private value!: boolean
+	@Prop({type: String, required: true}) private srcOn!: string
+	@Prop({type: String, required: true}) private srcOff!: string
 }
 </script>
 
@@ -53,17 +55,13 @@ export default class InputIconToggle extends Vue {
 
 	&__icon
 		position absolute
+		color var(--color-control)
 		pointer-events none
-		fill var(--color-control)
-
-		& > *
-			width 100%
-			height 100%
 
 		^[0]__input:checked + &
-			fill var(--color-control-text)
+			color var(--color-control-text)
 
 		^[0]__input:hover + &, ^[0]__input:focus + &, ^[0]__input:active + &
-			fill var(--color-active)
+			color var(--color-active)
 </style>
 

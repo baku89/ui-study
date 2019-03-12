@@ -1,42 +1,38 @@
 <template>
 	<div class="InputIconAction">
-		<select class="InputIconAction__select" @change="onChange" :value='null'>
-			<option
-				v-for="(value, index) in values"
-				:key="index"
-				:value="value"
-			>{{labels ? labels[index] : value}}</option>
-		</select>
-		<div class="InputIconAction__icon" :style="iconStyles" ref="icon">
-			<slot/>
-		</div>
+		<Icon
+			class="InputIconAction__icon"
+			tag="button"
+			:src="src"
+			:size="0.8"
+			:active="isPopoverOpen"
+			@click="isPopoverOpen = true"
+		/>
+		<Popover class="InputIconAction__popover" :active.sync="isPopoverOpen" placement="right-start">
+			<Menu :items="items" @select="onSelect"/>
+		</Popover>
 	</div>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
+import Popover from '@/components/common/Popover.vue'
+import Menu from '@/components/common/Menu'
+import Icon from '@/components/common/Icon.vue'
+
 type ValueType = string | number
 
-@Component
+@Component({
+	components: {Popover, Menu, Icon}
+})
 export default class InputIconAction extends Vue {
-	@Prop(Array) private values!: ValueType[]
-	@Prop(Array) private labels!: string[]
+	@Prop({type: Array, required: true}) private items!: any
+	@Prop({type: String, required: true}) private src!: string
+	private isPopoverOpen: boolean = false
 
-	private iconStyles: object = {}
-
-	private mounted() {
-		const iconWrapper = this.$refs.icon as HTMLElement
-		const icon = iconWrapper.firstChild as HTMLElement
-		const scale = iconWrapper.clientWidth / icon.clientWidth
-
-		this.iconStyles = {transform: `scale(${scale})`}
-	}
-
-	private onChange(e: Event) {
-		const {selectedIndex} = e.target as HTMLSelectElement
-		const newValue = this.values[selectedIndex]
-
+	private onSelect(newValue: ValueType) {
+		this.isPopoverOpen = false
 		this.$emit('click', newValue)
 	}
 }
@@ -54,30 +50,14 @@ $right-arrow-width = 1em
 	height $input-height
 
 	&__icon
-		position absolute
-		top 10%
-		left 10%
-		width 80%
-		height 80%
-		pointer-events none
-		fill var(--color-control)
-
-	&:hover, &:active
-		&:after
-			color var(--color-active)
-
-	&__select
+		position relative
+		top 0
+		left 0
 		width 100%
 		height 100%
-		position relative
-		display block
-		border-radius $border-radius
-		text-indent 100%
+		color var(--color-control)
 
-		^[0]:hover > &
-			input-border-hover-style()
-
-		^[0]:active > &
-			input-border-focus-style()
+		&:hover, &:active, &[active]
+			color var(--color-active)
 </style>
 

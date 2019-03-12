@@ -1,9 +1,7 @@
 <template>
 	<div class="InputIconButton">
 		<button class="InputIconButton__input" v-on="$listeners"/>
-		<div class="InputIconButton__icon">
-			<slot/>
-		</div>
+		<Icon class="InputIconButton__icon" :src="src"/>
 	</div>
 </template>
 
@@ -11,11 +9,14 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
 import ButtonWrapper from '@/components/common/ButtonWrapper'
+import Icon from '@/components/common/Icon.vue'
 
 @Component({
-	components: {ButtonWrapper}
+	components: {ButtonWrapper, Icon}
 })
-export default class InputIconButton extends Vue {}
+export default class InputIconButton extends Vue {
+	@Prop({type: String, required: true}) private src!: string
+}
 </script>
 
 
@@ -46,18 +47,13 @@ export default class InputIconButton extends Vue {}
 
 	&__icon
 		position absolute
-		transform-origin 0 0
+		color var(--color-control)
 		pointer-events none
-		fill var(--color-control)
-
-		& + *
-			width 100%
-			height 100%
 
 		^[0]__input:hover + &, ^[0]__input:focus + &
-			fill var(--color-active)
+			color var(--color-active)
 
 		^[0]__input:active + &
-			fill var(--color-bg)
+			color var(--color-bg)
 </style>
 

@@ -10,12 +10,6 @@ module.exports = {
 		config.resolve.extensions.prepend('.vue')
 
 		config.module
-			.rule('vue')
-			.use('vue-svg-inline-loader')
-			.loader('vue-svg-inline-loader')
-			.options({})
-
-		config.module
 			.rule('raw')
 			.test(/\.(vert|frag|glsl)$/)
 			.use('raw-loader')

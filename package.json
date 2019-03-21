@@ -48,7 +48,6 @@
 		"stylus-loader": "^3.0.2",
 		"tslint-config-prettier": "^1.17.0",
 		"typescript": "^3.0.0",
-		"vue-svg-inline-loader": "^1.2.11",
 		"vue-template-compiler": "^2.5.21"
 	},
 	"license": "MIT"

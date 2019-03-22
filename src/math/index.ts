@@ -56,4 +56,19 @@ function toDegrees(radians: number) {
 	return (radians * 180) / Math.PI
 }
 
-export {lerp, clamp, parseNumber, toFixed, ratio, mod, toRadians, toDegrees}
+function cycleMod(value: number, inc: number, max: number) {
+	inc = (inc % max) + max
+	return (value + inc) % max
+}
+
+export {
+	lerp,
+	clamp,
+	parseNumber,
+	toFixed,
+	ratio,
+	mod,
+	toRadians,
+	toDegrees,
+	cycleMod
+}

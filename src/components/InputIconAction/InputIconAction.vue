@@ -9,7 +9,7 @@
 			@click="isPopoverOpen = true"
 		/>
 		<Popover class="InputIconAction__popover" :active.sync="isPopoverOpen" placement="right-start">
-			<Menu :items="items" @select="onSelect"/>
+			<Menu :items="items" @click="onClick"/>
 		</Popover>
 	</div>
 </template>
@@ -31,7 +31,7 @@ export default class InputIconAction extends Vue {
 	@Prop({type: String, required: true}) private src!: string
 	private isPopoverOpen: boolean = false
 
-	private onSelect(newValue: ValueType) {
+	private onClick(newValue: ValueType) {
 		this.isPopoverOpen = false
 		this.$emit('click', newValue)
 	}

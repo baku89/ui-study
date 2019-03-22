@@ -9,44 +9,32 @@
 			@input="onInputFilterText"
 			ref="filter"
 		>
-		<ul class="Menu__list">
-			<li
-				v-for="(item, index) in isFiltering ? filteredItems : items"
-				:key="item.value"
-				class="Menu__li"
-				:selected="index === selectedIndex"
-				@mouseenter="selectedIndex = index"
-				@click="$emit('select', item.value)"
-				v-html="item.label"
-			/>
-		</ul>
+		<Submenu
+			ref="menu"
+			class="Menu__list"
+			:items="isFiltering ? filteredItems : items"
+			:has-parent="false"
+			@click="$emit('click', $event)"
+		/>
 	</div>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import keycode from 'keycode'
-import fuzzy, {filter} from 'fuzzy'
+import fuzzy from 'fuzzy'
 
-import {cycleMod, clamp} from '@/math'
-
-import InputString from '../../InputString.vue'
-
-interface MenuItem {
-	value: string | number | symbol
-	label: string
-}
+import Submenu from './Submenu.vue'
+import MenuItem from './MenuItem'
 
 @Component({
-	components: {InputString}
+	components: {Submenu}
 })
 export default class Menu extends Vue {
-	@Prop(Array) private items!: MenuItem[]
-
-	private selectedIndex: number | null = null
-
+	@Prop({type: Array, required: true}) private items!: MenuItem[]
 	private filterText: string | null = null
 
+	// Computed properties
 	private get isFiltering(): boolean {
 		return this.filterText !== null
 	}
@@ -55,27 +43,64 @@ export default class Menu extends Vue {
 		return !this.isFiltering ? this.items.length : this.filteredItems!.length
 	}
 
+	private get flattenedItems(): MenuItem[] {
+		const flattenedItems: MenuItem[] = []
+
+		const searchItems = (items: MenuItem[]) => {
+			items.forEach(item => {
+				flattenedItems.push({...item, type: undefined, submenu: undefined})
+
+				if (item.submenu) {
+					searchItems(item.submenu)
+				}
+			})
+		}
+		searchItems(this.items)
+
+		return flattenedItems
+	}
+
+	private get filteredItems(): MenuItem[] | null {
+		if (this.isFiltering) {
+			const filteredItems = fuzzy.filter(
+				this.filterText as string,
+				this.flattenedItems,
+				{
+					extract: el => el.label,
+					pre: '<u>',
+					post: '</u>'
+				}
+			)
+
+			return filteredItems.map(el => {
+				return {value: el.original.value, label: el.string}
+			})
+		} else {
+			return null
+		}
+	}
+
+	// Lifecycle hooks
 	private mounted() {
 		window.addEventListener('keydown', this.onKeydown)
 	}
 
+	private beforeDestroy() {
+		window.removeEventListener('keydown', this.onKeydown)
+	}
+
+	// Events
+
 	private onKeydown(e: KeyboardEvent) {
 		const key = keycode(e)
 
-		if (key === 'enter') {
-			if (this.selectedIndex !== null) {
-				this.$emit('select', this.items[this.selectedIndex].value)
-			}
-		} else if (key === 'up' || key === 'down') {
-			if (this.selectedIndex === null) {
-				this.selectedIndex = key === 'down' ? 0 : this.numValues - 1
-			} else {
-				const inc = key === 'up' ? -1 : 1
-				this.selectedIndex = cycleMod(this.selectedIndex, inc, this.numValues)
-			}
-		} else if (/[a-zA-Z0-9]/.test(key)) {
+		// Show filtering input,
+		// if the pressed key is neither modifier keys nor arrow keys
+		if (key.length === 1) {
+			// Show filtering input
 			if (!this.isFiltering) {
 				this.filterText = ''
+				;(this.$refs.menu as Submenu).setSelectedIndex(0)
 				this.$nextTick(() => {
 					;(this.$refs.filter as HTMLInputElement).focus()
 				})
@@ -100,43 +125,6 @@ export default class Menu extends Vue {
 			e.preventDefault()
 		}
 	}
-
-	private get filteredItems(): MenuItem[] | null {
-		if (this.isFiltering) {
-			const filteredItems = fuzzy.filter(
-				this.filterText as string,
-				this.items,
-				{
-					extract: el => el.label,
-					pre: '<u>',
-					post: '</u>'
-				}
-			)
-
-			return filteredItems.map(el => {
-				return {value: el.original.value, label: el.string}
-			})
-		} else {
-			return null
-		}
-	}
-
-	@Watch('filterText')
-	private onFilteredItemsChanged() {
-		if (this.isFiltering) {
-			if (this.selectedIndex === null) {
-				if (this.numValues > 0) {
-					this.selectedIndex = 0
-				}
-			} else {
-				this.selectedIndex = clamp(this.selectedIndex, 0, this.numValues - 1)
-			}
-		}
-	}
-
-	private beforeDestroy() {
-		window.removeEventListener('keydown', this.onKeydown)
-	}
 }
 </script>
 
@@ -147,24 +135,15 @@ export default class Menu extends Vue {
 	overflow hidden
 	border-radius $border-radius
 	background black
-	box-shadow 0 0 1em 0 rgba(black, 0.1)
 	color white
+	user-select none
 
 	&__filter
 		display block
-		padding 0 1em
-		border-bottom 1px solid #222
+		margin 0.5em
+		padding 0 0.3em
+		border 1px solid #333
+		border-radius $border-radius
 		font-family var(--font-normal)
 		line-height $input-height
-
-	&__li
-		padding 0 1em
-		line-height $input-height
-		cursor pointer
-
-		u
-			text-decoration underline
-
-		&[selected]
-			background var(--color-active)
 </style>

@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator'
+import {Component, Provide, Prop, Vue} from 'vue-property-decorator'
 
 import InputMatrix from './InputMatrix.vue'
 
@@ -24,6 +24,8 @@ import InputMatrix from './InputMatrix.vue'
 export default class ParamFieldAffine extends Vue {
 	@Prop(Array) private value!: number[]
 	@Prop(Number) private precision!: number
+
+	@Provide() private dragSpeed = 0.01
 
 	private onInput(newValue: number[]) {
 		this.$emit('input', newValue)

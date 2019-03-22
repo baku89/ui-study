@@ -186,7 +186,7 @@ export default class InputNumber extends Vue {
 				newValue = this.max + (x - this.dragMaxX) * this.dragSpeed
 			}
 		} else {
-			newValue = this.value + e.delta[0]
+			newValue = this.value + e.delta[0] * this.dragSpeed
 		}
 
 		this.$set(this.dragTo, 0, x)

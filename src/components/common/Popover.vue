@@ -33,8 +33,29 @@ export default class Popover extends Vue {
 			return
 		}
 		const onMousedown = (e: Event) => {
-			// @ts-ignore
-			if (e.path.indexOf(this.$el) === -1) {
+			// Search all $el of descendant "Popover"s
+			const popovers = [this.$el]
+			const searchPortals = (children: Vue[]) => {
+				children.forEach(node => {
+					if (
+						node.$el.nodeName !== '#comment' &&
+						node.$options.name === 'Popover'
+					) {
+						popovers.push(node.$el)
+					}
+					if (node.$children) {
+						searchPortals(node.$children)
+					}
+				})
+			}
+			searchPortals(this.$children)
+
+			const clickedOutside = popovers.every(popover => {
+				// @ts-ignore
+				return e.path.indexOf(popover) === -1
+			})
+
+			if (clickedOutside) {
 				window.removeEventListener('mousedown', onMousedown)
 				this.$emit('update:active', false)
 			}

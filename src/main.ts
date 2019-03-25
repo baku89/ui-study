@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import App from './App.vue'
-import VueRouter from 'vue-router'
+import {glMatrix} from 'gl-matrix'
 
 import router from './router'
+
+glMatrix.setMatrixArrayType(Array)
 
 Vue.config.productionTip = false
 

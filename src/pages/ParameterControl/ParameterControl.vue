@@ -96,6 +96,7 @@ export default class ParameterControl extends Vue {
 	private time!: number
 
 	private renderer!: ISFRenderer
+	private stopRendering!: boolean
 
 	private mounted() {
 		const canvas = this.$refs.canvas as HTMLCanvasElement
@@ -117,6 +118,10 @@ export default class ParameterControl extends Vue {
 		this.time = 0
 
 		const draw = (currentTime: number) => {
+			if (this.stopRendering) {
+				return
+			}
+
 			deltaTime = currentTime - lastTime
 			this.time += (deltaTime * this.speed) / 10000
 			twgl.resizeCanvasToDisplaySize(canvas)
@@ -124,13 +129,13 @@ export default class ParameterControl extends Vue {
 			this.renderer.draw(canvas)
 
 			lastTime = currentTime
-			raf(draw)
 		}
 		draw(performance.now())
 	}
 
 	private beforeDestroy() {
 		this.renderer.cleanup()
+		this.stopRendering = true
 	}
 
 	@Watch('intensity')

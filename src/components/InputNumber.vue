@@ -217,41 +217,41 @@ export default class InputNumber extends Vue {
 		z-index 2
 		input-border-focus-style()
 
-.InputNumber__display, .InputNumber__input
-	input-field-style()
-	width 100%
-	height 100%
-	text-align right
-	font-family var(--font-monospace)
+	&__display, &__input
+		input-field-style()
+		width 100%
+		height 100%
+		text-align right
+		font-family var(--font-monospace)
 
-.InputNumber__display
-	position absolute
-	top 0
-	left 0
-	z-index 5
-	overflow hidden
+	&__display
+		position absolute
+		top 0
+		left 0
+		z-index 5
+		overflow hidden
 
-	.editing > &
-		visibility hidden
+		^[0].editing > &
+			visibility hidden
 
-.InputNumber__label
-	position absolute
-	margin-left -0.05em
-	height 100%
-	color var(--color-border-text)
-	font-size 0.9em
-	line-height $input-height * 1.1
+	&__label
+		position absolute
+		margin-left -0.05em
+		height 100%
+		color var(--color-border-text)
+		font-size 0.9em
+		line-height $input-height * 1.1
 
-.InputNumber__unit
-	margin-right -0.1em
-	margin-left -0.1em
-	color var(--color-border-text)
-	font-size 1em
+	&__unit
+		margin-right -0.1em
+		margin-left -0.1em
+		color var(--color-border-text)
+		font-size 1em
 
-.InputNumber__input
-	opacity 0
+	&__input
+		opacity 0
 
-	.InputNumber.editing > &
-		opacity 1
+		^[0].editing > &
+			opacity 1
 </style>
 

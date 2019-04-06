@@ -84,7 +84,7 @@ export default class InputNumber extends Vue {
 	@Inject({from: 'dragSpeed', default: 0.5}) private readonly dragSpeed!: number
 
 	private get displayValue(): string {
-		return toFixed(this.value, this.precision)
+		return toFixed(this.value, this.precision, !this.isDragging)
 	}
 
 	private get hasMin() {

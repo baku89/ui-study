@@ -5,6 +5,11 @@
 		"name": "Baku Hashimoto",
 		"email": "mail@baku89.com"
 	},
+	"private": true,
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/baku89/ui-study.git"
+	},
 	"scripts": {
 		"serve": "vue-cli-service serve",
 		"build": "vue-cli-service build",

@@ -7,7 +7,7 @@
 			:max="max"
 			:min="min"
 			:labels="labels"
-			:unit="unit"
+			unit="%"
 			@input="onInput"
 		/>
 		<InputIconToggle
@@ -34,7 +34,6 @@ export default class ParamFieldScale extends Vue {
 	@Prop([Number, Array]) private max!: number | number[]
 	@Prop(Number) private precision!: number
 	@Prop(Array) private labels!: string[]
-	@Prop(String) private unit!: string
 	@Prop({type: Boolean, default: null}) private keepProportion!: boolean | null
 
 	private internalKeepProportion: boolean | null = null

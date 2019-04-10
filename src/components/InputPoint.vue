@@ -4,7 +4,7 @@
 			<button
 				class="InputPoint__knob"
 				:dragging="isDragging"
-				ref="drag"
+				ref="knob"
 				@keydown="onKeydown"
 				@keyup="onKeyup"
 			>
@@ -97,8 +97,8 @@ export default class InputPoint extends Vue {
 	private onDragstart(e: {current: vec2}) {
 		this.isDragging = true
 
-		const $drag = this.$refs.drag as HTMLElement
-		this.dragFrom = getDOMCenter($drag)
+		const $knob = this.$refs.knob as HTMLElement
+		this.dragFrom = getDOMCenter($knob)
 
 		this.dragTo[0] = this.dragFrom[0]
 		this.dragTo[1] = this.dragFrom[1]
@@ -109,8 +109,8 @@ export default class InputPoint extends Vue {
 	private onDrag(e: {delta: vec2; current: vec2}) {
 		const newValue = [this.value[0] + e.delta[0], this.value[1] + e.delta[1]]
 
-		const $drag = this.$refs.drag as HTMLElement
-		this.dragFrom = getDOMCenter($drag)
+		const $knob = this.$refs.knob as HTMLElement
+		this.dragFrom = getDOMCenter($knob)
 
 		this.dragTo[0] = e.current[0] - this.knobOffset[0]
 		this.dragTo[1] = e.current[1] - this.knobOffset[1]

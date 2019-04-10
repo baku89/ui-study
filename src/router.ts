@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import ComponentsList from './pages/ComponentsList.vue'
 import ParameterControl from './pages/ParameterControl'
 import TransformationMatrix from './pages/TransformationMatrix'
+import GraphicsOnLisp from './pages/GraphicsOnLisp'
 
 Vue.use(Router)
 
@@ -25,6 +26,11 @@ export default new Router({
 			path: '/transformation-matrix',
 			name: 'transformation-matrix',
 			component: TransformationMatrix
+		},
+		{
+			path: '/graphics-on-lisp',
+			name: 'graphics-on-lisp',
+			component: GraphicsOnLisp
 		}
 	]
 })

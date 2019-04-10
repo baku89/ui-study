@@ -38,7 +38,6 @@ export default class Draggable extends Vue {
 		window.addEventListener('mousemove', this.onMousemove)
 		window.addEventListener('mouseup', this.onMouseup)
 		const event = {
-			origin: this.origin,
 			current: this.origin,
 			delta: this.delta,
 			currentTarget: this.$el,
@@ -64,7 +63,6 @@ export default class Draggable extends Vue {
 		) {
 			this.dragStarted = true
 			const event = {
-				origin: this.origin,
 				current: this.current,
 				delta: this.delta,
 				currentTarget: this.$el,
@@ -80,7 +78,6 @@ export default class Draggable extends Vue {
 			// Fire only when delta is not zero
 			if (this.delta[0] !== 0 || this.delta[1] !== 0) {
 				const event = {
-					origin: this.origin,
 					current: this.current,
 					delta: this.delta,
 					currentTarget: this.$el,
@@ -103,7 +100,6 @@ export default class Draggable extends Vue {
 
 		if (this.dragStarted) {
 			const event = {
-				origin: this.origin,
 				current: this.current,
 				delta: this.delta,
 				currentTarget: this.$el,

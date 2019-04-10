@@ -35,6 +35,10 @@ export default class Drag extends Vue {
 		this.quitDrag()
 	}
 
+	private get boxElement(): Element | null {
+		return this.box ? document.querySelector(this.box) : this.$el
+	}
+
 	private onMousedown(e: Event) {
 		this.setCoord(this.current, e as MouseEvent)
 		vec2.copy(this.prev, this.current)
@@ -95,9 +99,7 @@ export default class Drag extends Vue {
 	}
 
 	private setCoord(coord: vec2, e: MouseEvent) {
-		const {left, top, right, bottom} = (this.box
-			? document.querySelector(this.box)
-			: this.$el)!.getBoundingClientRect()
+		const {left, top, right, bottom} = this.boxElement!.getBoundingClientRect()
 		let x = e.pageX
 		let y = e.pageY
 

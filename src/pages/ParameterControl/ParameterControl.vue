@@ -68,7 +68,6 @@
 
 <script lang="ts">
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import raf from 'raf'
 import * as twgl from 'twgl.js'
 // @ts-ignore
 import {Renderer as ISFRenderer} from 'interactive-shader-format'

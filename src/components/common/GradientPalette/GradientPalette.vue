@@ -1,10 +1,9 @@
 <template>
-	<canvas :id="id" ref="canvas"/>
+	<canvas ref="canvas"/>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
-import uid from 'uid'
 import * as twgl from 'twgl.js'
 
 import {DataColor, DataColorMode} from '@/data'
@@ -64,8 +63,6 @@ const ConstantMax = {
 export default class GradientPalette extends Vue {
 	@Prop(Array) private color!: DataColor
 	@Prop(Array) private varyings!: number[]
-
-	private id: string = uid(10)
 
 	private ctx!: CanvasRenderingContext2D
 	private canvas!: HTMLCanvasElement

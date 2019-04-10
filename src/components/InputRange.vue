@@ -32,7 +32,6 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import Draggable from './common/Draggable.vue'
 import {vec2} from 'gl-matrix'
-import mezr from 'mezr'
 import {lerp, clamp, ratio} from '@/math'
 
 @Component({

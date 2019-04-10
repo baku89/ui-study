@@ -17,28 +17,20 @@
 	},
 	"dependencies": {
 		"brace": "^0.11.1",
-		"change-case": "^3.1.0",
 		"color-convert": "^2.0.0",
 		"fuzzy": "^0.1.3",
 		"gl-matrix": "^3.0.0",
 		"hex-rgb": "^4.0.0",
-		"interactive-shader-format": "^2.9.0",
 		"keycode": "^2.2.0",
 		"keycode-js": "^1.0.4",
-		"mathjs": "^5.8.0",
 		"mezr": "^0.6.2",
-		"mobx": "^5.9.0",
-		"mobx-vue": "^2.0.8",
 		"mouse-event": "^1.0.5",
 		"popper.js": "^1.14.7",
 		"raf": "^3.4.1",
-		"twgl.js": "^4.8.2",
+		"twgl.js": "^4.9.1",
 		"uid": "^0.0.2",
 		"vue": "^2.5.21",
-		"vue-class-component": "^6.0.0",
-		"vue-property-decorator": "^7.0.0",
-		"vue-router": "^3.0.1",
-		"vuedraggable": "^2.18.1"
+		"vue-property-decorator": "^7.0.0"
 	},
 	"devDependencies": {
 		"@types/color-convert": "^1.9.0",
@@ -50,14 +42,21 @@
 		"@vue/cli-plugin-typescript": "^3.3.0",
 		"@vue/cli-service": "^3.3.0",
 		"autoprefixer-stylus": "^0.14.0",
+		"change-case": "^3.1.0",
 		"glslify-loader": "^2.0.0",
+		"interactive-shader-format": "^2.9.0",
+		"mathjs": "^5.9.0",
+		"mobx": "^5.9.4",
+		"mobx-vue": "^2.0.8",
 		"nib": "^1.1.2",
 		"raw-loader": "^1.0.0",
 		"stylus": "^0.54.5",
 		"stylus-loader": "^3.0.2",
 		"tslint-config-prettier": "^1.17.0",
 		"typescript": "^3.0.0",
-		"vue-template-compiler": "^2.5.21"
+		"vue-router": "^3.0.3",
+		"vue-template-compiler": "^2.5.21",
+		"vuedraggable": "^2.20.0"
 	},
 	"license": "MIT"
 }

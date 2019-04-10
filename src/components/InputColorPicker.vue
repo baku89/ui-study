@@ -37,7 +37,6 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 import {clamp} from '@/math'
-import mezr from 'mezr'
 
 import {DataColor, DataColorMode, DataColorElements} from '@/data'
 import {toCSSColor, convertColorElements} from '@/util'

@@ -17,17 +17,22 @@ export default class SvgArrow extends Vue {
 
 	private _sub!: vec2
 	private _lineTo!: vec2
-	private _n!: vec2
+	private _normalized!: vec2
 
 	private created() {
 		this._sub = vec2.create()
 		this._lineTo = vec2.create()
-		this._n = vec2.create()
+		this._normalized = vec2.create()
 	}
 
 	get lineTo(): vec2 {
-		vec2.normalize(this._n, this.sub)
-		vec2.scaleAndAdd(this._lineTo, this.to, this._n, -7)
+		vec2.normalize(this._normalized, this.sub)
+		vec2.scaleAndAdd(
+			this._lineTo,
+			this.to,
+			this._normalized,
+			this.willShowTip ? -7 : 0
+		)
 		return this._lineTo
 	}
 

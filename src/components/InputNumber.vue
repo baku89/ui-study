@@ -1,17 +1,18 @@
 <template>
 	<div class="InputNumber" :class="{editing: isEditing, dragging: isDragging}">
-		<Draggable
-			class="InputNumber__display"
+		<Drag
 			:minDragDistance="3"
 			@dragstart="onDragstart"
 			@drag="onDrag"
 			@dragend="onDragend"
 			@click="onClick"
 		>
-			<div class="InputNumber__label" v-if="label">{{this.label}}</div>
-			{{displayValue}}
-			<span v-if="unit" class="InputNumber__unit">{{unit}}</span>
-		</Draggable>
+			<div class="InputNumber__display">
+				<div class="InputNumber__label" v-if="label">{{this.label}}</div>
+				{{displayValue}}
+				<span v-if="unit" class="InputNumber__unit">{{unit}}</span>
+			</div>
+		</Drag>
 		<input
 			class="InputNumber__input"
 			type="text"
@@ -55,13 +56,13 @@ import KeyCode from 'keycode-js'
 
 import {toFixed} from '@/math'
 
-import Draggable from './common/Draggable.vue'
+import Drag from './common/Drag'
 import Portal from './common/Portal'
 import SvgArrow from './common/SvgArrow.vue'
 
 @Component({
 	components: {
-		Draggable,
+		Drag,
 		Portal,
 		SvgArrow
 	}

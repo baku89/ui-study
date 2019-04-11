@@ -1,17 +1,18 @@
 <template>
 	<div class="InputColorElement" :class="{editing: isEditing, dragging: isDragging}">
-		<Draggable
-			class="InputColorElement__display"
+		<Drag
 			:minDragDistance="3"
 			@dragstart="onDragstart"
 			@drag="onDrag"
 			@dragend="onDragend"
 			@click="onClick"
 		>
-			<div class="InputColorElement__label" v-if="label">{{this.label}}</div>
-			{{element.toFixed(0)}}
-			<span v-if="unit" class="InputColorElement__unit">{{unit}}</span>
-		</Draggable>
+			<div class="InputColorElement__display">
+				<div class="InputColorElement__label" v-if="label">{{this.label}}</div>
+				{{element.toFixed(0)}}
+				<span v-if="unit" class="InputColorElement__unit">{{unit}}</span>
+			</div>
+		</Drag>
 		<input
 			class="InputColorElement__input"
 			type="text"
@@ -47,7 +48,7 @@ import {ratio, clamp, lerp} from '@/math'
 import {DataColorMode, DataColorElements} from '@/data'
 import {toCSSColor} from '@/util'
 
-import Draggable from '@/components/common/Draggable.vue'
+import Drag from '@/components/common/Drag'
 import Portal from '@/components/common/Portal'
 import SvgArrow from '@/components/common/SvgArrow.vue'
 import GradientPalette from '@/components/common/GradientPalette'
@@ -57,7 +58,7 @@ const SLIT_WIDTH = 6
 
 @Component({
 	components: {
-		Draggable,
+		Drag,
 		Portal,
 		SvgArrow,
 		GradientPalette

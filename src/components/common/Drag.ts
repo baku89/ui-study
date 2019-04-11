@@ -8,16 +8,19 @@ export default class Drag extends Vue {
 	@Prop({type: String, default: 'absolute'}) private coord!:
 		| 'absolute'
 		| 'normalized'
+	@Prop({type: Number, default: 0}) private minDragDistance!: number
 	@Prop({type: Boolean, default: false}) private clamp!: boolean
 	@Prop({type: String}) private box!: string
 
 	private dragStarted!: boolean
+	private origin!: vec2
 	private current!: vec2
 	private prev!: vec2
 	private delta!: vec2
 
 	private created() {
 		this.dragStarted = false
+		this.origin = vec2.create()
 		this.current = vec2.create()
 		this.prev = vec2.create()
 		this.delta = vec2.create()
@@ -40,13 +43,29 @@ export default class Drag extends Vue {
 	}
 
 	private onMousedown(e: Event) {
-		this.setCoord(this.current, e as MouseEvent)
+		this.setCoord(this.origin, e as MouseEvent)
+		vec2.copy(this.current, this.origin)
 		vec2.copy(this.prev, this.current)
+		vec2.set(this.delta, 0, 0)
 
 		window.addEventListener('mousemove', this.onMousemove)
 		window.addEventListener('mouseup', this.onMouseup)
 		window.addEventListener('keydown', this.onKeyToggle)
 		window.addEventListener('keyup', this.onKeyToggle)
+
+		// Emit immediately
+		if (this.minDragDistance === 0) {
+			this.dragStarted = true
+			const event = {
+				current: this.current,
+				delta: this.delta,
+				preventDefault: this.quitDrag,
+				originalEvent: e
+			}
+			this.$emit('dragstart', event)
+		} else {
+			this.dragStarted = false
+		}
 	}
 
 	private onKeyToggle(e: KeyboardEvent) {
@@ -77,7 +96,10 @@ export default class Drag extends Vue {
 				originalEvent: e
 			}
 
-			if (!this.dragStarted && vec2.squaredLength(this.current) > 0) {
+			if (
+				!this.dragStarted &&
+				vec2.distance(this.origin, this.current) >= this.minDragDistance
+			) {
 				this.dragStarted = true
 				this.$emit('dragstart', event)
 			}
@@ -90,7 +112,11 @@ export default class Drag extends Vue {
 	}
 
 	private onMouseup(e: Event) {
-		this.$emit('dragend', {originalEvent: e})
+		if (this.dragStarted) {
+			this.$emit('dragend', {originalEvent: e})
+		} else {
+			this.$emit('click', {originalEvent: e})
+		}
 		this.quitDrag()
 	}
 

@@ -10,8 +10,9 @@
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
 		"sourceMap": true,
+		"declaration": true,
+		"declarationDir": "./typings",
 		"baseUrl": ".",
-		"types": ["webpack-env"],
 		"lib": ["esnext", "dom", "dom.iterable", "scripthost"]
 	},
 	"files": ["node_modules/@types/webgl2/index.d.ts"],

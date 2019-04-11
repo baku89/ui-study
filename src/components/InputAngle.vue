@@ -3,7 +3,7 @@
 		<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="onDragend">
 			<button
 				class="InputAngle__knob"
-				dragging="isDragging"
+				:dragging="isDragging"
 				ref="knob"
 				:style="{transform: `rotate(${this.value}deg)`}"
 			/>
@@ -96,7 +96,10 @@ export default class InputAngle extends Vue {
 	&:hover
 		background var(--color-active)
 
-	&.dragging
+	&:focus
+		background var(--color-active)
+
+	&[dragging]
 		top calc(10% - 1px)
 		left calc(10% - 1px)
 		z-index 200

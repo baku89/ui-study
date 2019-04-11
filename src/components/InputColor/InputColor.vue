@@ -140,4 +140,5 @@ export default class InputColor extends Vue {
 <style lang="stylus" scoped>
 .InputColor
 	display flex
+	user-select none
 </style>

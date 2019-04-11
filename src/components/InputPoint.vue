@@ -143,13 +143,13 @@ export default class InputPoint extends Vue {
 	&:hover
 		background var(--color-active)
 
+	&:focus
+		background var(--color-active)
+
 	&[dragging]
 		z-index 200
 		background var(--color-active)
 		box-shadow 0 0 0 1px var(--color-active)
-
-	&:focus
-		background var(--color-active)
 
 .InputPoint__icon
 	position relative

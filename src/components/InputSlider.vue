@@ -1,27 +1,24 @@
 <template>
 	<div class="InputSlider">
-		<Draggable
-			:class="{InputSlider__slit: true, dragging: isDragging}"
-			@dragstart="onDragstart"
-			@drag="onDrag"
-			@dragend="onDragend"
-		>
-			<div class="InputSlider__accum" :style="accumStyles"/>
-			<div :class="{InputSlider__knob: true, exceed}" ref="knob" :style="knobStyles"/>
-		</Draggable>
+		<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="onDragend">
+			<div class="InputSlider__slit" ref="slit" :dragging="isDragging">
+				<div class="InputSlider__accum" :style="accumStyles"/>
+				<div class="InputSlider__knob" :exceeded="isExceeded" ref="knob" :style="knobStyles"/>
+			</div>
+		</Drag>
 	</div>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import Draggable from './common/Draggable.vue'
+import Drag from './common/Drag'
 import {vec2} from 'gl-matrix'
 import mezr from 'mezr'
 import {lerp, clamp, ratio} from '@/math'
 
 @Component({
 	components: {
-		Draggable
+		Drag
 	}
 })
 export default class InputSlider extends Vue {
@@ -55,7 +52,7 @@ export default class InputSlider extends Vue {
 		}
 	}
 
-	private get exceed(): boolean {
+	private get isExceeded(): boolean {
 		return this.value < this.min || this.max < this.value
 	}
 
@@ -65,17 +62,13 @@ export default class InputSlider extends Vue {
 		}
 	}
 
-	private onDragstart(e: {
-		current: vec2
-		currentTarget: HTMLElement
-		originalEvent: MouseEvent
-	}) {
+	private onDragstart(e: {current: vec2; originalEvent: MouseEvent}) {
 		this.isDragging = true
 
 		if (e.originalEvent.target === this.$refs.knob) {
+			// When user click onto the knob circle
 			const {offsetX} = e.originalEvent
 			const half = (this.$refs.knob as HTMLElement).clientWidth / 2
-
 			this.knobOffset = offsetX - half
 		} else {
 			this.knobOffset = 0
@@ -83,8 +76,8 @@ export default class InputSlider extends Vue {
 		}
 	}
 
-	private onDrag(e: {current: vec2; currentTarget: HTMLElement}) {
-		const {left, right} = mezr.rect(e.currentTarget)
+	private onDrag(e: {current: vec2}) {
+		const {left, right} = mezr.rect(this.$refs.slit as HTMLElement)
 		const t = ratio(e.current[0] - this.knobOffset, left, right, true)
 		const value = lerp(this.min, this.max, t)
 
@@ -130,7 +123,7 @@ $size = 1em
 	border-radius 1.5px
 	background var(--color-control)
 
-	:hover > &, .dragging > &
+	:hover > &, [dragging] > &
 		background var(--color-active)
 
 .InputSlider__knob
@@ -148,13 +141,13 @@ $size = 1em
 		border 1px solid var(--color-control)
 		background var(--color-bg) !important
 
-	.InputSlider__slit:hover &, .InputSlider__slit.dragging > &
+	.InputSlider__slit:hover &, .InputSlider__slit[dragging] > &
 		background var(--color-active)
 
-		&.exceed
+		&[exceeded]
 			border-color var(--color-active)
 
-	.InputSlider__slit.dragging > &
+	.InputSlider__slit[dragging] > &
 		box-shadow 0 0 0 1px var(--color-active), 0 0 0 2px var(--color-bg)
 </style>
 

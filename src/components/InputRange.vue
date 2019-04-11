@@ -1,42 +1,42 @@
 <template>
 	<div class="InputRange">
-		<Draggable
-			class="InputRange__slit"
+		<Drag
 			@dragstart="onDragstart"
 			@drag="onDrag"
 			@dragend="onDragend"
 			@mousemove.native="onMousemove"
 			@mouseleave.native="onMouseleave"
-			ref="slit"
 		>
-			<div
-				:class="{InputRange__bar: true, inverted: this.value[0] > this.value[1], dragging: dragMode === 'bar', hover: hoverTarget === 'bar'}"
-				:style="barStyles"
-				ref="bar"
-			/>
-			<div
-				:class="{InputRange__edge: true, first: true, dragging: dragMode === 'first', hover: hoverTarget === 'first'}"
-				:style="firstStyles"
-				ref="first"
-			/>
-			<div
-				:class="{InputRange__edge: true, second: true, dragging: dragMode === 'second', hover: hoverTarget === 'second'}"
-				:style="secondStyles"
-				ref="second"
-			/>
-		</Draggable>
+			<div class="InputRange__slit" ref="slit">
+				<div
+					:class="{InputRange__bar: true, inverted: this.value[0] > this.value[1], dragging: dragMode === 'bar', hover: hoverTarget === 'bar'}"
+					:style="barStyles"
+					ref="bar"
+				/>
+				<div
+					:class="{InputRange__edge: true, first: true, dragging: dragMode === 'first', hover: hoverTarget === 'first'}"
+					:style="firstStyles"
+					ref="first"
+				/>
+				<div
+					:class="{InputRange__edge: true, second: true, dragging: dragMode === 'second', hover: hoverTarget === 'second'}"
+					:style="secondStyles"
+					ref="second"
+				/>
+			</div>
+		</Drag>
 	</div>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import Draggable from './common/Draggable.vue'
+import Drag from './common/Drag'
 import {vec2} from 'gl-matrix'
 import {lerp, clamp, ratio} from '@/math'
 
 @Component({
 	components: {
-		Draggable
+		Drag
 	}
 })
 export default class InputRange extends Vue {
@@ -94,16 +94,12 @@ export default class InputRange extends Vue {
 		this.hoverTarget = null
 	}
 
-	private onDragstart(e: {
-		current: vec2
-		currentTarget: HTMLElement
-		originalEvent: MouseEvent
-	}) {
+	private onDragstart(e: {current: vec2; originalEvent: MouseEvent}) {
 		this.dragMode = this.hoverTarget
 	}
 
-	private onDrag(e: {delta: vec2; currentTarget: HTMLElement}) {
-		const width = (e.currentTarget as HTMLElement).clientWidth
+	private onDrag(e: {delta: vec2}) {
+		const width = (this.$refs.slit as HTMLElement).clientWidth
 
 		let inc = (e.delta[0] / width) * (this.max - this.min)
 
@@ -206,6 +202,7 @@ $bar-width = 0.6em
 	width $bar-width
 	height $bar-width
 	border 1px solid transparent
+	border-radius 0 50% 50% 0
 
 	&:before
 		position absolute
@@ -236,8 +233,6 @@ $bar-width = 0.6em
 
 		&:before
 			left 0
-
-	border-radius 0 50% 50% 0
 </style>
 
 

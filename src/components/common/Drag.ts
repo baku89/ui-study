@@ -65,23 +65,27 @@ export default class Drag extends Vue {
 	private onMousemove(e: Event) {
 		this.setCoord(this.current, e as MouseEvent)
 
-		vec2.sub(this.delta, this.current, this.prev)
+		const hasMoved = !vec2.equals(this.current, this.prev)
 
-		const event = {
-			current: this.current,
-			delta: this.delta,
-			preventDefault: this.quitDrag,
-			originalEvent: e
-		}
+		if (hasMoved) {
+			vec2.sub(this.delta, this.current, this.prev)
 
-		if (!this.dragStarted && vec2.squaredLength(this.current) > 0) {
-			this.dragStarted = true
-			this.$emit('dragstart', event)
-		}
+			const event = {
+				current: this.current,
+				delta: this.delta,
+				preventDefault: this.quitDrag,
+				originalEvent: e
+			}
 
-		if (this.dragStarted) {
-			this.$emit('drag', event)
-			vec2.copy(this.prev, this.current)
+			if (!this.dragStarted && vec2.squaredLength(this.current) > 0) {
+				this.dragStarted = true
+				this.$emit('dragstart', event)
+			}
+
+			if (this.dragStarted) {
+				this.$emit('drag', event)
+				vec2.copy(this.prev, this.current)
+			}
 		}
 	}
 

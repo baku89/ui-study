@@ -1,35 +1,39 @@
 <template>
 	<div class="InputColorPicker">
-		<Draggable
-			:class="{InputColorPicker__sl: true, dragging: isDraggingSL}"
+		<Drag
 			coord="normalized"
-			@dragstart="onDragSL"
-			@drag="onDragSL"
-			@dragend="onDragSL"
+			:clamp="true"
+			@dragstart="onDragSL('dragstart', $event)"
+			@drag="onDragSL('drag', $event)"
+			@dragend="onDragSL('dragend', $event)"
 		>
-			<div class="InputColorPicker__sl-inner">
+			<div class="InputColorPicker__sl" :dragging="isDraggingSL">
+				<div class="InputColorPicker__sl-inner">
+					<GradientPalette
+						class="InputColorPicker__palette"
+						:color="gradientPaletteColor"
+						:varyings="[1, 2]"
+					/>
+					<div class="InputColorPicker__sl-preview" :style="SLPreviewStyles"/>
+				</div>
+			</div>
+		</Drag>
+		<Drag
+			coord="normalized"
+			:clamp="true"
+			@dragstart="onDragHue('dragstart', $event)"
+			@drag="onDragHue('drag', $event)"
+			@dragend="onDragHue('dragend', $event)"
+		>
+			<div class="InputColorPicker__hue" :dragging="isDraggingHue">
 				<GradientPalette
 					class="InputColorPicker__palette"
 					:color="gradientPaletteColor"
-					:varyings="[1, 2]"
+					:varyings="[0]"
 				/>
-				<div class="InputColorPicker__sl-preview" :style="SLPreviewStyles"/>
+				<div class="InputColorPicker__hue-preview" :style="HuePreviewStyles"/>
 			</div>
-		</Draggable>
-		<Draggable
-			:class="{InputColorPicker__hue: true, dragging: isDraggingHue}"
-			coord="normalized"
-			@dragstart="onDragHue"
-			@drag="onDragHue"
-			@dragend="onDragHue"
-		>
-			<GradientPalette
-				class="InputColorPicker__palette"
-				:color="gradientPaletteColor"
-				:varyings="[0]"
-			/>
-			<div class="InputColorPicker__hue-preview" :style="HuePreviewStyles"/>
-		</Draggable>
+		</Drag>
 	</div>
 </template>
 
@@ -42,12 +46,12 @@ import {DataColor, DataColorMode, DataColorElements} from '@/data'
 import {toCSSColor, convertColorElements} from '@/util'
 
 import GradientPalette from '@/components/common/GradientPalette'
-import Draggable from '@/components/common/Draggable.vue'
+import Drag from '@/components/common/Drag'
 
 @Component({
 	components: {
 		GradientPalette,
-		Draggable
+		Drag
 	}
 })
 export default class InputColorPicker extends Vue {
@@ -99,27 +103,37 @@ export default class InputColorPicker extends Vue {
 		}
 	}
 
-	private onDragSL(e: {current: vec2; eventName: string}) {
-		if (e.eventName === 'dragstart') {
+	private onDragSL(
+		type: 'dragstart' | 'drag' | 'dragend',
+		e: {current: vec2; eventName: string}
+	) {
+		if (type === 'dragstart') {
 			this.isDraggingSL = true
-		} else if (e.eventName === 'dragend') {
+		} else if (type === 'dragend') {
 			this.isDraggingSL = false
 		}
 
-		const s = e.current[0] * 100
-		const l = (1 - e.current[1]) * 100
-		this.emitNewHSL(this.hsl[0], s, l)
+		if (type !== 'dragend') {
+			const s = e.current[0] * 100
+			const l = (1 - e.current[1]) * 100
+			this.emitNewHSL(this.hsl[0], s, l)
+		}
 	}
 
-	private onDragHue(e: {current: vec2; eventName: string}) {
-		if (e.eventName === 'dragstart') {
+	private onDragHue(
+		type: 'dragstart' | 'drag' | 'dragend',
+		e: {current: vec2; eventName: string}
+	) {
+		if (type === 'dragstart') {
 			this.isDraggingHue = true
-		} else if (e.eventName === 'dragend') {
+		} else if (type === 'dragend') {
 			this.isDraggingHue = false
 		}
 
-		const h = (1 - e.current[1]) * 360
-		this.emitNewHSL(h, this.hsl[1], this.hsl[2])
+		if (type !== 'dragend') {
+			const h = (1 - e.current[1]) * 360
+			this.emitNewHSL(h, this.hsl[1], this.hsl[2])
+		}
 	}
 
 	private emitNewHSL(h: number, s: number, l: number) {
@@ -136,58 +150,59 @@ export default class InputColorPicker extends Vue {
 .InputColorPicker
 	position relative
 	display flex
+	user-select none
 
-.InputColorPicker__sl, .InputColorPicker__hue
-	overflow hidden
-	box-sizing content-box
-	border 1px solid var(--color-border)
-	border-radius $border-radius
+	&__sl, &__hue
+		overflow hidden
+		box-sizing content-box
+		border 1px solid var(--color-border)
+		border-radius $border-radius
 
-	&.dragging
-		overflow visible
-		cursor none
+		&.dragging
+			overflow visible
+			cursor none
 
-.InputColorPicker__sl
-	position relative
-	flex-grow 1
+	&__sl
+		position relative
+		flex-grow 1
 
-.InputColorPicker__sl-inner
-	position relative
-	padding-top 100%
-	height 0
+	&__sl-inner
+		position relative
+		padding-top 100%
+		height 0
 
-.InputColorPicker__hue
-	position relative
-	margin-left 0.3em
-	width 1em
+	&__hue
+		position relative
+		margin-left 0.3em
+		width 1em
 
-.InputColorPicker__palette
-	position absolute
-	top 0
-	left 0
-	width 100%
-	height 100%
-	border-radius $border-radius
+	&__palette
+		position absolute
+		top 0
+		left 0
+		width 100%
+		height 100%
+		border-radius $border-radius
 
-.InputColorPicker__sl-preview, .InputColorPicker__hue-preview
-	position absolute
-	margin -0.5em 0 0 -0.5em
-	width 1em
-	height 1em
-	border 1px solid var(--color-field)
-	border-radius 50%
-	box-shadow 0 0 0 0.5px var(--color-text)
+	&__sl-preview, &__hue-preview
+		position absolute
+		margin -0.5em 0 0 -0.5em
+		width 1em
+		height 1em
+		border 1px solid var(--color-field)
+		border-radius 50%
+		box-shadow 0 0 0 0.5px var(--color-text)
 
-	.dragging > * > &, .dragging > &
-		z-index 1000
-		margin-top -0.5 * $color-preview-size
-		margin-left -0.5 * $color-preview-size
-		width $color-preview-size
-		height $color-preview-size
-		border none
-		box-shadow none
+		.dragging > * > &, .dragging > &
+			z-index 1000
+			margin-top -0.5 * $color-preview-size
+			margin-left -0.5 * $color-preview-size
+			width $color-preview-size
+			height $color-preview-size
+			border none
+			box-shadow none
 
-.InputColorPicker__hue-preview
-	left 50%
+	&__hue-preview
+		left 50%
 </style>
 

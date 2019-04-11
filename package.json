@@ -13,12 +13,12 @@
 	"files": [
 		"lib"
 	],
-	"main": "dist/perceptive-design.common.js",
+	"main": "lib/perceptive-design.common.js",
 	"scripts": {
 		"serve": "vue-cli-service serve",
 		"build": "vue-cli-service build",
 		"lint": "vue-cli-service lint",
-		"build:lib": "vue-cli-service build --target lib --formats commonjs --name perceptive-pdesign ./src/index.ts --dest lib"
+		"build:lib": "vue-cli-service build --target lib --formats commonjs --name perceptive-design ./src/index.ts --dest lib"
 	},
 	"dependencies": {},
 	"devDependencies": {
@@ -57,9 +57,10 @@
 		"typescript": "^3.0.0",
 		"uid": "^0.0.2",
 		"vue": "^2.6.10",
+		"vue-class-component": "^7.0.2",
 		"vue-property-decorator": "^8.1.0",
 		"vue-router": "^3.0.3",
-		"vue-template-compiler": "^2.5.21",
+		"vue-template-compiler": "^2.6.10",
 		"vuedraggable": "^2.20.0"
 	},
 	"license": "MIT"

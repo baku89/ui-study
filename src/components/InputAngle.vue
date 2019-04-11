@@ -1,12 +1,13 @@
 <template>
 	<div class="InputAngle">
-		<Draggable
-			:class="{InputAngle__knob: true, dragging: isDragging}"
-			@dragstart="onDragstart"
-			@drag="onDrag"
-			@dragend="onDragend"
-			:style="{transform: `rotate(${this.value}deg)`}"
-		/>
+		<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="onDragend">
+			<button
+				class="InputAngle__knob"
+				dragging="isDragging"
+				ref="knob"
+				:style="{transform: `rotate(${this.value}deg)`}"
+			/>
+		</Drag>
 		<Portal>
 			<svg class="svg-overlay" v-if="isDragging">
 				<line class="guide" :x1="dragFrom[0]" :y1="dragFrom[1]" :x2="dragTo[0]" :y2="dragTo[1]"></line>
@@ -21,13 +22,13 @@ import {Component, Prop, Vue} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 import {getDOMCenter, RoteryDrag} from '@/util'
 
-import Draggable from './common/Draggable.vue'
+import Drag from './common/Drag'
 import Portal from './common/Portal'
 import SvgArcArrow from './common/SvgArcArrow.vue'
 
 @Component({
 	components: {
-		Draggable,
+		Drag,
 		Portal,
 		SvgArcArrow
 	}
@@ -46,19 +47,21 @@ export default class InputAngle extends Vue {
 		this.roteryDrag.minDistance = 10
 	}
 
-	private onDragstart(e: {current: number[]; currentTarget: HTMLElement}) {
+	private onDragstart(e: {current: number[]}) {
 		this.isDragging = true
 
-		this.dragFrom = getDOMCenter(e.currentTarget)
+		const $knob = this.$refs.knob as HTMLElement
+		this.dragFrom = getDOMCenter($knob)
 		this.dragTo[0] = e.current[0]
 		this.dragTo[1] = e.current[1]
 
 		this.roteryDrag.start(this.value, this.dragFrom, this.dragTo)
 	}
 
-	private onDrag(e: {delta: vec2; current: vec2; currentTarget: HTMLElement}) {
+	private onDrag(e: {delta: vec2; current: vec2}) {
 		// Update HUD
-		this.dragFrom = getDOMCenter(e.currentTarget)
+		const $knob = this.$refs.knob as HTMLElement
+		this.dragFrom = getDOMCenter($knob)
 		this.dragTo[0] = e.current[0]
 		this.dragTo[1] = e.current[1]
 

@@ -10,6 +10,9 @@
 		"type": "git",
 		"url": "https://github.com/baku89/ui-study.git"
 	},
+	"files": [
+		"lib"
+	],
 	"main": "dist/perceptive-design.common.js",
 	"scripts": {
 		"serve": "vue-cli-service serve",

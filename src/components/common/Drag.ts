@@ -13,10 +13,15 @@ export default class Drag extends Vue {
 	@Prop({type: String}) private box!: string
 
 	private dragStarted!: boolean
+
 	private origin!: vec2
 	private current!: vec2
 	private prev!: vec2
 	private delta!: vec2
+
+	private absOrigin!: vec2
+	private absCurrent!: vec2
+	private absPrev!: vec2
 
 	private created() {
 		this.dragStarted = false
@@ -24,6 +29,10 @@ export default class Drag extends Vue {
 		this.current = vec2.create()
 		this.prev = vec2.create()
 		this.delta = vec2.create()
+
+		this.absOrigin = vec2.create()
+		this.absCurrent = vec2.create()
+		this.absPrev = vec2.create()
 
 		this.onMousedown = this.onMousedown.bind(this)
 		this.onMousemove = this.onMousemove.bind(this)
@@ -43,19 +52,16 @@ export default class Drag extends Vue {
 	}
 
 	private onMousedown(e: Event) {
-		this.setCoord(this.origin, e as MouseEvent)
-		vec2.copy(this.current, this.origin)
-		vec2.copy(this.prev, this.current)
-		vec2.set(this.delta, 0, 0)
+		vec2.set(this.absOrigin, (e as MouseEvent).pageX, (e as MouseEvent).pageY)
 
-		window.addEventListener('mousemove', this.onMousemove)
-		window.addEventListener('mouseup', this.onMouseup)
-		window.addEventListener('keydown', this.onKeyToggle)
-		window.addEventListener('keyup', this.onKeyToggle)
-
-		// Emit immediately
 		if (this.minDragDistance === 0) {
+			// Emit immediately
 			this.dragStarted = true
+			this.toSpecifiedCoord(this.origin, this.absOrigin)
+			vec2.copy(this.current, this.origin)
+			vec2.copy(this.prev, this.origin)
+			vec2.set(this.delta, 0, 0)
+
 			const event = {
 				current: this.current,
 				delta: this.delta,
@@ -64,8 +70,15 @@ export default class Drag extends Vue {
 			}
 			this.$emit('dragstart', event)
 		} else {
+			// Otherwise, wait
+			vec2.copy(this.absPrev, this.absOrigin)
 			this.dragStarted = false
 		}
+
+		window.addEventListener('mousemove', this.onMousemove)
+		window.addEventListener('mouseup', this.onMouseup)
+		window.addEventListener('keydown', this.onKeyToggle)
+		window.addEventListener('keyup', this.onKeyToggle)
 	}
 
 	private onKeyToggle(e: KeyboardEvent) {
@@ -82,32 +95,47 @@ export default class Drag extends Vue {
 	}
 
 	private onMousemove(e: Event) {
-		this.setCoord(this.current, e as MouseEvent)
+		vec2.set(this.absCurrent, (e as MouseEvent).pageX, (e as MouseEvent).pageY)
 
-		const hasMoved = !vec2.equals(this.current, this.prev)
+		const hasMoved = !vec2.equals(this.absCurrent, this.absPrev)
 
 		if (hasMoved) {
-			vec2.sub(this.delta, this.current, this.prev)
+			// Detect dragstart
+			if (!this.dragStarted) {
+				const dragDistance = vec2.distance(this.absOrigin, this.absCurrent)
+				if (dragDistance >= this.minDragDistance) {
+					// Re-assign origin
+					this.toSpecifiedCoord(this.current, this.absCurrent)
+					vec2.copy(this.origin, this.current)
+					vec2.copy(this.prev, this.current)
 
-			const event = {
-				current: this.current,
-				delta: this.delta,
-				preventDefault: this.quitDrag,
-				originalEvent: e
-			}
+					const event = {
+						current: this.current,
+						delta: this.delta,
+						preventDefault: this.quitDrag,
+						originalEvent: e
+					}
 
-			if (
-				!this.dragStarted &&
-				vec2.distance(this.origin, this.current) >= this.minDragDistance
-			) {
-				this.dragStarted = true
-				this.$emit('dragstart', event)
-			}
+					this.dragStarted = true
+					this.$emit('dragstart', event)
+				}
+			} else {
+				// Detect drag
+				this.toSpecifiedCoord(this.current, this.absCurrent)
+				vec2.sub(this.delta, this.current, this.prev)
 
-			if (this.dragStarted) {
+				const event = {
+					current: this.current,
+					delta: this.delta,
+					preventDefault: this.quitDrag,
+					originalEvent: e
+				}
+
 				this.$emit('drag', event)
 				vec2.copy(this.prev, this.current)
 			}
+		} else {
+			vec2.copy(this.absPrev, this.absCurrent)
 		}
 	}
 
@@ -128,10 +156,10 @@ export default class Drag extends Vue {
 		window.removeEventListener('keyup', this.onKeyToggle)
 	}
 
-	private setCoord(coord: vec2, e: MouseEvent) {
+	private toSpecifiedCoord(coord: vec2, absCoord: vec2) {
 		const {left, top, right, bottom} = this.boxElement!.getBoundingClientRect()
-		let x = e.pageX
-		let y = e.pageY
+		let x = absCoord[0]
+		let y = absCoord[1]
 
 		if (this.clamp) {
 			x = clamp(x, left, right)

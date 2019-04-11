@@ -11,7 +11,7 @@ import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import Popper from 'popper.js'
 import keycode from 'keycode'
 
-import Portal from '@/components/common/Portal'
+import Portal from './Portal'
 
 @Component({
 	components: {Portal}

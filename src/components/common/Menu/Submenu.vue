@@ -40,10 +40,10 @@
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import keycode from 'keycode'
 
-import {clamp, cycleMod} from '@/math'
+import {clamp, cycleMod} from '../../../math'
 
-import Popover from '@/components/common/Popover.vue'
-import Icon from '@/components/common/Icon.vue'
+import Popover from '../../../components/common/Popover.vue'
+import Icon from '../../../components/common/Icon.vue'
 import MenuItem from './MenuItem'
 
 @Component({

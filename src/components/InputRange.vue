@@ -31,7 +31,7 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import Drag from './common/Drag'
 import {vec2} from 'gl-matrix'
-import {lerp, clamp, ratio} from '@/math'
+import {lerp, clamp, ratio} from '../math'
 
 @Component({
 	components: {

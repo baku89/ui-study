@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import Components from '@/components'
+import Components from '../../components'
 
 @Component({
 	components: Components

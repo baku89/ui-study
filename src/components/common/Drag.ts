@@ -1,7 +1,7 @@
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 
-import {clamp} from '@/math'
+import {clamp} from '../../math'
 
 @Component
 export default class Drag extends Vue {

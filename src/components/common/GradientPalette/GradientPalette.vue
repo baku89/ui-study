@@ -6,7 +6,7 @@
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import * as twgl from 'twgl.js'
 
-import {DataColor, DataColorMode} from '@/data'
+import {DataColor, DataColorMode} from '../../../data'
 
 let renderCanvas: HTMLCanvasElement
 let gl: WebGLRenderingContext

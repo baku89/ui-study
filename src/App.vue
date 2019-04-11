@@ -19,7 +19,7 @@
 <script lang="ts">
 import {Component, Vue, Watch} from 'vue-property-decorator'
 
-import Home from '@/pages/Home'
+import Home from './pages/Home'
 
 @Component({
 	components: {Home}

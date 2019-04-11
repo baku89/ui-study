@@ -8,7 +8,7 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import {lerp} from '@/math'
+import {lerp} from '../math'
 
 import InputNumber from './InputNumber.vue'
 import InputIconButton from './InputIconButton.vue'

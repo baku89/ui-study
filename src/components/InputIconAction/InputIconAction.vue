@@ -17,9 +17,9 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import Popover from '@/components/common/Popover.vue'
-import Menu from '@/components/common/Menu'
-import Icon from '@/components/common/Icon.vue'
+import Popover from '../common/Popover.vue'
+import Menu from '../common/Menu'
+import Icon from '../common/Icon.vue'
 
 type ValueType = string | number
 

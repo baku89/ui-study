@@ -1,7 +1,7 @@
 import mezr from 'mezr'
 import colorConvert from 'color-convert'
 import RoteryDrag from './RoteryDrag'
-import {DataColor, DataColorMode, DataColorElements} from '@/data'
+import {DataColor, DataColorMode, DataColorElements} from '../data'
 
 function getDOMCenter(el: HTMLElement): number[] {
 	const {top, right, bottom, left} = mezr.rect(el)

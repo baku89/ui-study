@@ -8,8 +8,8 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import ButtonWrapper from '@/components/common/ButtonWrapper'
-import Icon from '@/components/common/Icon.vue'
+import ButtonWrapper from './common/ButtonWrapper'
+import Icon from './common/Icon.vue'
 
 @Component({
 	components: {ButtonWrapper, Icon}

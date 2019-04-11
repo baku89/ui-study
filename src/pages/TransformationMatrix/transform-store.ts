@@ -1,18 +1,18 @@
 import {Vue} from 'vue-property-decorator'
 import {observable, action, computed} from 'mobx'
-import {mat2d, vec2, vec3} from 'gl-matrix'
-import {toRadians, toDegrees} from '@/math'
+import {mat2d, vec2} from 'gl-matrix'
 import math from 'mathjs'
 
 import TransformStackStore from './transform-stack-store'
 
+import {toDegrees} from '../../math'
 import {
 	DataTransformValue,
 	DataTransformType,
 	DataTransform,
 	DataTransformType1DList,
 	DataTransformType2DList
-} from '@/data'
+} from '../../data'
 
 export default class TransformStore {
 	// Observable

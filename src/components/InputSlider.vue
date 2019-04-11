@@ -11,10 +11,12 @@
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import Drag from './common/Drag'
 import {vec2} from 'gl-matrix'
 import mezr from 'mezr'
-import {lerp, clamp, ratio} from '@/math'
+
+import {lerp, clamp, ratio} from '../math'
+
+import Drag from './common/Drag'
 
 @Component({
 	components: {

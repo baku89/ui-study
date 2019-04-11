@@ -131,13 +131,13 @@ import {
 	DataTransformType2DList,
 	DataTransformStack,
 	DataTransformValue
-} from '@/data'
-import {convertColorElements} from '@/util'
-import {toRadians, ratio} from '@/math'
+} from '../../data'
+import {convertColorElements} from '../../util'
+import {toRadians, ratio} from '../../math'
 
-import Components from '@/components'
+import Components from '../../components'
 import Param from './Param.vue'
-import Drag from '@/components/common/Drag'
+import Drag from '../../components/common/Drag'
 import TransformStore from './transform-store'
 
 @Observer
@@ -453,11 +453,11 @@ export default class TransformationMatrix extends Vue {
 	private toFieldValue(stack: DataTransformStack) {
 		if (stack.type.includes('scale')) {
 			return stack.value instanceof Array
-				? stack.value.map(v => v * 100)
+				? stack.value.map((v: number) => v * 100)
 				: stack.value * 100
 		} else if (stack.type.includes('translate')) {
 			return stack.value instanceof Array
-				? stack.value.map(v => v * 10)
+				? stack.value.map((v: number) => v * 10)
 				: stack.value * 10
 		} else {
 			return stack.value

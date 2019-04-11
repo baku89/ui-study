@@ -128,10 +128,10 @@
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator'
 
-import {toCSSColor} from '@/util'
-import {DataColor} from '@/data'
+import {toCSSColor} from '../util'
+import {DataColor} from '../data'
 
-import Components from '@/components'
+import Components from '../components'
 
 @Component({
 	components: Components,

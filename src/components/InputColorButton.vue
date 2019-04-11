@@ -30,13 +30,13 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import colorConvert from 'color-convert'
 
-import {toCSSColor, convertColorElements} from '@/util'
-import {DataColor, DataColorMode, DataColorElements} from '@/data'
+import {toCSSColor, convertColorElements} from '../util'
+import {DataColor, DataColorMode, DataColorElements} from '../data'
 
 import InputColor from './InputColor'
 import InputColorPicker from './InputColorPicker.vue'
 import InputDropdown from './InputDropdown.vue'
-import Popover from '@/components/common/Popover.vue'
+import Popover from '../components/common/Popover.vue'
 
 @Component({
 	components: {

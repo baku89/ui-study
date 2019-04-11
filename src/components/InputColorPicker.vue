@@ -40,13 +40,13 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
-import {clamp} from '@/math'
+import {clamp} from '../math'
 
-import {DataColor, DataColorMode, DataColorElements} from '@/data'
-import {toCSSColor, convertColorElements} from '@/util'
+import {DataColor, DataColorMode, DataColorElements} from '../data'
+import {toCSSColor, convertColorElements} from '../util'
 
-import GradientPalette from '@/components/common/GradientPalette'
-import Drag from '@/components/common/Drag'
+import GradientPalette from './common/GradientPalette'
+import Drag from './common/Drag'
 
 @Component({
 	components: {

@@ -49,12 +49,10 @@
 
 <script lang="ts">
 import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
-import {parseNumber} from '@/math'
-import {getDOMCenter} from '@/util'
+import {parseNumber, toFixed} from '../math'
+import {getDOMCenter} from '../util'
 import {vec2} from 'gl-matrix'
 import KeyCode from 'keycode-js'
-
-import {toFixed} from '@/math'
 
 import Drag from './common/Drag'
 import Portal from './common/Portal'

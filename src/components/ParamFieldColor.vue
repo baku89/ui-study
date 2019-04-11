@@ -8,7 +8,7 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import {DataColor} from '@/data'
+import {DataColor} from '../data'
 
 import InputColor from './InputColor'
 import InputColorButton from './InputColorButton.vue'

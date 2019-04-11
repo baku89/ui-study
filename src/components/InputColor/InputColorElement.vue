@@ -42,16 +42,14 @@ import {Component, Prop, Vue} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 import KeyCode from 'keycode-js'
 
-import {parseNumber} from '@/math'
-import {getDOMCenter} from '@/util'
-import {ratio, clamp, lerp} from '@/math'
-import {DataColorMode, DataColorElements} from '@/data'
-import {toCSSColor} from '@/util'
+import {getDOMCenter, toCSSColor} from '../../util'
+import {parseNumber, ratio, clamp, lerp} from '../../math'
+import {DataColorMode, DataColorElements} from '../../data'
 
-import Drag from '@/components/common/Drag'
-import Portal from '@/components/common/Portal'
-import SvgArrow from '@/components/common/SvgArrow.vue'
-import GradientPalette from '@/components/common/GradientPalette'
+import Drag from '../common/Drag'
+import Portal from '../common/Portal'
+import SvgArrow from '../common/SvgArrow.vue'
+import GradientPalette from '../common/GradientPalette'
 
 const SLIT_HEIGHT = 200
 const SLIT_WIDTH = 6

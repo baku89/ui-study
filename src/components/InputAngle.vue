@@ -20,7 +20,7 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
-import {getDOMCenter, RoteryDrag} from '@/util'
+import {getDOMCenter, RoteryDrag} from '../util'
 
 import Drag from './common/Drag'
 import Portal from './common/Portal'

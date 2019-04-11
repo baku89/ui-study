@@ -74,9 +74,9 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
 import InputColorElement from './InputColorElement.vue'
-import InputString from '@/components/InputString.vue'
+import InputString from '../InputString.vue'
 
-import {DataColor, DataColorMode, DataColorInfo} from '@/data'
+import {DataColor, DataColorMode, DataColorInfo} from '../../data'
 
 @Component({
 	components: {InputColorElement, InputString}

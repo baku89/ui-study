@@ -1,7 +1,11 @@
 import {observable, computed} from 'mobx'
-import {toRadians} from '@/math'
+import {toRadians} from '../../math'
 import {mat2d} from 'gl-matrix'
-import {DataTransformValue, DataTransformStack, DataTransformType} from '@/data'
+import {
+	DataTransformValue,
+	DataTransformStack,
+	DataTransformType
+} from '../../data'
 
 export default class TransformStackStore {
 	@observable public type!: DataTransformType

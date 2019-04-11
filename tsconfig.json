@@ -12,9 +12,6 @@
 		"sourceMap": true,
 		"baseUrl": ".",
 		"types": ["webpack-env"],
-		"paths": {
-			"@/*": ["src/*"]
-		},
 		"lib": ["esnext", "dom", "dom.iterable", "scripthost"]
 	},
 	"files": ["node_modules/@types/webgl2/index.d.ts"],

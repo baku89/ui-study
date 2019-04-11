@@ -72,10 +72,10 @@ import * as twgl from 'twgl.js'
 // @ts-ignore
 import {Renderer as ISFRenderer} from 'interactive-shader-format'
 
-import {DataColor} from '@/data'
-import {convertColorElements} from '@/util'
+import {DataColor} from '../../data'
+import {convertColorElements} from '../../util'
 
-import Components from '@/components'
+import Components from '../../components'
 
 @Component({
 	components: Components

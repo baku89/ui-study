@@ -10,7 +10,7 @@
 <script lang="ts">
 import {Component, Prop, Watch, Vue} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
-import {mod} from '@/math'
+import {mod} from '../../math'
 
 @Component
 export default class SvgArcArrow extends Vue {

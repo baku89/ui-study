@@ -1,5 +1,5 @@
 import {vec2} from 'gl-matrix'
-import {lerp} from '@/math'
+import {lerp} from '../math'
 
 // Returns +1, -1, 0
 function isTraversedAxisMinusX(

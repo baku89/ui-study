@@ -35,7 +35,7 @@ import {vec2} from 'gl-matrix'
 
 import Drag from './common/Drag'
 import SvgArrow from './common/SvgArrow.vue'
-import {getDOMCenter} from '@/util'
+import {getDOMCenter} from '../util'
 
 interface ArrowKeyInfo {
 	delta: number[]

@@ -1,13 +1,12 @@
 <template>
 	<div class="InputRange">
-		<Drag
-			@dragstart="onDragstart"
-			@drag="onDrag"
-			@dragend="onDragend"
-			@mousemove.native="onMousemove"
-			@mouseleave.native="onMouseleave"
-		>
-			<div class="InputRange__slit" ref="slit">
+		<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="onDragend">
+			<div
+				class="InputRange__slit"
+				ref="slit"
+				@mousemove.native="onMousemove"
+				@mouseleave.native="onMouseleave"
+			>
 				<div
 					:class="{InputRange__bar: true, inverted: this.value[0] > this.value[1], dragging: dragMode === 'bar', hover: hoverTarget === 'bar'}"
 					:style="barStyles"

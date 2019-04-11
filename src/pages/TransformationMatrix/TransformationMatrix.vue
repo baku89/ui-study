@@ -137,7 +137,7 @@ import {toRadians, ratio} from '@/math'
 
 import Components from '@/components'
 import Param from './Param.vue'
-import Drag from './Drag'
+import Drag from '@/components/common/Drag'
 import TransformStore from './transform-store'
 
 @Observer

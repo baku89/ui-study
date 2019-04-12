@@ -2,6 +2,7 @@
 	<div class="InputColorElement" :editing="isEditing" :dragging="isDragging">
 		<Drag
 			:minDragDistance="3"
+			detectDirection="vertical"
 			@dragstart="onDragstart"
 			@drag="onDrag"
 			@dragend="onDragend"

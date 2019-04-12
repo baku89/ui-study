@@ -1,6 +1,6 @@
 <template>
 	<div class="InputSlider">
-		<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="onDragend">
+		<Drag detectDirection="horizontal" @dragstart="onDragstart" @drag="onDrag" @dragend="onDragend">
 			<div class="InputSlider__slit" ref="slit" :dragging="isDragging">
 				<div class="InputSlider__accum" :style="accumStyles"/>
 				<div class="InputSlider__knob" :exceeded="isExceeded" ref="knob" :style="knobStyles"/>

@@ -9,6 +9,10 @@ export default class Drag extends Vue {
 	@Prop({type: String, default: 'absolute'}) private coord!:
 		| 'absolute'
 		| 'normalized'
+	@Prop({type: String, default: 'uniform'}) private detectDirection!:
+		| 'uniform'
+		| 'horizontal'
+		| 'vertical'
 	@Prop({type: Number, default: 0}) private minDragDistance!: number
 	@Prop({type: Boolean, default: false}) private clamp!: boolean
 	@Prop({type: String}) private box!: string
@@ -65,6 +69,7 @@ export default class Drag extends Vue {
 			(e as MouseEvent).clientX,
 			(e as MouseEvent).clientY
 		)
+		vec2.copy(this.absPrev, this.absOrigin)
 
 		if (this.minDragDistance === 0) {
 			// Emit immediately
@@ -83,7 +88,6 @@ export default class Drag extends Vue {
 			this.$emit('dragstart', event)
 		} else {
 			// Otherwise, wait
-			vec2.copy(this.absPrev, this.absOrigin)
 			this.dragStarted = false
 		}
 
@@ -113,8 +117,14 @@ export default class Drag extends Vue {
 			(e as MouseEvent).clientY
 		)
 
-		// Only process when the mouse coordinate has moved more than 1px
-		const hasMoved = !vec2.equals(this.absCurrent, this.absPrev)
+		// Only process when the mouse coordinate has moved more than 1px in specified direction
+		let hasMoved
+		if (this.detectDirection === 'uniform') {
+			hasMoved = !vec2.equals(this.absCurrent, this.absPrev)
+		} else {
+			const detectIndex = this.detectDirection === 'horizontal' ? 0 : 1
+			hasMoved = this.absCurrent[detectIndex] !== this.absPrev[detectIndex]
+		}
 
 		if (hasMoved) {
 			// Detect dragstart when minDragDistance > 0
@@ -151,9 +161,9 @@ export default class Drag extends Vue {
 				this.$emit('drag', event)
 				vec2.copy(this.prev, this.current)
 			}
-		} else {
-			vec2.copy(this.absPrev, this.absCurrent)
 		}
+
+		vec2.copy(this.absPrev, this.absCurrent)
 	}
 
 	private onMouseup(e: Event) {

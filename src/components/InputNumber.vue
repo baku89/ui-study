@@ -2,6 +2,7 @@
 	<div class="InputNumber" :editing="isEditing" :dragging="isDragging">
 		<Drag
 			:minDragDistance="3"
+			detectDirection="horizontal"
 			@dragstart="onDragstart"
 			@drag="onDrag"
 			@dragend="onDragend"

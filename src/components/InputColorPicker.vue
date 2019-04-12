@@ -20,6 +20,7 @@
 		</Drag>
 		<Drag
 			coord="normalized"
+			detectDirection="vertical"
 			:clamp="true"
 			@dragstart="onDragHue('dragstart', $event)"
 			@drag="onDragHue('drag', $event)"

@@ -1,6 +1,12 @@
 <template>
 	<div class="InputRange">
-		<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="onDragend">
+		<Drag
+			coord="normalized"
+			detectDirection="horizontal"
+			@dragstart="onDragstart"
+			@drag="onDrag"
+			@dragend="onDragend"
+		>
 			<div class="InputRange__slit" ref="slit" @mousemove="onMousemove" @mouseleave="onMouseleave">
 				<div
 					class="InputRange__bar"
@@ -99,11 +105,8 @@ export default class InputRange extends Vue {
 		this.dragMode = this.hoverTarget
 	}
 
-	private onDrag(e: {delta: vec2}) {
-		const width = (this.$refs.slit as HTMLElement).clientWidth
-
-		let inc = (e.delta[0] / width) * (this.max - this.min)
-
+	private onDrag(e: {current: vec2; delta: vec2}) {
+		let inc = e.delta[0] * (this.max - this.min)
 		// Limit the value of inc in advance not to exceed min/max
 		if (this.dragMode === 'bar') {
 			if (inc < 0 && this.lower + inc < this.min) {
@@ -120,20 +123,16 @@ export default class InputRange extends Vue {
 				inc = this.lower - this.upper
 			}
 		}
-
 		const newValue = Array.from(this.value)
-
 		if (this.dragMode === 'bar' || this.dragMode === 'first') {
 			newValue[0] += inc
 		}
 		if (this.dragMode === 'bar' || this.dragMode === 'second') {
 			newValue[1] += inc
 		}
-
 		// Clamp
 		newValue[0] = clamp(newValue[0], this.min, this.max)
 		newValue[1] = clamp(newValue[1], this.min, this.max)
-
 		if (inc !== 0) {
 			this.$emit('input', newValue)
 		}

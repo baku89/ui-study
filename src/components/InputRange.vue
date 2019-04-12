@@ -106,8 +106,7 @@ export default class InputRange extends Vue {
 
 	private onDragstart() {
 		this.dragMode = this.hoverTarget
-
-		this.dragStartValue = Array.from(this.value) as [number, number]
+		this.dragStartValue = [this.value[0], this.value[1]]
 	}
 
 	private onDrag(e: {current: vec2; originalEvent: MouseEvent}) {

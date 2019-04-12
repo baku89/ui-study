@@ -24,8 +24,8 @@
 			@keydown="onKeydown"
 			ref="input"
 		>
-		<Portal>
-			<svg class="svg-overlay" v-if="isDragging">
+		<Portal v-if="isDragging">
+			<svg class="svg-overlay">
 				<SvgArrow :from="dragFrom" :to="dragTo"></SvgArrow>
 				<line
 					v-if="min !== undefined"

@@ -8,8 +8,8 @@
 				:style="{transform: `rotate(${this.value}deg)`}"
 			/>
 		</Drag>
-		<Portal>
-			<svg class="svg-overlay" v-if="isDragging">
+		<Portal v-if="isDragging">
+			<svg class="svg-overlay">
 				<line class="guide" :x1="dragFrom[0]" :y1="dragFrom[1]" :x2="dragTo[0]" :y2="dragTo[1]"></line>
 				<SvgArcArrow :center="dragFrom" :radius="100" :start="0" :end="this.value"></SvgArcArrow>
 			</svg>

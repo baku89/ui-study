@@ -27,8 +27,8 @@
 			@keydown="onKeydown"
 			ref="input"
 		>
-		<Portal>
-			<div class="svg-overlay" v-if="isDragging">
+		<Portal v-if="isDragging">
+			<div class="svg-overlay">
 				<GradientPalette
 					class="InputColorElement__slit"
 					:color="color"

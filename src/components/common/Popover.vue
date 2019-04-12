@@ -1,6 +1,6 @@
 <template>
-	<Portal @initial-parent="setOriginalParent" @destroy="killPopper">
-		<div v-if="active" class="Popover">
+	<Portal v-if="active" @initial-parent="setOriginalParent" @destroy="killPopper">
+		<div class="Popover">
 			<slot/>
 		</div>
 	</Portal>

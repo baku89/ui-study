@@ -38,7 +38,6 @@ export default class InputSlider extends Vue {
 	@Inject({from: 'keySlower', default: 'alt'})
 	private readonly keySlower!: string
 
-	// private knobOffset!: number
 	private dragStartValue!: number
 
 	private isDragging: boolean = false

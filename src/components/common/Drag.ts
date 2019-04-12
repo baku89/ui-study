@@ -1,4 +1,5 @@
 import {Component, Vue, Prop} from 'vue-property-decorator'
+import mouse from 'mouse-event'
 import {vec2} from 'gl-matrix'
 
 import {clamp} from '../../math'
@@ -54,6 +55,11 @@ export default class Drag extends Vue {
 	}
 
 	private onMousedown(e: Event) {
+		// Only react when left button clicked
+		if (mouse.buttons(e as MouseEvent) !== 1) {
+			return
+		}
+
 		vec2.set(
 			this.absOrigin,
 			(e as MouseEvent).clientX,

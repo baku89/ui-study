@@ -69,12 +69,6 @@ export default class InputSlider extends Vue {
 		return this.value < this.min || this.max < this.value
 	}
 
-	private get zeroStyles(): object {
-		return {
-			left: `${ratio(0, this.min, this.max) * 100}%`
-		}
-	}
-
 	private onDragstart(e: {current: vec2; originalEvent: MouseEvent}) {
 		this.isDragging = true
 
@@ -96,11 +90,6 @@ export default class InputSlider extends Vue {
 		}
 
 		let newValue = this.dragStartValue + inc
-
-		// const $slit = this.$refs.slit as HTMLElement
-		// const {left, right} = $slit.getBoundingClientRect()
-		// const t = ratio(e.current[0] - this.knobOffset, left, right, true)
-		// let newValue = lerp(this.min, this.max, t)
 
 		if (this.step !== undefined) {
 			newValue = quantize(newValue, this.step)
@@ -178,5 +167,3 @@ export default class InputSlider extends Vue {
 		^[0]__slit[dragging] > &
 			box-shadow 0 0 0 1px var(--color-active), 0 0 0 2px var(--color-bg)
 </style>
-
-

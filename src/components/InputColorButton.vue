@@ -10,8 +10,8 @@
 						class="InputColorButton__mode"
 						theme="simple"
 						:value="value[0]"
-						:values="['hsl', 'rgb', 'hex']"
-						:labels="['HSL', 'RGB', 'HEX']"
+						:values="['hsl', 'rgb', 'hsv', 'hex']"
+						:labels="['HSL', 'RGB', 'HSV', 'HEX']"
 						@input="onChangeMode"
 					/>
 					<InputColor

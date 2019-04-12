@@ -1,34 +1,62 @@
 // Color
-type DataColorMode = 'hex' | 'hexa' | 'rgb' | 'rgba' | 'hsl' | 'hsl'
+type DataColorMode =
+	| 'hex'
+	| 'hexa'
+	| 'rgb'
+	| 'rgba'
+	| 'hsl'
+	| 'hsla'
+	| 'hsv'
+	| 'hsva'
 type DataColorElements = string | number[] | [string, number]
 type DataColor = [DataColorMode, DataColorElements]
 
-const DataColorInfo = {
-	maxValue: {
-		hex: [NaN],
-		hexa: [NaN, 100],
-		rgb: [255, 255, 255],
-		rgba: [255, 255, 255, 100],
-		hsl: [360, 100, 100],
-		hsla: [360, 100, 100, 100]
-	},
-	label: {
-		hex: [''],
-		hexa: ['', 'A'],
-		rgb: ['R', 'G', 'B'],
-		rgba: ['R', 'G', 'B', 'A'],
-		hsl: ['H', 'S', 'L'],
-		hsla: ['H', 'S', 'L', 'A']
-	},
-	unit: {
-		hex: [''],
-		hexa: ['', '%'],
-		rgb: [''],
-		rgba: ['', '', '', '%'],
-		hsl: ['°', '%', '%'],
-		hsla: ['°', '%', '%', '%']
-	}
+interface DataColorModeInfo {
+	maxValue: number[]
+	label: string[]
+	unit: string[]
 }
+
+const DataColorInfo = new Map<DataColorMode, DataColorModeInfo>([
+	['hex', {maxValue: [NaN], label: [''], unit: ['']}],
+	['hexa', {maxValue: [NaN, 100], label: ['', 'A'], unit: ['', '%']}],
+	[
+		'rgb',
+		{maxValue: [255, 255, 255], label: ['R', 'G', 'B'], unit: ['', '', '']}
+	],
+	[
+		'rgba',
+		{
+			maxValue: [255, 255, 255, 100],
+			label: ['R', 'G', 'B', 'A'],
+			unit: ['', '', '', '%']
+		}
+	],
+	[
+		'hsl',
+		{maxValue: [360, 100, 100], label: ['H', 'S', 'L'], unit: ['°', '%', '%']}
+	],
+	[
+		'hsla',
+		{
+			maxValue: [360, 100, 100, 100],
+			label: ['H', 'S', 'L', 'A'],
+			unit: ['°', '%', '%', '%']
+		}
+	],
+	[
+		'hsv',
+		{maxValue: [360, 100, 100], label: ['H', 'S', 'V'], unit: ['°', '%', '%']}
+	],
+	[
+		'hsva',
+		{
+			maxValue: [360, 100, 100, 100],
+			label: ['H', 'S', 'V', 'A'],
+			unit: ['°', '%', '%', '%']
+		}
+	]
+])
 
 // Transform
 type DataTransformType1D =

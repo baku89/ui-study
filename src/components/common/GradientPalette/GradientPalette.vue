@@ -45,18 +45,12 @@ function getModeIndex(mode: DataColorMode, varyings: number[]): number {
 		case 'rgb':
 			index += 20
 			break
+		case 'hsv':
+			index += 30
+			break
 	}
 
 	return index
-}
-
-const ConstantMax = {
-	rg: 255,
-	gb: 255,
-	br: 255,
-	hs: 100,
-	sl: 360,
-	lh: 100
 }
 
 @Component

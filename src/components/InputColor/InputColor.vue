@@ -87,17 +87,17 @@ export default class InputColor extends Vue {
 
 	private get elementMax(): number[] {
 		const mode = this.value[0]
-		return DataColorInfo.maxValue[mode]
+		return DataColorInfo.get(mode)!.maxValue
 	}
 
 	private get elementLabels(): string[] {
 		const mode = this.value[0]
-		return DataColorInfo.label[mode]
+		return DataColorInfo.get(mode)!.label
 	}
 
 	private get elementUnits(): Array<string | undefined> {
 		const mode = this.value[0]
-		return DataColorInfo.unit[mode]
+		return DataColorInfo.get(mode)!.unit
 	}
 
 	private get hasAlpha(): boolean {

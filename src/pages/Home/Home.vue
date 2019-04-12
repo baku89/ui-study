@@ -10,7 +10,7 @@
 				>Baku Hashimoto</a> has been developing since 2019.
 				The several demos showing below explain the way of thinking behind Perceptive Design and how it actually works.
 			</p>
-			<p class="highlight">
+			<!-- <p class="highlight">
 				<em>Dear Adobe Creative Residency Team,</em>
 				<br>Though I am planning to develop functional software for vector graphics/motion design,
 				I am also trying to consider the future of design tool at the level of fundamental UI/UX.
@@ -19,7 +19,7 @@
 				just like how tube colors had encouraged Impressionism.
 				In this age, I think something new expression yields from an intersection of artistic &amp; technical mind sets.
 				And, I am convinced that to create a tool can be a way to be creative as much as to focus on a specific work with just using ready-made software.
-			</p>
+			</p>-->
 		</section>
 
 		<PageLink

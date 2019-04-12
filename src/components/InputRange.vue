@@ -1,7 +1,8 @@
 <template>
 	<div class="InputRange">
 		<Drag
-			coord="normalized"
+			measure="normalized"
+			coordinate="relative"
 			detectDirection="horizontal"
 			@dragstart="onDragstart"
 			@drag="onDrag"
@@ -54,6 +55,8 @@ export default class InputRange extends Vue {
 	private hoverTarget: 'bar' | 'first' | 'second' | null = null
 	private dragMode: 'bar' | 'first' | 'second' | null = null
 
+	private dragStartValue!: [number, number]
+
 	get lower() {
 		return Math.min(this.value[0], this.value[1])
 	}
@@ -103,37 +106,60 @@ export default class InputRange extends Vue {
 
 	private onDragstart() {
 		this.dragMode = this.hoverTarget
+
+		this.dragStartValue = Array.from(this.value) as [number, number]
 	}
 
-	private onDrag(e: {current: vec2; delta: vec2}) {
-		let inc = e.delta[0] * (this.max - this.min)
-		// Limit the value of inc in advance not to exceed min/max
-		if (this.dragMode === 'bar') {
-			if (inc < 0 && this.lower + inc < this.min) {
-				inc = -(this.lower - this.min)
-			} else if (this.upper + inc > this.max) {
-				inc = this.max - this.upper
-			}
-		} else if (this.dragMode === 'first') {
-			if (0 < inc && this.upper < this.lower + inc) {
-				inc = this.upper - this.lower
+	private onDrag(e: {current: vec2; originalEvent: MouseEvent}) {
+		let inc = e.current[0] * (this.max - this.min)
+
+		const isSymmetrical = e.originalEvent.altKey
+		const middle = isSymmetrical
+			? lerp(this.dragStartValue[0], this.dragStartValue[1], 0.5)
+			: 0
+
+		let incMin = this.min - this.dragStartValue[0]
+		let incMax = this.max - this.dragStartValue[1]
+
+		if (this.dragMode === 'first') {
+			if (isSymmetrical) {
+				incMax = middle - this.dragStartValue[0]
+			} else {
+				incMax = this.dragStartValue[1] - this.dragStartValue[0]
 			}
 		} else if (this.dragMode === 'second') {
-			if (inc < 0 && this.upper + inc < this.lower) {
-				inc = this.lower - this.upper
+			if (isSymmetrical) {
+				incMin = middle - this.dragStartValue[1]
+			} else {
+				incMin = this.dragStartValue[0] - this.dragStartValue[1]
 			}
 		}
-		const newValue = Array.from(this.value)
-		if (this.dragMode === 'bar' || this.dragMode === 'first') {
-			newValue[0] += inc
-		}
-		if (this.dragMode === 'bar' || this.dragMode === 'second') {
-			newValue[1] += inc
-		}
-		// Clamp
-		newValue[0] = clamp(newValue[0], this.min, this.max)
-		newValue[1] = clamp(newValue[1], this.min, this.max)
+
+		inc = clamp(inc, incMin, incMax)
+
 		if (inc !== 0) {
+			const newValue = Array.from(this.dragStartValue)
+
+			// dragMode | bar | 1st | 2nd
+			// ---------+-----+-----+-----
+			//   isSym  | +/+ | +/- | -/+
+			//  !isSym  | +/+ | +/o | o/+
+
+			if (this.dragMode === 'bar') {
+				newValue[0] += inc
+				newValue[1] += inc
+			} else if (this.dragMode === 'first') {
+				newValue[0] += inc
+				newValue[1] += isSymmetrical ? -inc : 0
+			} else {
+				newValue[0] += isSymmetrical ? -inc : 0
+				newValue[1] += inc
+			}
+
+			// Clamp
+			newValue[0] = clamp(newValue[0], this.min, newValue[1])
+			newValue[1] = clamp(newValue[1], newValue[0], this.max)
+
 			this.$emit('input', newValue)
 		}
 	}

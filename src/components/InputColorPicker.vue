@@ -1,7 +1,7 @@
 <template>
 	<div class="InputColorPicker">
 		<Drag
-			coord="normalized"
+			measure="normalized"
 			:clamp="true"
 			@dragstart="onDragSV('dragstart', $event)"
 			@drag="onDragSV('drag', $event)"
@@ -19,7 +19,7 @@
 			</div>
 		</Drag>
 		<Drag
-			coord="normalized"
+			measure="normalized"
 			detectDirection="vertical"
 			:clamp="true"
 			@dragstart="onDragHue('dragstart', $event)"

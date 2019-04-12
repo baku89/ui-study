@@ -96,61 +96,60 @@ export default class InputSlider extends Vue {
 .InputSlider
 	position relative
 	height 2em
+	$size = 1em
 
-$size = 1em
+	&__slit
+		position absolute
+		top 0
+		right 0.5 * $size
+		left 0.5 * $size
+		height 100%
 
-.InputSlider__slit
-	position absolute
-	top 0
-	right 0.5 * $size
-	left 0.5 * $size
-	height 100%
+		&:before
+			position absolute
+			top 50%
+			right 0
+			left 0
+			display block
+			margin-top -0.5px
+			height 1px
+			background var(--color-control)
+			content ' '
 
-	&:before
+	&__accum
 		position absolute
 		top 50%
-		right 0
-		left 0
-		display block
-		margin-top -0.5px
-		height 1px
+		margin-top -1.5px
+		height 3px
+		border-radius 1.5px
 		background var(--color-control)
-		content ' '
 
-.InputSlider__accum
-	position absolute
-	top 50%
-	margin-top -1.5px
-	height 3px
-	border-radius 1.5px
-	background var(--color-control)
+		:hover > &, [dragging] > &
+			background var(--color-active)
 
-	:hover > &, [dragging] > &
-		background var(--color-active)
+	&__knob
+		position absolute
+		top 50%
+		margin-top -0.5 * $size
+		margin-left -0.5 * $size
+		width $size
+		height $size
+		border-radius 50%
+		background var(--color-control)
+		box-shadow 0 0 0 1px var(--color-bg)
 
-.InputSlider__knob
-	position absolute
-	top 50%
-	margin-top -0.5 * $size
-	margin-left -0.5 * $size
-	width $size
-	height $size
-	border-radius 50%
-	background var(--color-control)
-	box-shadow 0 0 0 1px var(--color-bg)
+		&.exceed
+			border 1px solid var(--color-control)
+			background var(--color-bg) !important
 
-	&.exceed
-		border 1px solid var(--color-control)
-		background var(--color-bg) !important
+		^[0]__slit:hover &, ^[0]__slit[dragging] > &
+			background var(--color-active)
 
-	.InputSlider__slit:hover &, .InputSlider__slit[dragging] > &
-		background var(--color-active)
+			&[exceeded]
+				border-color var(--color-active)
 
-		&[exceeded]
-			border-color var(--color-active)
-
-	.InputSlider__slit[dragging] > &
-		box-shadow 0 0 0 1px var(--color-active), 0 0 0 2px var(--color-bg)
+		^[0]__slit[dragging] > &
+			box-shadow 0 0 0 1px var(--color-active), 0 0 0 2px var(--color-bg)
 </style>
 
 

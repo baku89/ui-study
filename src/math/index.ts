@@ -41,11 +41,17 @@ function parseNumber(str: string): number {
 	return parseFloat(str)
 }
 
-function toFixed(value: number, precision: number, omitZeros: boolean = true): string {
+function toFixed(
+	value: number,
+	precision: number,
+	omitZeros: boolean = true
+): string {
 	const fixed = (+value).toFixed(precision)
 	return fixed === '0'
 		? fixed
-		: omitZeros ? fixed.replace(/^(.+\.[1-9]*)0+$/, '$1').replace(/\.$/, '') : fixed
+		: omitZeros
+		? fixed.replace(/^(.+\.[1-9]*)0+$/, '$1').replace(/\.$/, '')
+		: fixed
 }
 
 function toRadians(degrees: number) {

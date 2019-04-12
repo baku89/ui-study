@@ -113,6 +113,7 @@ html, body
 		width 100%
 		height $title-bar-height
 		background #222222
+		user-select none
 
 	&__hamburger, &__settings
 		position absolute

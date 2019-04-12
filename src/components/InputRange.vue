@@ -37,10 +37,11 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator'
+import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import Drag from './common/Drag'
 import {vec2} from 'gl-matrix'
 import {lerp, clamp, ratio} from '../math'
+import keypressed from '../util/keypressed'
 
 @Component({
 	components: {
@@ -51,6 +52,12 @@ export default class InputRange extends Vue {
 	@Prop({type: Array, required: true}) private value!: [number, number]
 	@Prop({type: Number, required: true}) private min!: number
 	@Prop({type: Number, required: true}) private max!: number
+
+	@Inject({from: 'keySymmetry', default: 's'})
+	private readonly keySymmetry!: string
+
+	@Inject({from: 'keySlower', default: 'alt'})
+	private readonly keySlower!: string
 
 	private hoverTarget: 'bar' | 'first' | 'second' | null = null
 	private dragMode: 'bar' | 'first' | 'second' | null = null
@@ -109,13 +116,15 @@ export default class InputRange extends Vue {
 		this.dragStartValue = [this.value[0], this.value[1]]
 	}
 
-	private onDrag(e: {current: vec2; originalEvent: MouseEvent}) {
+	private onDrag(e: {current: vec2}) {
+		const isSymmetrical = keypressed(this.keySymmetry)
+		const middle = lerp(this.dragStartValue[0], this.dragStartValue[1], 0.5)
+
 		let inc = e.current[0] * (this.max - this.min)
 
-		const isSymmetrical = e.originalEvent.altKey
-		const middle = isSymmetrical
-			? lerp(this.dragStartValue[0], this.dragStartValue[1], 0.5)
-			: 0
+		if (keypressed(this.keySlower)) {
+			inc *= 0.1
+		}
 
 		let incMin = this.min - this.dragStartValue[0]
 		let incMax = this.max - this.dragStartValue[1]

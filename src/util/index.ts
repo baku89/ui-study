@@ -1,5 +1,6 @@
 import colorConvert from 'color-convert'
 import RoteryDrag from './RoteryDrag'
+import keypressed from './keypressed'
 import {DataColor, DataColorMode, DataColorElements} from '../data'
 
 function getDOMCenter(el: HTMLElement): number[] {
@@ -60,4 +61,4 @@ function convertColorElements(
 	}
 }
 
-export {getDOMCenter, toCSSColor, convertColorElements, RoteryDrag}
+export {getDOMCenter, toCSSColor, convertColorElements, RoteryDrag, keypressed}

@@ -1,6 +1,12 @@
 <template>
 	<div class="InputSlider">
-		<Drag detectDirection="horizontal" @dragstart="onDragstart" @drag="onDrag" @dragend="onDragend">
+		<Drag
+			detectDirection="horizontal"
+			measure="normalized"
+			@dragstart="onDragstart"
+			@drag="onDrag"
+			@dragend="onDragend"
+		>
 			<div class="InputSlider__slit" ref="slit" :dragging="isDragging">
 				<div class="InputSlider__accum" :style="accumStyles"/>
 				<div class="InputSlider__knob" :exceeded="isExceeded" ref="knob" :style="knobStyles"/>
@@ -10,12 +16,13 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator'
+import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 
 import {lerp, clamp, ratio, quantize} from '../math'
 
 import Drag from './common/Drag'
+import {keypressed} from '../util'
 
 @Component({
 	components: {
@@ -28,7 +35,11 @@ export default class InputSlider extends Vue {
 	@Prop({type: Number, required: true}) private max!: number
 	@Prop(Number) private step!: number
 
-	private knobOffset!: number
+	@Inject({from: 'keySlower', default: 'alt'})
+	private readonly keySlower!: string
+
+	// private knobOffset!: number
+	private dragStartValue!: number
 
 	private isDragging: boolean = false
 
@@ -68,25 +79,34 @@ export default class InputSlider extends Vue {
 		this.isDragging = true
 
 		if (e.originalEvent.target === this.$refs.knob) {
-			// When user click onto the knob circle
-			const {offsetX} = e.originalEvent
-			const half = (this.$refs.knob as HTMLElement).clientWidth / 2
-			this.knobOffset = offsetX - half
+			this.dragStartValue = this.value
 		} else {
-			this.knobOffset = 0
-			this.onDrag(e)
+			const newValue = lerp(this.min, this.max, e.current[0])
+			this.dragStartValue = newValue
+			this.$emit('input', newValue)
 		}
 	}
 
 	private onDrag(e: {current: vec2}) {
-		const $slit = this.$refs.slit as HTMLElement
-		const {left, right} = $slit.getBoundingClientRect()
-		const t = ratio(e.current[0] - this.knobOffset, left, right, true)
-		let newValue = lerp(this.min, this.max, t)
+		const originX = ratio(this.dragStartValue, this.min, this.max)
+		let inc = (e.current[0] - originX) * (this.max - this.min)
+
+		if (keypressed(this.keySlower)) {
+			inc *= 0.1
+		}
+
+		let newValue = this.dragStartValue + inc
+
+		// const $slit = this.$refs.slit as HTMLElement
+		// const {left, right} = $slit.getBoundingClientRect()
+		// const t = ratio(e.current[0] - this.knobOffset, left, right, true)
+		// let newValue = lerp(this.min, this.max, t)
 
 		if (this.step !== undefined) {
 			newValue = quantize(newValue, this.step)
 		}
+
+		newValue = clamp(newValue, this.min, this.max)
 
 		if (this.value !== newValue) {
 			this.$emit('input', newValue)

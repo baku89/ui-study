@@ -6,9 +6,12 @@ import {clamp} from '../../math'
 
 @Component
 export default class Drag extends Vue {
-	@Prop({type: String, default: 'absolute'}) private coord!:
-		| 'absolute'
+	@Prop({type: String, default: 'pixel'}) private measure!:
+		| 'pixel'
 		| 'normalized'
+	@Prop({type: String, default: 'absolute'}) private coordinate!:
+		| 'absolute'
+		| 'relative'
 	@Prop({type: String, default: 'uniform'}) private detectDirection!:
 		| 'uniform'
 		| 'horizontal'
@@ -64,11 +67,7 @@ export default class Drag extends Vue {
 			return
 		}
 
-		vec2.set(
-			this.absOrigin,
-			(e as MouseEvent).clientX,
-			(e as MouseEvent).clientY
-		)
+		this.setAbsCoordByMouseEvent(this.absOrigin, e as MouseEvent)
 		vec2.copy(this.absPrev, this.absOrigin)
 
 		if (this.minDragDistance === 0) {
@@ -76,7 +75,9 @@ export default class Drag extends Vue {
 			this.dragStarted = true
 			this.toSpecifiedCoord(this.origin, this.absOrigin)
 			vec2.copy(this.current, this.origin)
-			vec2.copy(this.prev, this.origin)
+			if (this.coordinate === 'relative') {
+				vec2.set(this.current, 0, 0)
+			}
 			vec2.set(this.delta, 0, 0)
 
 			const event = {
@@ -86,6 +87,7 @@ export default class Drag extends Vue {
 				originalEvent: e
 			}
 			this.$emit('dragstart', event)
+			vec2.copy(this.prev, this.current)
 		} else {
 			// Otherwise, wait
 			this.dragStarted = false
@@ -111,11 +113,7 @@ export default class Drag extends Vue {
 	}
 
 	private onMousemove(e: Event) {
-		vec2.set(
-			this.absCurrent,
-			(e as MouseEvent).clientX,
-			(e as MouseEvent).clientY
-		)
+		this.setAbsCoordByMouseEvent(this.absCurrent, e as MouseEvent)
 
 		// Only process when the mouse coordinate has moved more than 1px in specified direction
 		let hasMoved
@@ -131,10 +129,13 @@ export default class Drag extends Vue {
 			if (!this.dragStarted) {
 				const dragDistance = vec2.distance(this.absOrigin, this.absCurrent)
 				if (dragDistance >= this.minDragDistance) {
-					// Re-assign origin
-					this.toSpecifiedCoord(this.current, this.absCurrent)
-					vec2.copy(this.origin, this.current)
-					vec2.copy(this.prev, this.current)
+					// Re-assign origin and emit
+					this.toSpecifiedCoord(this.origin, this.absCurrent)
+					vec2.copy(this.current, this.origin)
+					if (this.coordinate === 'relative') {
+						vec2.set(this.current, 0, 0)
+					}
+					vec2.set(this.delta, 0, 0)
 
 					const event = {
 						current: this.current,
@@ -145,10 +146,14 @@ export default class Drag extends Vue {
 
 					this.dragStarted = true
 					this.$emit('dragstart', event)
+					vec2.copy(this.prev, this.origin)
 				}
 			} else {
-				// Detect drag
+				// Detect drag and emit
 				this.toSpecifiedCoord(this.current, this.absCurrent)
+				if (this.coordinate === 'relative') {
+					vec2.sub(this.current, this.current, this.origin)
+				}
 				vec2.sub(this.delta, this.current, this.prev)
 
 				const event = {
@@ -183,17 +188,32 @@ export default class Drag extends Vue {
 		window.removeEventListener('keyup', this.onKeyToggle)
 	}
 
+	private setAbsCoordByMouseEvent(coord: vec2, e: MouseEvent) {
+		let x = e.clientX
+		let y = e.clientY
+
+		if (this.clamp) {
+			const {
+				left,
+				top,
+				right,
+				bottom
+			} = this.boxElement!.getBoundingClientRect()
+			x = clamp(x, left, right)
+			y = clamp(y, top, bottom)
+		}
+
+		vec2.set(coord, x, y)
+	}
+
 	private toSpecifiedCoord(coord: vec2, absCoord: vec2) {
 		const {left, top, right, bottom} = this.boxElement!.getBoundingClientRect()
 		let x = absCoord[0]
 		let y = absCoord[1]
 
-		if (this.clamp) {
-			x = clamp(x, left, right)
-			y = clamp(y, top, bottom)
-		}
+		// Omit clamping since absCoord has already clamped in setAbsCoordByMouseEvent() if necessary
 
-		if (this.coord === 'normalized') {
+		if (this.measure === 'normalized') {
 			x = (x - left) / (right - left)
 			y = (y - top) / (bottom - top)
 		}

@@ -29,13 +29,13 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator'
+import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import keycode from 'keycode'
 import {vec2} from 'gl-matrix'
 
 import Drag from './common/Drag'
 import SvgArrow from './common/SvgArrow.vue'
-import {getDOMCenter} from '../util'
+import {getDOMCenter, keypressed} from '../util'
 
 interface ArrowKeyInfo {
 	delta: number[]
@@ -64,6 +64,11 @@ export default class InputPoint extends Vue {
 	private dragFrom: number[] = [0, 0]
 	private dragTo: number[] = [0, 0]
 
+	@Inject({from: 'keyFaster', default: 'shift'})
+	private readonly keyFaster!: string
+	@Inject({from: 'keySlower', default: 'alt'})
+	private readonly keySlower!: string
+
 	// UI
 	private ui: {
 		keyArrowAngle: null | number
@@ -78,7 +83,11 @@ export default class InputPoint extends Vue {
 		if (info !== undefined) {
 			e.preventDefault()
 
-			const multiplier = e.shiftKey ? 10 : e.altKey ? 0.1 : 1
+			const multiplier = keypressed(this.keyFaster)
+				? 10
+				: keypressed(this.keySlower)
+				? 0.1
+				: 1
 			const newValue = [
 				this.value[0] + info.delta[0] * multiplier,
 				this.value[1] + info.delta[1] * multiplier

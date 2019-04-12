@@ -42,11 +42,11 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
+import {Component, Prop, Vue, Watch, Inject} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 import keycode from 'keycode'
 
-import {getDOMCenter, toCSSColor} from '../../util'
+import {getDOMCenter, toCSSColor, keypressed} from '../../util'
 import {parseNumber, ratio, clamp, lerp} from '../../math'
 import {
 	DataColorMode,
@@ -85,6 +85,9 @@ export default class InputColorElement extends Vue {
 
 	private updatedRecently: boolean = false
 	private updatedTimer!: NodeJS.Timer
+
+	@Inject({from: 'keyFaster', default: 'shift'})
+	private readonly keyFaster!: string
 
 	get mode(): DataColorMode {
 		return this.color[0]
@@ -127,7 +130,7 @@ export default class InputColorElement extends Vue {
 		// Otherwise, reset the field with original value
 		if (!isNaN(value)) {
 			value = clamp(value, 0, this.info.max[this.varying])
-			this.$emit('input', value)
+			this.$emit('update:element', value)
 		} else {
 			input.value = this.element.toFixed(0)
 		}
@@ -141,16 +144,14 @@ export default class InputColorElement extends Vue {
 		if (key === 'up' || key === 'down') {
 			let inc = key === 'up' ? 1 : -1
 
-			if (e.shiftKey) {
+			if (keypressed(this.keyFaster)) {
 				inc *= 10
-			} else if (e.altKey) {
-				inc /= 10
 			}
 
 			let newElement = this.element + inc
 
 			newElement = clamp(newElement, 0, this.info.max[this.varying])
-			this.$emit('input', newElement)
+			this.$emit('update:element', newElement)
 		}
 	}
 

@@ -51,7 +51,7 @@
 <script lang="ts">
 import {Component, Prop, Vue, Inject, Watch} from 'vue-property-decorator'
 import {parseNumber, toFixed, quantize} from '../math'
-import {getDOMCenter} from '../util'
+import {getDOMCenter, keypressed} from '../util'
 import {vec2} from 'gl-matrix'
 import keycode from 'keycode'
 
@@ -86,6 +86,10 @@ export default class InputNumber extends Vue {
 	private updatedTimer!: NodeJS.Timer
 
 	@Inject({from: 'dragSpeed', default: 0.5}) private readonly dragSpeed!: number
+	@Inject({from: 'keyFaster', default: 'shift'})
+	private readonly keyFaster!: string
+	@Inject({from: 'keySlower', default: 'alt'})
+	private readonly keySlower!: string
 
 	private get displayValue(): string {
 		return toFixed(this.value, this.precision, !this.updatedRecently)
@@ -143,14 +147,15 @@ export default class InputNumber extends Vue {
 
 	private onKeydown(e: KeyboardEvent) {
 		const key = keycode(e)
+
 		if (key === 'up' || key === 'down') {
 			let inc = key === 'up' ? 1 : -1
 
 			if (this.hasStep) {
 				inc *= this.step
-			} else if (e.shiftKey) {
+			} else if (keypressed(this.keyFaster)) {
 				inc *= 10
-			} else if (e.altKey) {
+			} else if (keypressed(this.keySlower)) {
 				inc /= 10
 			}
 

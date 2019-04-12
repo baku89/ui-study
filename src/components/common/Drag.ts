@@ -35,6 +35,7 @@ export default class Drag extends Vue {
 		this.absPrev = vec2.create()
 
 		this.onMousedown = this.onMousedown.bind(this)
+		this.onKeyToggle = this.onKeyToggle.bind(this)
 		this.onMousemove = this.onMousemove.bind(this)
 		this.onMouseup = this.onMouseup.bind(this)
 	}
@@ -44,6 +45,7 @@ export default class Drag extends Vue {
 	}
 
 	private beforeDestroy() {
+		this.$el.removeEventListener('mousedown', this.onMousedown)
 		this.quitDrag()
 	}
 
@@ -97,10 +99,11 @@ export default class Drag extends Vue {
 	private onMousemove(e: Event) {
 		vec2.set(this.absCurrent, (e as MouseEvent).pageX, (e as MouseEvent).pageY)
 
+		// Only process when the mouse coordinate has moved more than 1px
 		const hasMoved = !vec2.equals(this.absCurrent, this.absPrev)
 
 		if (hasMoved) {
-			// Detect dragstart
+			// Detect dragstart when minDragDistance > 0
 			if (!this.dragStarted) {
 				const dragDistance = vec2.distance(this.absOrigin, this.absCurrent)
 				if (dragDistance >= this.minDragDistance) {

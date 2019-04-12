@@ -1,5 +1,5 @@
 <template>
-	<div class="InputColorElement" :class="{editing: isEditing, dragging: isDragging}">
+	<div class="InputColorElement" :editing="isEditing" :dragging="isDragging">
 		<Drag
 			:minDragDistance="3"
 			@dragstart="onDragstart"
@@ -40,7 +40,7 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
-import KeyCode from 'keycode-js'
+import keycode from 'keycode'
 
 import {getDOMCenter, toCSSColor} from '../../util'
 import {parseNumber, ratio, clamp, lerp} from '../../math'
@@ -116,13 +116,15 @@ export default class InputColorElement extends Vue {
 		this.isEditing = false
 	}
 
-	private onKeydown({keyCode, shiftKey, altKey}: KeyboardEvent) {
-		if (keyCode === KeyCode.KEY_UP || keyCode === KeyCode.KEY_DOWN) {
-			let inc = keyCode === KeyCode.KEY_UP ? 1 : -1
+	private onKeydown(e: KeyboardEvent) {
+		const key = keycode(e)
 
-			if (shiftKey) {
+		if (key === 'up' || key === 'down') {
+			let inc = key === 'up' ? 1 : -1
+
+			if (e.shiftKey) {
 				inc *= 10
-			} else if (altKey) {
+			} else if (e.altKey) {
 				inc /= 10
 			}
 
@@ -192,59 +194,59 @@ export default class InputColorElement extends Vue {
 		z-index 2
 		input-border-hover-style()
 
-	&.editing, &.dragging
+	&[editing], &[dragging]
 		z-index 2
 		input-border-focus-style()
 
-.InputColorElement__display, .InputColorElement__input
-	input-field-style()
-	width 100%
-	height 100%
-	text-align right
-	font-family var(--font-monospace)
+	&__display, &__input
+		input-field-style()
+		width 100%
+		height 100%
+		text-align right
+		font-family var(--font-monospace)
 
-.InputColorElement__display
-	position absolute
-	top 0
-	left 0
-	z-index 5
-	overflow hidden
+	&__display
+		position absolute
+		top 0
+		left 0
+		z-index 5
+		overflow hidden
 
-	.InputColorElement.editing > &
-		visibility hidden
+		^[0][editing] > &
+			visibility hidden
 
-.InputColorElement__label
-	position absolute
-	margin-left -0.05em
-	height 100%
-	color var(--color-border-text)
-	font-size 0.9em
-	line-height $input-height * (1 / @font-size)
+	&__label
+		position absolute
+		margin-left -0.05em
+		height 100%
+		color var(--color-border-text)
+		font-size 0.9em
+		line-height $input-height * (1 / @font-size)
 
-.InputColorElement__unit
-	margin-right -0.1em
-	margin-left -0.1em
-	color var(--color-border-text)
-	font-size 1em
+	&__unit
+		margin-right -0.1em
+		margin-left -0.1em
+		color var(--color-border-text)
+		font-size 1em
 
-.InputColorElement__input
-	opacity 0
+	&__input
+		opacity 0
 
-	.editing > &
-		opacity 1
+		^[0][editing] > &
+			opacity 1
 
-.InputColorElement__slit
-	position absolute
-	width 3px
-	height 100px
-	border-radius 1.5px
+	&__slit
+		position absolute
+		width 3px
+		height 100px
+		border-radius 1.5px
 
-.InputColorElement__preview
-	position absolute
-	margin-top -0.5 * $color-preview-size
-	margin-left -0.5 * $color-preview-size
-	width $color-preview-size
-	height $color-preview-size
-	border-radius 50%
+	&__preview
+		position absolute
+		margin-top -0.5 * $color-preview-size
+		margin-left -0.5 * $color-preview-size
+		width $color-preview-size
+		height $color-preview-size
+		border-radius 50%
 </style>
 

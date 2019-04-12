@@ -52,7 +52,7 @@ import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import {parseNumber, toFixed} from '../math'
 import {getDOMCenter} from '../util'
 import {vec2} from 'gl-matrix'
-import KeyCode from 'keycode-js'
+import keycode from 'keycode'
 
 import Drag from './common/Drag'
 import Portal from './common/Portal'
@@ -129,13 +129,14 @@ export default class InputNumber extends Vue {
 		window.addEventListener('mousedown', forceBlur)
 	}
 
-	private onKeydown({keyCode, shiftKey, altKey}: KeyboardEvent) {
-		if (keyCode === KeyCode.KEY_UP || keyCode === KeyCode.KEY_DOWN) {
-			let inc = keyCode === KeyCode.KEY_UP ? 1 : -1
+	private onKeydown(e: KeyboardEvent) {
+		const key = keycode(e)
+		if (key === 'up' || key === 'down') {
+			let inc = key === 'up' ? 1 : -1
 
-			if (shiftKey) {
+			if (e.shiftKey) {
 				inc *= 10
-			} else if (altKey) {
+			} else if (e.altKey) {
 				inc /= 10
 			}
 

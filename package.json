@@ -44,7 +44,6 @@
 		"hex-rgb": "^4.0.0",
 		"interactive-shader-format": "^2.9.0",
 		"keycode": "^2.2.0",
-		"keycode-js": "^1.0.4",
 		"mathjs": "^5.9.0",
 		"mezr": "^0.6.2",
 		"mobx": "^5.9.4",

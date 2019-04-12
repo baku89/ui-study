@@ -1,24 +1,26 @@
 <template>
 	<div class="InputRange">
 		<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="onDragend">
-			<div
-				class="InputRange__slit"
-				ref="slit"
-				@mousemove.native="onMousemove"
-				@mouseleave.native="onMouseleave"
-			>
+			<div class="InputRange__slit" ref="slit" @mousemove="onMousemove" @mouseleave="onMouseleave">
 				<div
-					:class="{InputRange__bar: true, inverted: this.value[0] > this.value[1], dragging: dragMode === 'bar', hover: hoverTarget === 'bar'}"
+					class="InputRange__bar"
+					:inverted="this.value[0] > this.value[1]"
+					:dragging="dragMode === 'bar'"
+					:hover="hoverTarget === 'bar'"
 					:style="barStyles"
 					ref="bar"
 				/>
 				<div
-					:class="{InputRange__edge: true, first: true, dragging: dragMode === 'first', hover: hoverTarget === 'first'}"
+					class="InputRange__edge first"
+					:dragging="dragMode === 'first'"
+					:hover="hoverTarget === 'first'"
 					:style="firstStyles"
 					ref="first"
 				/>
 				<div
-					:class="{InputRange__edge: true, second: true, dragging: dragMode === 'second', hover: hoverTarget === 'second'}"
+					class="InputRange__edge second"
+					:dragging="dragMode === 'second'"
+					:hover="hoverTarget === 'second'"
 					:style="secondStyles"
 					ref="second"
 				/>
@@ -93,7 +95,7 @@ export default class InputRange extends Vue {
 		this.hoverTarget = null
 	}
 
-	private onDragstart(e: {current: vec2; originalEvent: MouseEvent}) {
+	private onDragstart() {
 		this.dragMode = this.hoverTarget
 	}
 
@@ -149,89 +151,88 @@ export default class InputRange extends Vue {
 .InputRange
 	position relative
 	height 2em
+	$bar-width = 0.6em
 
-$bar-width = 0.6em
+	&__slit
+		position absolute
+		top 0
+		right 0.5 * $bar-width
+		left 0.5 * $bar-width
+		height 100%
 
-.InputRange__slit
-	position absolute
-	top 0
-	right 0.5 * $bar-width
-	left 0.5 * $bar-width
-	height 100%
+		&:before
+			position absolute
+			top 50%
+			right 0
+			left 0
+			display block
+			margin-top -0.5px
+			height 1px
+			background var(--color-control)
+			content ' '
 
-	&:before
+	&__bar
 		position absolute
 		top 50%
-		right 0
-		left 0
-		display block
-		margin-top -0.5px
-		height 1px
+		margin-top -0.5 * $bar-width
+		margin-right -0.5 * $bar-width
+		margin-left -0.5 * $bar-width
+		height $bar-width
+		border-radius 0.5 * $bar-width
 		background var(--color-control)
-		content ' '
-
-.InputRange__bar
-	position absolute
-	top 50%
-	margin-top -0.5 * $bar-width
-	margin-right -0.5 * $bar-width
-	margin-left -0.5 * $bar-width
-	height $bar-width
-	border-radius 0.5 * $bar-width
-	background var(--color-control)
-	box-shadow 0 0 0 1px var(--color-bg)
-
-	&.inverted
-		border 1px solid var(--color-control)
-		background var(--color-bg)
-
-	&.hover, &.dragging
-		border none
-		background var(--color-active)
-
-	&.dragging
-		box-shadow 0 0 0 1px var(--color-active), 0 0 0 2px var(--color-bg)
-
-.InputRange__edge
-	$extend = 0 * $bar-width
-	position absolute
-	top 50%
-	box-sizing content-box
-	margin 'calc(%s - 1px)' % ($bar-width / -2)
-	width $bar-width
-	height $bar-width
-	border 1px solid transparent
-	border-radius 0 50% 50% 0
-
-	&:before
-		position absolute
-		top ($input-height - $bar-width) * -0.5
-		display block
-		width 300%
-		height $input-height
-		content ' '
-
-	&.hover, &.dragging
-		border-color var(--color-active)
-		background var(--color-active)
 		box-shadow 0 0 0 1px var(--color-bg)
 
-	&.dragging
-		margin 'calc(%s - 2px)' % ($bar-width / -2)
-		border-width 2px
+		&[inverted]
+			border 1px solid var(--color-control)
+			background var(--color-bg)
 
-	&.first
-		left $extend
-		border-radius 50% 0 0 50%
+		&[hover], &[dragging]
+			border none
+			background var(--color-active)
+
+		&[dragging]
+			box-shadow 0 0 0 1px var(--color-active), 0 0 0 2px var(--color-bg)
+
+	&__edge
+		$extend = 0 * $bar-width
+		position absolute
+		top 50%
+		box-sizing content-box
+		margin 'calc(%s - 1px)' % ($bar-width / -2)
+		width $bar-width
+		height $bar-width
+		border 1px solid transparent
+		border-radius 0 50% 50% 0
 
 		&:before
-			right 0
+			position absolute
+			top ($input-height - $bar-width) * -0.5
+			display block
+			width 300%
+			height $input-height
+			content ' '
 
-	&.second
-		right $extend
+		&[hover], &[dragging]
+			border-color var(--color-active)
+			background var(--color-active)
+			box-shadow 0 0 0 1px var(--color-bg)
 
-		&:before
-			left 0
+		&[dragging]
+			margin 'calc(%s - 2px)' % ($bar-width / -2)
+			border-width 2px
+
+		&.first
+			left $extend
+			border-radius 50% 0 0 50%
+
+			&:before
+				right 0
+
+		&.second
+			right $extend
+
+			&:before
+				left 0
 </style>
 
 

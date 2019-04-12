@@ -67,16 +67,17 @@
 							</g>
 						</Drag>
 						<g :transform="state.svgTransform">
-							<Drag coord="normalized" @drag="onDragTranslate" box=".preview__canvas">
+							<Drag measure="normalized" @drag="onDragTranslate" box=".preview__canvas">
 								<image class="image" xlink:href="../../assets/Mochi.jpg" x="0" y="0" width="1" height="1"></image>
 							</Drag>
 						</g>
 						<g :transform="state.svgTransformActiveScale">
 							<Drag
 								v-if="state.bboxScaleActive"
-								coord="normalized"
+								measure="normalized"
 								@dragstart="onDragstartScale"
 								@drag="onDragScale"
+								@keytoggle="onDragScale"
 								box=".preview__canvas"
 							>
 								<rect class="bbox-scale-handle" x="0" y="0" width="1" height="1"></rect>
@@ -84,7 +85,7 @@
 							<rect class="bbox-edge" x="0" y="0" width="1" height="1"></rect>
 						</g>
 						<Drag
-							coord="normalized"
+							measure="normalized"
 							@dragstart="onDragstartScale"
 							@drag="onDragScale"
 							box=".preview__canvas"

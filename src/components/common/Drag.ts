@@ -108,7 +108,7 @@ export default class Drag extends Vue {
 				originalEvent: e
 			}
 
-			this.$emit('drag', event)
+			this.$emit('keytoggle', event)
 		}
 	}
 

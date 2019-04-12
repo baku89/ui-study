@@ -27,7 +27,7 @@
 			<div class="svg-overlay" v-if="isDragging">
 				<GradientPalette
 					class="InputColorElement__slit"
-					:color="[mode, value]"
+					:color="color"
 					:varyings="[varying]"
 					:style="slitStyles"
 				/>
@@ -44,7 +44,7 @@ import keycode from 'keycode'
 
 import {getDOMCenter, toCSSColor} from '../../util'
 import {parseNumber, ratio, clamp, lerp} from '../../math'
-import {DataColorMode, DataColorElements} from '../../data'
+import {DataColorMode, DataColorElements, DataColor} from '../../data'
 
 import Drag from '../common/Drag'
 import Portal from '../common/Portal'
@@ -63,8 +63,7 @@ const SLIT_WIDTH = 6
 	}
 })
 export default class InputColorElement extends Vue {
-	@Prop(Array) private value!: number[] | [string, number]
-	@Prop(String) private mode!: DataColorMode
+	@Prop(Array) private color!: DataColor
 	@Prop(Number) private varying!: number
 	@Prop(String) private label!: string
 	@Prop(String) private unit!: string
@@ -77,10 +76,17 @@ export default class InputColorElement extends Vue {
 	private slitMinY: number = 0
 	private slitLeft: number = 0
 	private previewY: number = 0
-	private previewColor: string = ''
+
+	get mode(): DataColorMode {
+		return this.color[0]
+	}
 
 	get element(): number {
-		return this.value[this.varying] as number
+		return this.color[1][this.varying] as number
+	}
+
+	get cssColor(): string {
+		return toCSSColor(this.color)
 	}
 
 	get slitStyles() {
@@ -93,7 +99,7 @@ export default class InputColorElement extends Vue {
 
 	get previewStyles() {
 		return {
-			background: this.previewColor,
+			background: this.cssColor,
 			left: `${this.slitLeft}px`,
 			top: `${this.previewY}px`
 		}
@@ -164,14 +170,7 @@ export default class InputColorElement extends Vue {
 		this.previewY = clamp(e.current[1], this.slitMaxY, this.slitMinY)
 		const t = ratio(this.previewY, this.slitMinY, this.slitMaxY)
 		const newValue = lerp(this.min, this.max, t)
-		const newColorValue = Array.from(this.value)
-		newColorValue[this.varying] = newValue
-		this.previewColor = toCSSColor([
-			this.mode,
-			newColorValue as DataColorElements
-		])
-
-		this.$emit('input', newValue)
+		this.$emit('update:element', newValue)
 	}
 
 	private onDragend() {

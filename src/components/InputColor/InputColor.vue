@@ -5,66 +5,61 @@
 				class="left"
 				:value="hasAlpha ? value[1][0] : value[1]"
 				:validator="validateColorHex"
-				@input="hasAlpha ? onInputElement(0, $event) : onInputElement(null, $event)"
+				@input="hasAlpha ? onUpdateElement(0, $event) : onUpdateElement(null, $event)"
 			/>
 			<InputColorElement
 				v-if="hasAlpha"
 				class="right"
-				:value="value[1]"
+				:color="value"
 				:varying="1"
-				:mode="value[0]"
 				:min="0"
 				:max="elementMax[1]"
 				:label="showLabel ? elementLabels[1] : undefined"
 				:unit="elementUnits[1]"
-				@input="onInputElement(1, $event)"
+				@update:element="onUpdateElement(1, $event)"
 			/>
 		</template>
 		<template v-else>
 			<InputColorElement
 				class="left"
-				:value="value[1]"
+				:color="value"
 				:varying="0"
-				:mode="value[0]"
 				:min="0"
 				:max="elementMax[0]"
 				:label="showLabel ? elementLabels[0] : undefined"
 				:unit="elementUnits[0]"
-				@input="onInputElement(0, $event)"
+				@update:element="onUpdateElement(0, $event)"
 			/>
 			<InputColorElement
 				class="middle"
-				:value="value[1]"
+				:color="value"
 				:varying="1"
-				:mode="value[0]"
 				:min="0"
 				:max="elementMax[1]"
 				:label="showLabel ? elementLabels[1] : undefined"
 				:unit="elementUnits[1]"
-				@input="onInputElement(1, $event)"
+				@update:element="onUpdateElement(1, $event)"
 			/>
 			<InputColorElement
 				:class="hasAlpha ? 'middle' : 'right'"
-				:value="value[1]"
+				:color="value"
 				:varying="2"
-				:mode="value[0]"
 				:min="0"
 				:max="elementMax[2]"
 				:label="showLabel ? elementLabels[2] : undefined"
 				:unit="elementUnits[2]"
-				@input="onInputElement(2, $event)"
+				@update:element="onUpdateElement(2, $event)"
 			/>
 			<InputColorElement
 				v-if="hasAlpha"
 				class="right"
-				:value="value[1]"
+				:color="value"
 				:varying="3"
-				:mode="value[0]"
 				:min="0"
 				:max="elementMax[3]"
 				:label="showLabel ? elementLabels[3] : undefined"
 				:unit="elementUnits[3]"
-				@input="onInputElement(3, $event)"
+				@update:element="onUpdateElement(3, $event)"
 			/>
 		</template>
 	</div>
@@ -111,9 +106,8 @@ export default class InputColor extends Vue {
 	private validateColorHex(value: string): string | false {
 		if (/^#?(?:[0-9A-F]{3}){1,2}$/i.test(value)) {
 			if (!value.startsWith('#')) {
-				console.log('dont start with #')
+				console.warn('dont start with #')
 				value = '#' + value
-				console.log(value)
 			}
 			return value.toUpperCase()
 		} else {
@@ -121,17 +115,10 @@ export default class InputColor extends Vue {
 		}
 	}
 
-	private onInputElement(index: number, element: number | string) {
-		let elements
-		if (index === null) {
-			elements = element
-		} else {
-			elements = Array.from(this.value[1])
-			elements[index] = element
-		}
-
+	private onUpdateElement(index: number, element: number | string) {
+		let elements = Array.from(this.value[1])
+		elements[index] = element
 		const newValue = [this.value[0], elements]
-
 		this.$emit('input', newValue)
 	}
 }

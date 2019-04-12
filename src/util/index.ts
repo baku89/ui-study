@@ -7,7 +7,8 @@ function getDOMCenter(el: HTMLElement): number[] {
 	return [(left + right) / 2, (top + bottom) / 2]
 }
 
-function toCSSColor([mode, value]: DataColor): string {
+function toCSSColor(color: DataColor): string {
+	const [mode, value] = color
 	let cssColor: string
 
 	if (mode === 'hex') {

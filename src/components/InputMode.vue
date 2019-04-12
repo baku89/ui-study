@@ -4,7 +4,7 @@
 			<input
 				class="InputMode__radio"
 				type="radio"
-				name="test"
+				:name="uid"
 				:checked="values[index] === value"
 				@click="onClick(v)"
 			>
@@ -15,6 +15,7 @@
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
+import uid from 'uid'
 
 type ValueType = string | number | symbol
 
@@ -23,6 +24,8 @@ export default class InputMode extends Vue {
 	@Prop() private value!: ValueType
 	@Prop(Array) private values!: ValueType[]
 	@Prop(Array) private labels!: string[]
+
+	private id: string = uid(10)
 
 	private onClick(v: ValueType) {
 		this.$emit('input', v)

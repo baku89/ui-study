@@ -1,5 +1,5 @@
 <template>
-	<div class="InputNumber" :class="{editing: isEditing, dragging: isDragging}">
+	<div class="InputNumber" :editing="isEditing" :dragging="isDragging">
 		<Drag
 			:minDragDistance="3"
 			@dragstart="onDragstart"
@@ -30,17 +30,17 @@
 					v-if="min !== undefined"
 					class="narrow-stroke"
 					:x1="dragMinX"
-					:y1="dragFrom[1] - 30"
+					:y1="dragFrom[1] - 16"
 					:x2="dragMinX"
-					:y2="dragFrom[1] + 30"
+					:y2="dragFrom[1] + 16"
 				></line>
 				<line
 					v-if="max !== undefined"
 					class="narrow-stroke"
 					:x1="dragMaxX"
-					:y1="dragFrom[1] - 30"
+					:y1="dragFrom[1] - 16"
 					:x2="dragMaxX"
-					:y2="dragFrom[1] + 30"
+					:y2="dragFrom[1] + 16"
 				></line>
 			</svg>
 		</Portal>
@@ -80,10 +80,12 @@ export default class InputNumber extends Vue {
 	private dragMinX: number = 0
 	private dragMaxX: number = 0
 
+	private updatedRecently: boolean = false
+
 	@Inject({from: 'dragSpeed', default: 0.5}) private readonly dragSpeed!: number
 
 	private get displayValue(): string {
-		return toFixed(this.value, this.precision, !this.isDragging)
+		return toFixed(this.value, this.precision, !this.updatedRecently)
 	}
 
 	private get hasMin() {
@@ -213,7 +215,7 @@ export default class InputNumber extends Vue {
 		z-index 2
 		input-border-hover-style()
 
-	&.editing, &.dragging
+	&[editing], &[dragging]
 		z-index 2
 		input-border-focus-style()
 
@@ -231,7 +233,7 @@ export default class InputNumber extends Vue {
 		z-index 5
 		overflow hidden
 
-		^[0].editing > &
+		^[0][editing] > &
 			visibility hidden
 
 	&__label
@@ -251,7 +253,7 @@ export default class InputNumber extends Vue {
 	&__input
 		opacity 0
 
-		^[0].editing > &
+		^[0][editing] > &
 			opacity 1
 </style>
 

@@ -2,7 +2,10 @@
 	<div class="App">
 		<div class="App__title-bar" @click="onClickMenu">
 			<button class="App__hamburger">
-				<span class="mark">{{isNavOpened ? '✕' : '三'}}</span> MENU
+				<Icon
+					class="mark"
+					:src="isNavOpened ? './assets/icon_cross.svg' : './assets/icon_hamburger.svg'"
+				></Icon>MENU
 			</button>
 		</div>
 		<div :class="{App__nav: true, open: isNavOpened}">
@@ -19,10 +22,12 @@
 <script lang="ts">
 import {Component, Vue, Watch} from 'vue-property-decorator'
 
+import Icon from './components/common/Icon.vue'
+
 import Home from './pages/Home'
 
 @Component({
-	components: {Home}
+	components: {Home, Icon}
 })
 export default class App extends Vue {
 	private get isNavOpened(): boolean {
@@ -98,19 +103,22 @@ html, body
 
 .App__hamburger
 	width 10em
-	height 100%
+	height $title-bar-height
 	background #333
 	color white
+	vertical-align middle
 	letter-spacing 0.3em
+	line-height $title-bar-height
 	cursor pointer
 
 	.mark
 		display inline-block
 		overflow hidden
-		width 1.2em
-		height 1.2em
+		margin-right 0.1em
+		margin-bottom 0.22em
+		width 1.4em
+		height @width
 		vertical-align middle
-		text-align center
 		letter-spacing 0
 		line-height 1em
 

@@ -46,7 +46,7 @@ export default class InputCheckbox extends Vue {
 	&:hover
 		input-border-hover-style()
 
-	&:active
+	&:active, &:focus
 		input-border-focus-style()
 
 	&:checked:before
@@ -61,7 +61,7 @@ export default class InputCheckbox extends Vue {
 		font-size 1.1em
 		line-height 1em
 
-	&:hover, &:active
+	&:hover, &:active, &:focus
 		&:before
 			color var(--color-active)
 

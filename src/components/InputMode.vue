@@ -5,7 +5,7 @@
 				class="InputMode__radio"
 				type="radio"
 				name="test"
-				:checked="values[index] === v"
+				:checked="values[index] === value"
 				@click="onClick(v)"
 			>
 			<label class="InputMode__label">{{labels ? labels[index] : v}}</label>
@@ -75,11 +75,14 @@ export default class InputMode extends Vue {
 			background var(--color-bg)
 			color var(--color-text)
 
-		^[0]__radio:hover + &, ^[0]__radio:focus + &
+		^[0]__radio:hover + &
 			border-color var(--color-active)
 
 		^[0]__radio:active + &
 			background var(--color-active)
 			color var(--color-bg)
+
+		^[0]__radio:focus + &
+			input-border-focus-style()
 </style>
 

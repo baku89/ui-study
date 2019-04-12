@@ -12,7 +12,6 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
-import mezr from 'mezr'
 
 import {lerp, clamp, ratio} from '../math'
 
@@ -79,7 +78,8 @@ export default class InputSlider extends Vue {
 	}
 
 	private onDrag(e: {current: vec2}) {
-		const {left, right} = mezr.rect(this.$refs.slit as HTMLElement)
+		const $slit = this.$refs.slit as HTMLElement
+		const {left, right} = $slit.getBoundingClientRect()
 		const t = ratio(e.current[0] - this.knobOffset, left, right, true)
 		const value = lerp(this.min, this.max, t)
 

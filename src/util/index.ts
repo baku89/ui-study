@@ -1,4 +1,3 @@
-import mezr from 'mezr'
 import colorConvert from 'color-convert'
 import RoteryDrag from './RoteryDrag'
 import {DataColor, DataColorMode, DataColorElements} from '../data'

@@ -4472,11 +4472,6 @@ methods@~1.1.2:
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
   integrity sha1-VSmk1nZUE07cxSZmVoNbD4Ua/O4=
 
-mezr@^0.6.2:
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/mezr/-/mezr-0.6.2.tgz#924b1345086f151e27c48355b9632853b6a0e495"
-  integrity sha1-kksTRQhvFR4nxINVuWMoU7ag5JU=
-
 micromatch@^3.1.10, micromatch@^3.1.4, micromatch@^3.1.8, micromatch@^3.1.9:
   version "3.1.10"
   resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-3.1.10.tgz#70859bc95c9840952f359a068a3fc49f9ecfac23"

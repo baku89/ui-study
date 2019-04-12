@@ -1,5 +1,5 @@
 <template>
-	<div class="InputNumber" :editing="isEditing" :dragging="isDragging">
+	<div class="InputNumber" :editing="isEditing" :updating="isDragging || updatedRecently">
 		<Drag
 			:minDragDistance="3"
 			detectDirection="horizontal"
@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
+import {Component, Prop, Vue, Inject, Watch} from 'vue-property-decorator'
 import {parseNumber, toFixed, quantize} from '../math'
 import {getDOMCenter} from '../util'
 import {vec2} from 'gl-matrix'
@@ -83,6 +83,7 @@ export default class InputNumber extends Vue {
 	private dragMaxX: number = 0
 
 	private updatedRecently: boolean = false
+	private updatedTimer!: NodeJS.Timer
 
 	@Inject({from: 'dragSpeed', default: 0.5}) private readonly dragSpeed!: number
 
@@ -213,6 +214,16 @@ export default class InputNumber extends Vue {
 	private onDragend() {
 		this.isDragging = false
 	}
+
+	@Watch('value')
+	private onValueChanged() {
+		this.updatedRecently = true
+		clearTimeout(this.updatedTimer)
+
+		this.updatedTimer = setTimeout(() => {
+			this.updatedRecently = false
+		}, 100)
+	}
 }
 </script>
 
@@ -230,7 +241,7 @@ export default class InputNumber extends Vue {
 		z-index 2
 		input-border-hover-style()
 
-	&[editing], &[dragging]
+	&[editing], &[updating]
 		z-index 2
 		input-border-focus-style()
 

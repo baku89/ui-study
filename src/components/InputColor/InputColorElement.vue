@@ -1,5 +1,5 @@
 <template>
-	<div class="InputColorElement" :editing="isEditing" :dragging="isDragging">
+	<div class="InputColorElement" :editing="isEditing" :updating="isDragging || updatedRecently">
 		<Drag
 			:minDragDistance="3"
 			detectDirection="vertical"
@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator'
+import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 import keycode from 'keycode'
 
@@ -82,6 +82,9 @@ export default class InputColorElement extends Vue {
 	private slitMinY: number = 0
 	private slitLeft: number = 0
 	private previewY: number = 0
+
+	private updatedRecently: boolean = false
+	private updatedTimer!: NodeJS.Timer
 
 	get mode(): DataColorMode {
 		return this.color[0]
@@ -186,6 +189,18 @@ export default class InputColorElement extends Vue {
 	private onDragend() {
 		this.isDragging = false
 	}
+
+	@Watch('color')
+	private onColorChanged(newColor: DataColor, oldColor: DataColor) {
+		if (oldColor[1][this.varying] !== newColor[1][this.varying]) {
+			this.updatedRecently = true
+			clearTimeout(this.updatedTimer)
+
+			this.updatedTimer = setTimeout(() => {
+				this.updatedRecently = false
+			}, 100)
+		}
+	}
 }
 </script>
 
@@ -203,7 +218,7 @@ export default class InputColorElement extends Vue {
 		z-index 2
 		input-border-hover-style()
 
-	&[editing], &[dragging]
+	&[editing], &[updating]
 		z-index 2
 		input-border-focus-style()
 

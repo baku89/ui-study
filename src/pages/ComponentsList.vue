@@ -141,7 +141,7 @@ import Components from '../components'
 				radius: 25,
 				scale: [100, 100],
 				position: [50, 50],
-				color: ['hsl', [332, 74, 55]]
+				color: ['hsv', [332, 74, 80]]
 			},
 			ex2: {
 				text: 'Hello World',

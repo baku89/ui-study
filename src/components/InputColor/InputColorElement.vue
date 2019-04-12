@@ -8,9 +8,12 @@
 			@click="onClick"
 		>
 			<div class="InputColorElement__display">
-				<div class="InputColorElement__label" v-if="label">{{this.label}}</div>
+				<div class="InputColorElement__label" v-if="info.label[varying]">{{info.label[varying]}}</div>
 				{{element.toFixed(0)}}
-				<span v-if="unit" class="InputColorElement__unit">{{unit}}</span>
+				<span
+					v-if="info.unit[varying]"
+					class="InputColorElement__unit"
+				>{{info.unit[varying]}}</span>
 			</div>
 		</Drag>
 		<input
@@ -44,7 +47,13 @@ import keycode from 'keycode'
 
 import {getDOMCenter, toCSSColor} from '../../util'
 import {parseNumber, ratio, clamp, lerp} from '../../math'
-import {DataColorMode, DataColorElements, DataColor} from '../../data'
+import {
+	DataColorMode,
+	DataColorElements,
+	DataColor,
+	DataColorInfo,
+	DataColorModeInfo
+} from '../../data'
 
 import Drag from '../common/Drag'
 import Portal from '../common/Portal'
@@ -65,10 +74,6 @@ const SLIT_WIDTH = 6
 export default class InputColorElement extends Vue {
 	@Prop(Array) private color!: DataColor
 	@Prop(Number) private varying!: number
-	@Prop(String) private label!: string
-	@Prop(String) private unit!: string
-	@Prop(Number) private min!: number
-	@Prop(Number) private max!: number
 
 	private isEditing: boolean = false
 	private isDragging: boolean = false
@@ -105,6 +110,10 @@ export default class InputColorElement extends Vue {
 		}
 	}
 
+	get info(): DataColorModeInfo {
+		return DataColorInfo.get(this.mode)!
+	}
+
 	private onChange() {
 		const input = this.$refs.input as HTMLInputElement
 		const strValue: string = input.value
@@ -113,7 +122,7 @@ export default class InputColorElement extends Vue {
 		// If the new value is valid, fire input event.
 		// Otherwise, reset the field with original value
 		if (!isNaN(value)) {
-			value = clamp(value, this.min, this.max)
+			value = clamp(value, 0, this.info.max[this.varying])
 			this.$emit('input', value)
 		} else {
 			input.value = this.element.toFixed(0)
@@ -136,7 +145,7 @@ export default class InputColorElement extends Vue {
 
 			let newElement = this.element + inc
 
-			newElement = clamp(newElement, this.min, this.max)
+			newElement = clamp(newElement, 0, this.info.max[this.varying])
 			this.$emit('input', newElement)
 		}
 	}
@@ -157,7 +166,7 @@ export default class InputColorElement extends Vue {
 	}
 
 	private onDragstart(e: {current: vec2}) {
-		const position = ratio(this.element, this.min, this.max)
+		const position = ratio(this.element, 0, this.info.max[this.varying])
 
 		this.slitMinY = e.current[1] + position * SLIT_HEIGHT
 		this.slitMaxY = e.current[1] - (1 - position) * SLIT_HEIGHT
@@ -169,7 +178,7 @@ export default class InputColorElement extends Vue {
 	private onDrag(e: {current: vec2; delta: vec2}) {
 		this.previewY = clamp(e.current[1], this.slitMaxY, this.slitMinY)
 		const t = ratio(this.previewY, this.slitMinY, this.slitMaxY)
-		const newValue = lerp(this.min, this.max, t)
+		const newValue = lerp(0, this.info.max[this.varying], t)
 		this.$emit('update:element', newValue)
 	}
 

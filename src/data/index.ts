@@ -12,46 +12,43 @@ type DataColorElements = string | number[] | [string, number]
 type DataColor = [DataColorMode, DataColorElements]
 
 interface DataColorModeInfo {
-	maxValue: number[]
+	max: number[]
 	label: string[]
 	unit: string[]
 }
 
 const DataColorInfo = new Map<DataColorMode, DataColorModeInfo>([
-	['hex', {maxValue: [NaN], label: [''], unit: ['']}],
-	['hexa', {maxValue: [NaN, 100], label: ['', 'A'], unit: ['', '%']}],
-	[
-		'rgb',
-		{maxValue: [255, 255, 255], label: ['R', 'G', 'B'], unit: ['', '', '']}
-	],
+	['hex', {max: [NaN], label: [''], unit: ['']}],
+	['hexa', {max: [NaN, 100], label: ['', 'A'], unit: ['', '%']}],
+	['rgb', {max: [255, 255, 255], label: ['R', 'G', 'B'], unit: ['', '', '']}],
 	[
 		'rgba',
 		{
-			maxValue: [255, 255, 255, 100],
+			max: [255, 255, 255, 100],
 			label: ['R', 'G', 'B', 'A'],
 			unit: ['', '', '', '%']
 		}
 	],
 	[
 		'hsl',
-		{maxValue: [360, 100, 100], label: ['H', 'S', 'L'], unit: ['°', '%', '%']}
+		{max: [360, 100, 100], label: ['H', 'S', 'L'], unit: ['°', '%', '%']}
 	],
 	[
 		'hsla',
 		{
-			maxValue: [360, 100, 100, 100],
+			max: [360, 100, 100, 100],
 			label: ['H', 'S', 'L', 'A'],
 			unit: ['°', '%', '%', '%']
 		}
 	],
 	[
 		'hsv',
-		{maxValue: [360, 100, 100], label: ['H', 'S', 'V'], unit: ['°', '%', '%']}
+		{max: [360, 100, 100], label: ['H', 'S', 'V'], unit: ['°', '%', '%']}
 	],
 	[
 		'hsva',
 		{
-			maxValue: [360, 100, 100, 100],
+			max: [360, 100, 100, 100],
 			label: ['H', 'S', 'V', 'A'],
 			unit: ['°', '%', '%', '%']
 		}
@@ -113,6 +110,7 @@ export {
 	DataColorMode,
 	DataColorElements,
 	DataColor,
+	DataColorModeInfo,
 	DataColorInfo,
 	DataTransform,
 	DataTransformType,

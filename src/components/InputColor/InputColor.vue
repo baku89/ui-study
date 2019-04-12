@@ -12,10 +12,6 @@
 				class="right"
 				:color="value"
 				:varying="1"
-				:min="0"
-				:max="elementMax[1]"
-				:label="showLabel ? elementLabels[1] : undefined"
-				:unit="elementUnits[1]"
 				@update:element="onUpdateElement(1, $event)"
 			/>
 		</template>
@@ -24,30 +20,18 @@
 				class="left"
 				:color="value"
 				:varying="0"
-				:min="0"
-				:max="elementMax[0]"
-				:label="showLabel ? elementLabels[0] : undefined"
-				:unit="elementUnits[0]"
 				@update:element="onUpdateElement(0, $event)"
 			/>
 			<InputColorElement
 				class="middle"
 				:color="value"
 				:varying="1"
-				:min="0"
-				:max="elementMax[1]"
-				:label="showLabel ? elementLabels[1] : undefined"
-				:unit="elementUnits[1]"
 				@update:element="onUpdateElement(1, $event)"
 			/>
 			<InputColorElement
 				:class="hasAlpha ? 'middle' : 'right'"
 				:color="value"
 				:varying="2"
-				:min="0"
-				:max="elementMax[2]"
-				:label="showLabel ? elementLabels[2] : undefined"
-				:unit="elementUnits[2]"
 				@update:element="onUpdateElement(2, $event)"
 			/>
 			<InputColorElement
@@ -55,10 +39,6 @@
 				class="right"
 				:color="value"
 				:varying="3"
-				:min="0"
-				:max="elementMax[3]"
-				:label="showLabel ? elementLabels[3] : undefined"
-				:unit="elementUnits[3]"
 				@update:element="onUpdateElement(3, $event)"
 			/>
 		</template>
@@ -79,21 +59,6 @@ import {DataColor, DataColorMode, DataColorInfo} from '../../data'
 export default class InputColor extends Vue {
 	@Prop(Array) private value!: DataColor
 	@Prop({type: Boolean, default: true}) private showLabel!: boolean
-
-	private get elementMax(): number[] {
-		const mode = this.value[0]
-		return DataColorInfo.get(mode)!.maxValue
-	}
-
-	private get elementLabels(): string[] {
-		const mode = this.value[0]
-		return DataColorInfo.get(mode)!.label
-	}
-
-	private get elementUnits(): Array<string | undefined> {
-		const mode = this.value[0]
-		return DataColorInfo.get(mode)!.unit
-	}
 
 	private get hasAlpha(): boolean {
 		return this.value[0].indexOf('a') !== -1
@@ -116,7 +81,7 @@ export default class InputColor extends Vue {
 	}
 
 	private onUpdateElement(index: number, element: number | string) {
-		let elements = Array.from(this.value[1])
+		const elements = Array.from(this.value[1])
 		elements[index] = element
 		const newValue = [this.value[0], elements]
 		this.$emit('input', newValue)

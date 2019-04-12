@@ -19,6 +19,7 @@ export default class InputButton extends Vue {}
 	height $input-height
 	input-border-style()
 	input-field-style()
+	padding 0 0.5em
 	border-color var(--color-control)
 	background transparent
 	color var(--color-control-text)

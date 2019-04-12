@@ -1,12 +1,16 @@
 <template>
-	<div class="InputMode">
-		<div
-			v-for="(v, index) in values"
-			:class="{InputMode__option: true, active: values[index] === value}"
-			:key="index"
-			@click="$emit('input', v)"
-		>{{labels ? labels[index] : v}}</div>
-	</div>
+	<form class="InputMode">
+		<div class="InputMode__option" v-for="(v, index) in values" :key="index">
+			<input
+				class="InputMode__radio"
+				type="radio"
+				name="test"
+				:checked="values[index] === v"
+				@click="onClick(v)"
+			>
+			<label class="InputMode__label">{{labels ? labels[index] : v}}</label>
+		</div>
+	</form>
 </template>
 
 <script lang="ts">
@@ -19,6 +23,10 @@ export default class InputMode extends Vue {
 	@Prop() private value!: ValueType
 	@Prop(Array) private values!: ValueType[]
 	@Prop(Array) private labels!: string[]
+
+	private onClick(v: ValueType) {
+		this.$emit('input', v)
+	}
 }
 </script>
 
@@ -33,28 +41,45 @@ export default class InputMode extends Vue {
 	border-radius $border-radius
 	background var(--color-border)
 
-.InputMode__option
-	position relative
-	z-index 1
-	margin -1px
-	padding 0 0.8em
-	height $input-height
-	border 1px solid transparent
-	border-radius $border-radius
-	color var(--color-border-text)
-	line-height 'calc(%s - 2px)' % $input-height
+	&__option
+		position relative
+		z-index 1
+		margin -1px -1px -1px 0
+		height $input-height
+		color var(--color-border-text)
+		line-height 'calc(%s - 2px)' % $input-height
 
-	&.active
-		border-color var(--color-border)
-		background var(--color-bg)
-		color var(--color-text)
+		&:first-child
+			margin-left -1px
 
-	&:hover
-		z-index 2
-		border-color var(--color-active)
+		&:hover
+			z-index 2
 
-	&:active
-		background var(--color-active)
-		color var(--color-bg)
+	&__radio
+		position absolute
+		top 0
+		left 0
+		width 100%
+		height 100%
+		opacity 0.5
+
+	&__label
+		display block
+		padding 0 0.8em
+		height $input-height
+		border 1px solid transparent
+		border-radius $border-radius
+
+		^[0]__radio:checked + &
+			border-color var(--color-border)
+			background var(--color-bg)
+			color var(--color-text)
+
+		^[0]__radio:hover + &, ^[0]__radio:focus + &
+			border-color var(--color-active)
+
+		^[0]__radio:active + &
+			background var(--color-active)
+			color var(--color-bg)
 </style>
 

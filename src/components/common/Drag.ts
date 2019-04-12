@@ -54,7 +54,11 @@ export default class Drag extends Vue {
 	}
 
 	private onMousedown(e: Event) {
-		vec2.set(this.absOrigin, (e as MouseEvent).pageX, (e as MouseEvent).pageY)
+		vec2.set(
+			this.absOrigin,
+			(e as MouseEvent).clientX,
+			(e as MouseEvent).clientY
+		)
 
 		if (this.minDragDistance === 0) {
 			// Emit immediately
@@ -97,7 +101,11 @@ export default class Drag extends Vue {
 	}
 
 	private onMousemove(e: Event) {
-		vec2.set(this.absCurrent, (e as MouseEvent).pageX, (e as MouseEvent).pageY)
+		vec2.set(
+			this.absCurrent,
+			(e as MouseEvent).clientX,
+			(e as MouseEvent).clientY
+		)
 
 		// Only process when the mouse coordinate has moved more than 1px
 		const hasMoved = !vec2.equals(this.absCurrent, this.absPrev)

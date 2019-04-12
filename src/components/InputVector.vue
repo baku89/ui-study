@@ -7,6 +7,7 @@
 			:value="v"
 			:min="min instanceof Array ? min[index] : min"
 			:max="max instanceof Array ? max[index] : max"
+			:step="step instanceof Array ? step[index] : step"
 			:precision="precision"
 			:label="labels ? labels[index] : undefined"
 			:unit="unit"
@@ -27,6 +28,7 @@ export default class InputVector extends Vue {
 	@Prop(Number) private precision!: number
 	@Prop([Number, Array]) private min!: number | number[]
 	@Prop([Number, Array]) private max!: number | number[]
+	@Prop([Number, Array]) private step!: number | number[]
 	@Prop(Array) private labels!: string[]
 	@Prop(String) private unit!: string
 

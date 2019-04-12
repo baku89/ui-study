@@ -67,6 +67,10 @@ function cycleMod(value: number, inc: number, max: number) {
 	return (value + inc) % max
 }
 
+function quantize(value: number, step: number) {
+	return Math.floor(value / step + 0.5) * step
+}
+
 export {
 	lerp,
 	clamp,
@@ -76,5 +80,6 @@ export {
 	mod,
 	toRadians,
 	toDegrees,
-	cycleMod
+	cycleMod,
+	quantize
 }

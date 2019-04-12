@@ -6,6 +6,7 @@
 			:precision="precision"
 			:min="min"
 			:max="max"
+			:step="step"
 			:unit="unit"
 			@input="onInput"
 		/>
@@ -24,6 +25,7 @@ export default class ParamFieldNumber extends Vue {
 	@Prop({type: Number, required: true}) private value!: number
 	@Prop(Number) private min!: number
 	@Prop(Number) private max!: number
+	@Prop(Number) private step!: number
 	@Prop(Number) private precision!: number
 	@Prop(String) private label!: string
 	@Prop(String) private unit!: string
@@ -34,5 +36,4 @@ export default class ParamFieldNumber extends Vue {
 }
 </script>
 
-<style lang="stylus" scoped>
-</style>
+<style lang="stylus" scoped></style>

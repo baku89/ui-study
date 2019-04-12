@@ -13,7 +13,7 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 
-import {lerp, clamp, ratio} from '../math'
+import {lerp, clamp, ratio, quantize} from '../math'
 
 import Drag from './common/Drag'
 
@@ -26,6 +26,7 @@ export default class InputSlider extends Vue {
 	@Prop({type: Number, required: true}) private value!: number
 	@Prop({type: Number, required: true}) private min!: number
 	@Prop({type: Number, required: true}) private max!: number
+	@Prop(Number) private step!: number
 
 	private knobOffset!: number
 
@@ -81,9 +82,15 @@ export default class InputSlider extends Vue {
 		const $slit = this.$refs.slit as HTMLElement
 		const {left, right} = $slit.getBoundingClientRect()
 		const t = ratio(e.current[0] - this.knobOffset, left, right, true)
-		const value = lerp(this.min, this.max, t)
+		let newValue = lerp(this.min, this.max, t)
 
-		this.$emit('input', value)
+		if (this.step !== undefined) {
+			newValue = quantize(newValue, this.step)
+		}
+
+		if (this.value !== newValue) {
+			this.$emit('input', newValue)
+		}
 	}
 
 	private onDragend() {

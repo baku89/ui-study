@@ -6,6 +6,7 @@
 			:precision="precision"
 			:min="min"
 			:max="max"
+			:step="step"
 			:unit="unit"
 			@input="onInput"
 		/>
@@ -14,6 +15,7 @@
 			:value="value"
 			:min="min"
 			:max="max"
+			:step="step"
 			@input="onInput"
 		/>
 	</div>
@@ -32,6 +34,7 @@ export default class ParamFieldSlider extends Vue {
 	@Prop({type: Number, required: true}) private value!: number
 	@Prop({type: Number, required: true}) private min!: number
 	@Prop({type: Number, required: true}) private max!: number
+	@Prop(Number) private step!: number
 	@Prop(Number) private precision!: number
 	@Prop(String) private label!: string
 	@Prop(String) private unit!: string

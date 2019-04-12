@@ -8,7 +8,7 @@
 
 			<div class="param__column">
 				<div class="input-label param__label">Iteration</div>
-				<ParamFieldSlider class="param__input" v-model="iteration" :min="1" :max="5" :precision="0"/>
+				<ParamFieldSlider class="param__input" v-model="iteration" :min="1" :max="5" :step="1"/>
 			</div>
 
 			<div class="param__column">
@@ -69,6 +69,7 @@
 <script lang="ts">
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import * as twgl from 'twgl.js'
+import raf from 'raf'
 // @ts-ignore
 import {Renderer as ISFRenderer} from 'interactive-shader-format'
 
@@ -128,6 +129,7 @@ export default class ParameterControl extends Vue {
 			this.renderer.draw(canvas)
 
 			lastTime = currentTime
+			raf(draw)
 		}
 		draw(performance.now())
 	}
@@ -144,7 +146,7 @@ export default class ParameterControl extends Vue {
 
 	@Watch('iteration')
 	private updateIteration() {
-		this.renderer.setValue('iteration', Math.round(this.iteration))
+		this.renderer.setValue('iteration', this.iteration)
 	}
 
 	@Watch('offset')

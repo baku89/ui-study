@@ -50,7 +50,7 @@
 
 <script lang="ts">
 import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
-import {parseNumber, toFixed} from '../math'
+import {parseNumber, toFixed, quantize} from '../math'
 import {getDOMCenter} from '../util'
 import {vec2} from 'gl-matrix'
 import keycode from 'keycode'
@@ -73,6 +73,7 @@ export default class InputNumber extends Vue {
 	@Prop(String) private unit!: string
 	@Prop(Number) private min!: number
 	@Prop(Number) private max!: number
+	@Prop(Number) private step!: number
 
 	private isEditing: boolean = false
 	private isDragging: boolean = false
@@ -89,29 +90,36 @@ export default class InputNumber extends Vue {
 		return toFixed(this.value, this.precision, !this.updatedRecently)
 	}
 
-	private get hasMin() {
+	private get hasMin(): boolean {
 		return this.min !== undefined
 	}
 
-	private get hasMax() {
+	private get hasMax(): boolean {
 		return this.max !== undefined
+	}
+
+	private get hasStep(): boolean {
+		return this.step !== undefined
 	}
 
 	private onChange() {
 		const input = this.$refs.input as HTMLInputElement
 		const strValue: string = input.value
-		let value: number = parseNumber(strValue)
+		let newValue: number = parseNumber(strValue)
 
-		if (isNaN(value)) {
+		if (isNaN(newValue)) {
 			input.value = this.value.toString()
 		} else {
 			if (this.hasMin) {
-				value = Math.max(this.min, value)
+				newValue = Math.max(this.min, newValue)
 			}
 			if (this.hasMax) {
-				value = Math.min(this.max, value)
+				newValue = Math.min(this.max, newValue)
 			}
-			this.$emit('input', value)
+			if (this.hasStep) {
+				newValue = quantize(newValue, this.step)
+			}
+			this.$emit('input', newValue)
 		}
 
 		this.isEditing = false
@@ -137,7 +145,9 @@ export default class InputNumber extends Vue {
 		if (key === 'up' || key === 'down') {
 			let inc = key === 'up' ? 1 : -1
 
-			if (e.shiftKey) {
+			if (this.hasStep) {
+				inc *= this.step
+			} else if (e.shiftKey) {
 				inc *= 10
 			} else if (e.altKey) {
 				inc /= 10
@@ -190,6 +200,10 @@ export default class InputNumber extends Vue {
 			}
 		} else {
 			newValue = this.value + e.delta[0] * this.dragSpeed
+		}
+
+		if (this.hasStep) {
+			newValue = quantize(newValue as number, this.step)
 		}
 
 		this.$set(this.dragTo, 0, x)

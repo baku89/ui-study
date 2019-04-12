@@ -147,8 +147,8 @@ import TransformStore from './transform-store'
 export default class TransformationMatrix extends Vue {
 	private state = new TransformStore([
 		{type: 'translate', value: [2, 1], active: true},
-		{type: 'scale', value: [2, 2], active: true},
-		{type: 'rotate', value: 90, active: true}
+		{type: 'rotate', value: 90, active: true},
+		{type: 'scale', value: [2, 2], active: true}
 	])
 
 	private transformItems: any = [
@@ -373,24 +373,21 @@ export default class TransformationMatrix extends Vue {
 		}
 
 		// Calc back the transform matrices
-		const destination = mat2d.create()
-
-		console.log(scale.join(', '))
-
-		vec2.mul(scale, scale, this.initialScaleValue)
-
-		this.state.setScale(scale)
 
 		// First, calc back only the scale
+		vec2.mul(scale, scale, this.initialScaleValue)
+		this.state.setScale(scale)
+
 		// mat2d.fromScaling(destination, scale)
 		// mat2d.mul(destination, this.initialMatrix, destination)
 		// this.state.calcBackTransform({destination, type: 'scale'})
 
 		// Then, do it again on the translate
-		// mat2d.fromTranslation(destination, translate)
-		// mat2d.scale(destination, destination, scale)
-		// mat2d.mul(destination, this.initialMatrix, destination)
-		// this.state.calcBackTransform({destination, type: 'translate'})
+		const destination = mat2d.create()
+		mat2d.fromTranslation(destination, translate)
+		mat2d.scale(destination, destination, scale)
+		mat2d.mul(destination, this.initialMatrix, destination)
+		this.state.calcBackTransform({destination, type: 'translate'})
 	}
 
 	private onDragRotate({delta}: {delta: vec2}) {

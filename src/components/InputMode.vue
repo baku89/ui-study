@@ -4,7 +4,7 @@
 			<input
 				class="InputMode__radio"
 				type="radio"
-				:name="uid"
+				:name="id"
 				:checked="values[index] === value"
 				@click="onClick(v)"
 			>

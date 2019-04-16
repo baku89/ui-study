@@ -1,5 +1,5 @@
 <template>
-	<input class="InputString" type="text" :value="value" @change="onChange" ref="input">
+	<input class="InputString" type="text" :value="value" v-on="inputListeners" ref="input">
 </template>
 
 <script lang="ts">
@@ -9,6 +9,12 @@ import {Component, Prop, Vue} from 'vue-property-decorator'
 export default class InputString extends Vue {
 	@Prop(String) private value!: string
 	@Prop(Function) private validator!: (value: string) => string | false
+
+	get inputListeners() {
+		return Object.assign({}, this.$listeners, {
+			change: this.onChange
+		})
+	}
 
 	private onChange() {
 		const input = this.$refs.input as HTMLInputElement

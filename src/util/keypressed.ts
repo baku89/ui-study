@@ -13,8 +13,7 @@ window.addEventListener('keyup', (e: KeyboardEvent) => {
 })
 
 function keypressed(key: string): boolean {
-	console.log(key)
-	return KEYS.has(key) ? (KEYS.get(key) as boolean) : false
+	return KEYS.get(key) || false
 }
 
 export default keypressed

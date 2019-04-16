@@ -136,13 +136,13 @@ export default class InputNumber extends Vue {
 		input.select()
 		this.isEditing = true
 
-		const forceBlur = (e: Event) => {
+		const forceChange = (e: Event) => {
 			if (e.target !== input) {
 				this.onChange()
-				window.removeEventListener('mousedown', forceBlur)
+				window.removeEventListener('mousedown', forceChange)
 			}
 		}
-		window.addEventListener('mousedown', forceBlur)
+		window.addEventListener('mousedown', forceChange)
 	}
 
 	private onKeydown(e: KeyboardEvent) {
@@ -239,11 +239,10 @@ export default class InputNumber extends Vue {
 .InputNumber
 	input-border-style()
 	position relative
-	z-index 1
 	background var(--color-field)
 
 	&:hover
-		z-index 2
+		z-index 1
 		input-border-hover-style()
 
 	&[editing], &[updating]

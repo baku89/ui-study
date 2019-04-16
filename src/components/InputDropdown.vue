@@ -40,7 +40,7 @@ $right-arrow-width = 1em
 
 .InputDropdown
 	position relative
-	height $input-height
+	height var(--input-height)
 
 	&__select
 		width 100%
@@ -49,7 +49,7 @@ $right-arrow-width = 1em
 		padding-right $right-arrow-width
 		padding-left 0.4em
 		font-family var(--font-normal)
-		line-height 'calc(%s - 2px)' % $input-height
+		line-height 'calc(%s - 2px)' % var(--input-height)
 
 		^[0].simple > &
 			border none
@@ -70,11 +70,11 @@ $right-arrow-width = 1em
 		right 0
 		display block
 		width $right-arrow-width
-		height $input-height
+		height var(--input-height)
 		color var(--color-border-text)
 		text-align center
 		font-size 1em
-		line-height 'calc(%s - 2px)' % $input-height
+		line-height 'calc(%s - 2px)' % var(--input-height)
 		transform scale(0.7)
 		pointer-events none
 

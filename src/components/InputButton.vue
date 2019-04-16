@@ -22,7 +22,7 @@ export default class InputButton extends Vue {
 @import '../style/config.styl'
 
 .InputButton
-	height $input-height
+	height var(--input-height)
 	input-border-style()
 	input-field-style()
 	padding 0 0.5em

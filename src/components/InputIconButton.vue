@@ -29,8 +29,8 @@ export default class InputIconButton extends Vue {
 
 .InputIconButton
 	position relative
-	width $input-height
-	height $input-height
+	width var(--input-height)
+	height var(--input-height)
 
 	&__input, &__icon
 		top 10%

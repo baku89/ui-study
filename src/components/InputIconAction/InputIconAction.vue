@@ -46,8 +46,8 @@ $right-arrow-width = 1em
 
 .InputIconAction
 	position relative
-	width $input-height
-	height $input-height
+	width var(--input-height)
+	height var(--input-height)
 
 	&__icon
 		position relative

@@ -90,7 +90,6 @@ export default class InputMatrix extends Vue {
 .InputMatrix
 	display flex
 	flex-wrap wrap
-	--input-height $input-height
 
 	&.row
 		flex-direction row

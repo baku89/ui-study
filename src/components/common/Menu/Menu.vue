@@ -145,5 +145,5 @@ export default class Menu extends Vue {
 		border 1px solid #333
 		border-radius $border-radius
 		font-family var(--font-normal)
-		line-height $input-height
+		line-height var(--input-height)
 </style>

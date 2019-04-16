@@ -110,7 +110,7 @@ export default class InputSlider extends Vue {
 <style lang="stylus" scoped>
 .InputSlider
 	position relative
-	height 2em
+	height var(--input-height)
 	$size = 1em
 
 	&__slit

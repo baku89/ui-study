@@ -94,8 +94,8 @@ export default class InputColorButton extends Vue {
 
 .InputColorButton
 	position relative
-	width $input-height
-	height $input-height
+	width var(--input-height)
+	height var(--input-height)
 
 .InputColorButton__preview
 	position relative

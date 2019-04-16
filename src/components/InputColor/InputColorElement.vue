@@ -161,13 +161,13 @@ export default class InputColorElement extends Vue {
 		input.select()
 		this.isEditing = true
 
-		const forceBlur = (e: Event) => {
+		const forceChange = (e: Event) => {
 			if (e.target !== input) {
 				this.onChange()
-				window.removeEventListener('mousedown', forceBlur)
+				window.removeEventListener('mousedown', forceChange)
 			}
 		}
-		window.addEventListener('mousedown', forceBlur)
+		window.addEventListener('mousedown', forceChange)
 	}
 
 	private onDragstart(e: {current: vec2}) {
@@ -212,15 +212,14 @@ export default class InputColorElement extends Vue {
 .InputColorElement
 	input-border-style()
 	position relative
-	z-index 1
 	background var(--color-field)
 
 	&:hover
-		z-index 2
+		z-index 1
 		input-border-hover-style()
 
 	&[editing], &[updating]
-		z-index 2
+		z-index 1
 		input-border-focus-style()
 
 	&__display, &__input

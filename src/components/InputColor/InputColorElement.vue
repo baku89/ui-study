@@ -219,7 +219,7 @@ export default class InputColorElement extends Vue {
 		input-border-hover-style()
 
 	&[editing], &[updating]
-		z-index 1
+		z-index 2
 		input-border-focus-style()
 
 	&__display, &__input

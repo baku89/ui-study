@@ -40,7 +40,7 @@
 import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import Drag from './common/Drag'
 import {vec2} from 'gl-matrix'
-import {lerp, clamp, ratio} from '../math'
+import {lerp, clamp, ratio, quantize} from '../math'
 import keypressed from '../util/keypressed'
 
 @Component({
@@ -52,6 +52,7 @@ export default class InputRange extends Vue {
 	@Prop({type: Array, required: true}) private value!: [number, number]
 	@Prop({type: Number, required: true}) private min!: number
 	@Prop({type: Number, required: true}) private max!: number
+	@Prop(Number) private step!: number
 
 	@Inject({from: 'keySymmetry', default: 's'})
 	private readonly keySymmetry!: string
@@ -164,6 +165,12 @@ export default class InputRange extends Vue {
 				newValue[1] += inc
 			}
 
+			// Quantize
+			if (this.step !== undefined) {
+				newValue[0] = quantize(newValue[0], this.step)
+				newValue[1] = quantize(newValue[1], this.step)
+			}
+
 			// Clamp
 			newValue[0] = clamp(newValue[0], this.min, newValue[1])
 			newValue[1] = clamp(newValue[1], newValue[0], this.max)
@@ -204,6 +211,9 @@ export default class InputRange extends Vue {
 			background var(--color-control)
 			content ' '
 
+			^[0].no-slit &
+				display none
+
 	&__bar
 		position absolute
 		top 50%
@@ -239,10 +249,10 @@ export default class InputRange extends Vue {
 
 		&:before
 			position absolute
-			top ($input-height - $bar-width) * -0.5
+			top 'calc((var(--input-height) - %s) / -2)' % $bar-width
 			display block
 			width 300%
-			height $input-height
+			height var(--input-height)
 			content ' '
 
 		&[hover], &[dragging]

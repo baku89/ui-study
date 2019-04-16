@@ -18,13 +18,14 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator'
+import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
-import {getDOMCenter, RoteryDrag} from '../util'
+import {getDOMCenter, RoteryDrag, keypressed} from '../util'
 
 import Drag from './common/Drag'
 import Portal from './common/Portal'
 import SvgArcArrow from './common/SvgArcArrow.vue'
+import {mod} from '../math'
 
 @Component({
 	components: {
@@ -41,6 +42,14 @@ export default class InputAngle extends Vue {
 	private dragTo: number[] = [0, 0]
 
 	private roteryDrag!: RoteryDrag
+
+	@Inject({
+		from: 'quantizeAngles',
+		default: [0, 45, 90, 135, 180, 225, 270, 315]
+	})
+	private readonly quantizeAngles!: number[]
+	@Inject({from: 'keyQuantize', default: 'shift'})
+	private readonly keyQuantize!: string
 
 	private created() {
 		this.roteryDrag = new RoteryDrag()
@@ -65,7 +74,22 @@ export default class InputAngle extends Vue {
 		this.dragTo[0] = e.current[0]
 		this.dragTo[1] = e.current[1]
 
-		const newValue = this.roteryDrag.getAngle(this.dragTo)
+		let newValue = this.roteryDrag.getAngle(this.dragTo)
+
+		// Quantize the angle
+		if (keypressed(this.keyQuantize)) {
+			// Find the closest angle out of quantizeAngles
+			// https://stackoverflow.com/questions/8584902/get-closest-number-out-of-array
+			let angle = mod(newValue, 360)
+			const turn = Math.floor(newValue / 360)
+
+			angle = this.quantizeAngles.reduce((prev, curr) => {
+				return Math.abs(curr - angle) < Math.abs(prev - angle) ? curr : prev
+			})
+
+			newValue = turn * 360 + angle
+		}
+
 		this.$emit('input', newValue)
 	}
 

@@ -18,8 +18,6 @@ import Portal from './Portal'
 })
 export default class Modal extends Vue {
 	@Prop({type: Boolean, required: true}) private show!: boolean
-
-	mounted() {}
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
 	<div class="InputIconButton">
-		<button class="InputIconButton__input" v-on="$listeners"/>
+		<button class="InputIconButton__input" v-on="$listeners" ref="button"/>
 		<Icon class="InputIconButton__icon" :src="src"/>
 	</div>
 </template>
@@ -8,14 +8,18 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import ButtonWrapper from './common/ButtonWrapper'
 import Icon from './common/Icon.vue'
+import {setButtonUnfocusableForMouse} from '../util'
 
 @Component({
-	components: {ButtonWrapper, Icon}
+	components: {Icon}
 })
 export default class InputIconButton extends Vue {
 	@Prop({type: String, required: true}) private src!: string
+
+	private mounted() {
+		setButtonUnfocusableForMouse(this.$refs.button as HTMLElement)
+	}
 }
 </script>
 

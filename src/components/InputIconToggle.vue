@@ -1,32 +1,34 @@
 <template>
 	<div class="InputIconToggle">
-		<ButtonWrapper>
-			<input
-				class="InputIconToggle__input"
-				type="checkbox"
-				:checked="value"
-				@change="$emit('input', $event.target.checked)"
-			>
-		</ButtonWrapper>
+		<input
+			class="InputIconToggle__input"
+			type="checkbox"
+			:checked="value"
+			@change="$emit('input', $event.target.checked)"
+			ref="input"
+		>
 		<Icon class="InputIconToggle__icon" v-if="value" :src="srcOn"/>
 		<Icon class="InputIconToggle__icon" v-else :src="srcOff"/>
-		</div>
 	</div>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import ButtonWrapper from './common/ButtonWrapper'
 import Icon from './common/Icon.vue'
+import {setButtonUnfocusableForMouse} from '../util'
 
 @Component({
-	components: {ButtonWrapper, Icon}
+	components: {Icon}
 })
 export default class InputIconToggle extends Vue {
 	@Prop({type: Boolean, required: true}) private value!: boolean
 	@Prop({type: String, required: true}) private srcOn!: string
 	@Prop({type: String, required: true}) private srcOff!: string
+
+	private mounted() {
+		setButtonUnfocusableForMouse(this.$refs.input as HTMLElement)
+	}
 }
 </script>
 

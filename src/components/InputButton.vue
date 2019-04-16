@@ -1,18 +1,20 @@
 <template>
-	<ButtonWrapper>
-		<button class="InputButton" v-on="$listeners">
-			<slot/>
-		</button>
-	</ButtonWrapper>
+	<button class="InputButton" v-on="$listeners" ref="button">
+		<slot/>
+	</button>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import ButtonWrapper from './common/ButtonWrapper'
+import {setButtonUnfocusableForMouse} from '../util'
 
-@Component({components: {ButtonWrapper}})
-export default class InputButton extends Vue {}
+@Component
+export default class InputButton extends Vue {
+	private mounted() {
+		setButtonUnfocusableForMouse(this.$refs.button as HTMLElement)
+	}
+}
 </script>
 
 

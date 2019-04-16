@@ -2,10 +2,26 @@ import colorConvert from 'color-convert'
 import RoteryDrag from './RoteryDrag'
 import keypressed from './keypressed'
 import {DataColor, DataColorMode, DataColorElements} from '../data'
+import mouse from 'mouse-event'
 
 function getDOMCenter(el: HTMLElement): number[] {
 	const {top, right, bottom, left} = el.getBoundingClientRect()
 	return [(left + right) / 2, (top + bottom) / 2]
+}
+
+function setButtonUnfocusableForMouse(button: HTMLElement) {
+	button.addEventListener('mousedown', (e: MouseEvent) => {
+		const clicked = mouse.buttons(e)
+		if (clicked === 1) {
+			window.addEventListener(
+				'mouseup',
+				() => {
+					button.blur()
+				},
+				{once: true}
+			)
+		}
+	})
 }
 
 function toCSSColor(color: DataColor): string {
@@ -61,4 +77,11 @@ function convertColorElements(
 	}
 }
 
-export {getDOMCenter, toCSSColor, convertColorElements, RoteryDrag, keypressed}
+export {
+	getDOMCenter,
+	setButtonUnfocusableForMouse,
+	toCSSColor,
+	convertColorElements,
+	RoteryDrag,
+	keypressed
+}

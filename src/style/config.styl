@@ -9,6 +9,12 @@ input-border-style()
 	border-radius $border-radius
 	background var(--color-field)
 
+	&.left, &.center, &.right, &.top, &.middle, &.bottom
+		z-index 1
+
+		&:hover, &:active, &:focus
+			z-index 2
+
 	&.left
 		margin-right -1px
 		border-top-right-radius 0

@@ -15,6 +15,7 @@ import InputPoint from './InputPoint.vue'
 import InputRange from './InputRange.vue'
 import InputSlider from './InputSlider.vue'
 import InputString from './InputString.vue'
+import InputTime from './InputTime'
 import InputVector from './InputVector.vue'
 import ParamFieldAffine from './ParamFieldAffine.vue'
 import ParamFieldAngle from './ParamFieldAngle.vue'
@@ -44,6 +45,7 @@ export default {
 	InputRange,
 	InputSlider,
 	InputString,
+	InputTime,
 	InputVector,
 	ParamFieldAffine,
 	ParamFieldAngle,

@@ -112,7 +112,7 @@
 				<div class="aspect">
 					<div class="canvas">
 						<img class="dice" src="../assets/dice.svg" :style="{left: `${(ex4.seed-1) * -100}%`}">
-					</div>
+					</div>Inpu
 				</div>
 			</div>
 		</div>
@@ -121,6 +121,22 @@
 		<p>Code Editor.</p>
 		<div class="example">
 			<InputCodeEditor class="code" v-model="ex5.code" lang="javascript"/>
+		</div>
+
+		<h2>Example 6</h2>
+		<p>Play Controls</p>
+		<div class="example">
+			<div class="param">
+				<div class="column">
+					<label>Timecode</label>
+					<InputTime v-model="ex6.time" :fps="24" :min="0" style="margin-right: .5em"/>
+					<InputButton class="left">«Cut</InputButton>
+					<InputButton class="center">«-1</InputButton>
+					<InputButton class="center">▶</InputButton>
+					<InputButton class="center">+1»</InputButton>
+					<InputButton class="right">Cut»</InputButton>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -158,6 +174,9 @@ import Components from '../components'
 			},
 			ex5: {
 				code: 'console.log("Hello World")'
+			},
+			ex6: {
+				time: 200
 			}
 		}
 	},

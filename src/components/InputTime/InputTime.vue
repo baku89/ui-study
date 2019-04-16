@@ -82,7 +82,6 @@
 
 <script lang="ts">
 import {Component, Prop, Vue, Inject, Watch} from 'vue-property-decorator'
-import {Observer} from 'mobx-vue'
 import {vec2} from 'gl-matrix'
 import keycode from 'keycode'
 
@@ -93,7 +92,6 @@ import Drag from '../common/Drag'
 import Portal from '../common/Portal'
 import SvgArrow from '../common/SvgArrow.vue'
 
-@Observer
 @Component({
 	components: {Drag, Portal, SvgArrow}
 })
@@ -153,7 +151,7 @@ export default class InputTime extends Vue {
 
 	private onChange() {
 		const input = this.$refs.input as HTMLInputElement
-		let newSmpte: string = input.value
+		const newSmpte: string = input.value
 
 		try {
 			this.timecode.smpte = newSmpte

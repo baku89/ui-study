@@ -4,22 +4,18 @@
 		<p>Slider, Scale, Position, and Color.</p>
 		<div class="example">
 			<div class="param">
-				<div class="column">
-					<label>Radius</label>
+				<Parameter label="Radius">
 					<ParamFieldSlider class="input" v-model="ex1.radius" :min="0" :max="50"/>
-				</div>
-				<div class="column">
-					<label>Scale</label>
+				</Parameter>
+				<Parameter label="Scale">
 					<ParamFieldScale class="input" v-model="ex1.scale" unit="%"/>
-				</div>
-				<div class="column">
-					<label>Position</label>
+				</Parameter>
+				<Parameter label="Position">
 					<ParamFieldPoint class="input" v-model="ex1.position" :min="0" :max="100" unit="%"/>
-				</div>
-				<div class="column">
-					<label>Color</label>
+				</Parameter>
+				<Parameter label="Color">
 					<ParamFieldColor class="input" v-model="ex1.color"/>
-				</div>
+				</Parameter>
 			</div>
 			<div class="preview">
 				<div class="aspect">
@@ -40,18 +36,15 @@
 		<p>String, Angle, and Range (min/max).</p>
 		<div class="example">
 			<div class="param">
-				<div class="column">
-					<label>Text</label>
+				<Parameter label="Text">
 					<InputString class="input long" v-model="ex2.text"/>
-				</div>
-				<div class="column">
-					<label>Angle</label>
+				</Parameter>
+				<Parameter label="Angle">
 					<ParamFieldAngle class="input" v-model="ex2.rotation"/>
-				</div>
-				<div class="column">
-					<label>Trim</label>
+				</Parameter>
+				<Parameter label="Trim">
 					<ParamFieldRange class="input" v-model="ex2.trim" :min="0" :max="100" unit="%"/>
-				</div>
+				</Parameter>
 			</div>
 			<div class="preview">
 				<div class="aspect">
@@ -72,22 +65,19 @@
 		<p>Dropdown, Checkbox, and Select.</p>
 		<div class="example">
 			<div class="param">
-				<div class="column">
-					<label>Image</label>
+				<Parameter label="Image">
 					<InputDropdown
 						class="input long"
 						v-model="ex3.image"
 						:values="['Mochi', 'Dango', 'Beko-mochi']"
 					/>
-				</div>
-				<div class="column">
-					<label>Inverted</label>
+				</Parameter>
+				<Parameter label="Inverted">
 					<InputCheckbox class="input" v-model="ex3.inverted"/>
-				</div>
-				<div class="column">
-					<label>Edge</label>
+				</Parameter>
+				<Parameter label="Edge">
 					<InputMode class="input no-grow" v-model="ex3.edge" :values="['Rounded', 'Circle', 'Glow']"/>
-				</div>
+				</Parameter>
 			</div>
 			<div class="preview">
 				<div class="aspect" :style="{filter: ex3.inverted ? 'invert(1)' : ''}">
@@ -100,19 +90,18 @@
 		<p>Random seed, Button.</p>
 		<div class="example">
 			<div class="param">
-				<div class="column">
-					<label>Roll</label>
+				<Parameter label="Roll">
 					<ParamFieldSeed v-model="ex4.seed" :min="1" :max="6" :step="1"/>
-				</div>
-				<div class="column">
+				</Parameter>
+				<Parameter>
 					<InputButton @click="ex4.seed = (ex4.seed % 6) + 1">Increment</InputButton>
-				</div>
+				</Parameter>
 			</div>
 			<div class="preview">
 				<div class="aspect">
 					<div class="canvas">
 						<img class="dice" src="../assets/dice.svg" :style="{left: `${(ex4.seed-1) * -100}%`}">
-					</div>Inpu
+					</div>
 				</div>
 			</div>
 		</div>
@@ -127,31 +116,66 @@
 		<p>Play Controls</p>
 		<div class="example">
 			<div class="param">
-				<div class="column">
-					<label>Timecode</label>
-					<InputTime v-model="ex6.time" :fps="24" :min="0" style="margin-right: .5em"/>
-					<InputButton class="left">«Cut</InputButton>
-					<InputButton class="center">«-1</InputButton>
-					<InputButton class="center">▶</InputButton>
-					<InputButton class="center">+1»</InputButton>
-					<InputButton class="right">Cut»</InputButton>
-				</div>
+				<Parameter label="Timecode">
+					<InputTime
+						class="param-field--1w"
+						v-model="ex6.time"
+						:fps="24"
+						:min="ex6.min"
+						:max="ex6.max"
+						style="margin-right: .5em;"
+					/>
+					<InputButton class="center" @click="ex6.playing = false; ex6.time--">«-1</InputButton>
+					<InputButton
+						class="center"
+						@click="togglePlay"
+						style="width: 2em;"
+					>{{ex6.playing ? '&#10074;&#10074;' : '▶'}}</InputButton>
+					<InputButton class="center" @click="ex6.playing = false; ex6.time++">+1»</InputButton>
+				</Parameter>
+				<Parameter label="Value">
+					<ParamFieldSlider
+						class="input"
+						:value="ex6.currentValue"
+						@input="onUpdateCurrentValue"
+						:min="0"
+						:max="255"
+					/>
+				</Parameter>
 			</div>
 		</div>
+
+		<Timeline :time.sync="ex6.time" :min="ex6.min" :max="ex6.max">
+			<template v-slot="{displayRange}">
+				<TimelineColor :value="ex6.colors" :displayRange="displayRange" ref="timelineColor"/>
+			</template>
+		</Timeline>
 	</div>
 </template>
 
 <script lang="ts">
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 
 import {toCSSColor} from '../util'
 import {DataColor} from '../data'
+
+import raf from 'raf'
+import TimelineColor from '../components/TimelineColor.vue'
 
 import Components from '../components'
 
 @Component({
 	components: Components,
 	data() {
+		const time = 2
+		const min = 0
+		const max = 60000
+		const colors = new Uint8ClampedArray(
+			Array((max - min + 1) * 4)
+				.fill(0)
+				.map((v, i) => (i % 4 === 3 ? 255 : 0))
+		)
+
 		return {
 			ex1: {
 				radius: 25,
@@ -176,7 +200,12 @@ import Components from '../components'
 				code: 'console.log("Hello World")'
 			},
 			ex6: {
-				time: 200
+				time,
+				min,
+				max,
+				playing: false,
+				colors,
+				currentValue: colors[time]
 			}
 		}
 	},
@@ -190,6 +219,56 @@ export default class ComponentsList extends Vue {
 		const end = Math.floor((max / 100) * len)
 
 		return text.slice(start, end)
+	}
+
+	private togglePlay() {
+		const playing = !this.$data.ex6.playing
+		this.$data.ex6.playing = playing
+
+		if (playing) {
+			let prevTime = performance.now()
+
+			const update = (time: number) => {
+				if (!this.$data.ex6.playing) {
+					return
+				}
+
+				if (time - prevTime > 1000 / 24) {
+					this.$data.ex6.time += 1
+
+					if (this.$data.ex6.time > this.$data.ex6.max) {
+						this.$data.ex6.time = this.$data.ex6.max
+						return
+					}
+
+					this.$data.ex6.currentValue = this.$data.ex6.colors[
+						this.$data.ex6.time
+					]
+					prevTime = time
+				}
+
+				raf(update)
+			}
+
+			raf(update)
+		}
+	}
+
+	@Watch('ex6.time')
+	private onTimeChanged() {
+		this.$data.ex6.currentValue = this.$data.ex6.colors[this.$data.ex6.time * 4]
+	}
+
+	private onUpdateCurrentValue(newValue: number) {
+		const time = this.$data.ex6.time
+
+		this.$data.ex6.colors[time * 4] = newValue
+		this.$data.ex6.colors[time * 4 + 1] = newValue
+		this.$data.ex6.colors[time * 4 + 2] = newValue
+		this.$data.ex6.currentValue = newValue
+
+		const timelineColor = this.$refs.timelineColor as TimelineColor
+		timelineColor.renderColors()
 	}
 }
 </script>
@@ -212,34 +291,7 @@ export default class ComponentsList extends Vue {
 
 	.param
 		flex-grow 1
-		margin 2em
-		margin-right 1em
-
-	.column
-		display flex
-		margin-bottom 0.8em
-
-		&:last-child
-			margin-bottom 0
-
-		label
-			padding 0 1em 0 0.2em
-			width 6em
-			line-height $input-height
-
-		.input
-			flex-grow 1
-
-			&.narrow
-				flex-grow 0
-				width 6em
-
-			&.long
-				flex-grow 0
-				width 12em
-
-			&.no-grow
-				flex-grow 0
+		margin 2em 1em 2em 2em
 
 	.preview
 		position relative

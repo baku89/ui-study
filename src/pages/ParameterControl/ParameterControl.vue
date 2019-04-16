@@ -1,38 +1,31 @@
 <template>
 	<div class="page-content">
 		<div class="param">
-			<div class="param__column">
-				<div class="input-label param__label">Intensity</div>
+			<Parameter label="Intensity">
 				<ParamFieldSlider class="param__input" v-model="intensity" :min="0" :max="100"/>
-			</div>
+			</Parameter>
 
-			<div class="param__column">
-				<div class="input-label param__label">Iteration</div>
+			<Parameter label="Iteration">
 				<ParamFieldSlider class="param__input" v-model="iteration" :min="1" :max="5" :step="1"/>
-			</div>
+			</Parameter>
 
-			<div class="param__column">
-				<div class="input-label param__label">Speed</div>
+			<Parameter label="Speed">
 				<ParamFieldSlider class="param__input" v-model="speed" :min="-10" :max="10"/>
-			</div>
+			</Parameter>
 
-			<div class="param__column">
-				<div class="input-label param__label">Offset</div>
+			<Parameter label="Offset">
 				<ParamFieldPoint v-model="offset" :precision="1" unit="%"/>
-			</div>
+			</Parameter>
 
-			<div class="param__column">
-				<div class="input-label param__label">Scale</div>
+			<Parameter label="Scale">
 				<ParamFieldScale v-model="scale" :keepProportion.sync="keepProportion"/>
-			</div>
+			</Parameter>
 
-			<div class="param__column">
-				<div class="input-label param__label">Angle</div>
+			<Parameter label="Angle">
 				<ParamFieldAngle class="param__input" v-model="angle"/>
-			</div>
+			</Parameter>
 
-			<div class="param__column">
-				<div class="input-label param__label">Crop</div>
+			<Parameter label="Crop">
 				<ParamFieldScale
 					v-model="crop"
 					:precision="0"
@@ -40,23 +33,20 @@
 					:min="0"
 					:labels="['T', 'R', 'B', 'L']"
 					unit="%"
-					class="crop"
 				/>
-			</div>
+			</Parameter>
 
-			<div class="param__column">
-				<div class="input-label param__label">Frame Color</div>
+			<Parameter label="Frame">
 				<ParamFieldColor v-model="frameColor"/>
-			</div>
+			</Parameter>
 
-			<div class="param__column">
-				<div class="input-label param__label">Noise Type</div>
+			<Parameter label="Noise">
 				<InputMode v-model="noiseType" :labels="['Simplex', 'Periodic']" :values="[0, 1]"/>
-			</div>
+			</Parameter>
 
-			<div class="param__column">
+			<Parameter>
 				<InputButton @click="time = 0">Reset</InputButton>
-			</div>
+			</Parameter>
 		</div>
 		<div class="preview">
 			<div class="preview__wrapper">
@@ -205,20 +195,6 @@ export default class ParameterControl extends Vue {
 .param
 	margin-right 1em
 	width 30em
-
-	&__column
-		display flex
-		margin-bottom 0.8em
-
-	&__label
-		padding 0 0.2em
-		width 7em
-
-	&__input
-		flex-grow 1
-
-	.crop .InputVector
-		width 16em !important
 
 .preview
 	position relative

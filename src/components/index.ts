@@ -17,6 +17,7 @@ import InputSlider from './InputSlider.vue'
 import InputString from './InputString.vue'
 import InputTime from './InputTime'
 import InputVector from './InputVector.vue'
+import Parameter from './Parameter.vue'
 import ParamFieldAffine from './ParamFieldAffine.vue'
 import ParamFieldAngle from './ParamFieldAngle.vue'
 import ParamFieldColor from './ParamFieldColor.vue'
@@ -26,6 +27,8 @@ import ParamFieldRange from './ParamFieldRange.vue'
 import ParamFieldScale from './ParamFieldScale.vue'
 import ParamFieldSeed from './ParamFieldSeed.vue'
 import ParamFieldSlider from './ParamFieldSlider.vue'
+import Timeline from './Timeline.vue'
+import TimelineColor from './TimelineColor.vue'
 
 export default {
 	InputAngle,
@@ -47,6 +50,7 @@ export default {
 	InputString,
 	InputTime,
 	InputVector,
+	Parameter,
 	ParamFieldAffine,
 	ParamFieldAngle,
 	ParamFieldColor,
@@ -55,5 +59,7 @@ export default {
 	ParamFieldRange,
 	ParamFieldSeed,
 	ParamFieldScale,
-	ParamFieldSlider
+	ParamFieldSlider,
+	Timeline,
+	TimelineColor
 }

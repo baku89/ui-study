@@ -1,16 +1,14 @@
 <template>
-	<div class="ParamFieldNumber">
-		<InputNumber
-			class="param-field--1w"
-			:value="value"
-			:precision="precision"
-			:min="min"
-			:max="max"
-			:step="step"
-			:unit="unit"
-			@input="onInput"
-		/>
-	</div>
+	<InputNumber
+		class="ParamFieldNumber param-field--1w"
+		:value="value"
+		:precision="precision"
+		:min="min"
+		:max="max"
+		:step="step"
+		:unit="unit"
+		@input="onInput"
+	/>
 </template>
 
 <script lang="ts">
@@ -35,5 +33,3 @@ export default class ParamFieldNumber extends Vue {
 	}
 }
 </script>
-
-<style lang="stylus" scoped></style>

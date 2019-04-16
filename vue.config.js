@@ -1,5 +1,7 @@
 const DtsBundleWebpack = require('dts-bundle-webpack')
 
+resolve: { alias: { mobx: __dirname + "/node_modules/mobx/lib/mobx.es6.js" }}
+
 module.exports = {
 	css: {
 		loaderOptions: {

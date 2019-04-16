@@ -1,14 +1,5 @@
 <template>
-	<InputNumber
-		class="ParamFieldNumber param-field--1w"
-		:value="value"
-		:precision="precision"
-		:min="min"
-		:max="max"
-		:step="step"
-		:unit="unit"
-		@input="onInput"
-	/>
+	<InputNumber class="ParamFieldNumber param-field--1w" v-bind="$props" @input="onInput"/>
 </template>
 
 <script lang="ts">

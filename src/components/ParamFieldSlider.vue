@@ -1,15 +1,6 @@
 <template>
 	<div class="ParamFieldSlider">
-		<InputNumber
-			class="param-field--1w"
-			:value="value"
-			:precision="precision"
-			:min="min"
-			:max="max"
-			:step="step"
-			:unit="unit"
-			@input="onInput"
-		/>
+		<InputNumber class="param-field--1w" v-bind="$props" @input="onInput"/>
 		<InputSlider
 			class="ParamFieldSlider__slider"
 			:value="value"

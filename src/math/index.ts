@@ -71,6 +71,10 @@ function quantize(value: number, step: number) {
 	return Math.floor(value / step + 0.5) * step
 }
 
+function isInteger(value: number): boolean {
+	return Math.floor(value) - value === 0
+}
+
 export {
 	lerp,
 	clamp,
@@ -81,5 +85,6 @@ export {
 	toRadians,
 	toDegrees,
 	cycleMod,
-	quantize
+	quantize,
+	isInteger
 }

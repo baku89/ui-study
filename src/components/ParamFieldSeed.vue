@@ -1,6 +1,14 @@
 <template>
 	<div class="ParamFieldSeed">
-		<InputNumber class="param-field--1w" :value="value" :precision="0" @input="onInput"/>
+		<InputNumber
+			class="param-field--1w"
+			:value="value"
+			:precision="0"
+			:min="min"
+			:max="max"
+			:step="step"
+			@input="onInput"
+		/>
 		<InputIconButton @click="generateRandomSeed" src="./assets/icon_refresh.svg"/>
 	</div>
 </template>
@@ -17,10 +25,11 @@ import InputIconButton from './InputIconButton.vue'
 	components: {InputNumber, InputIconButton}
 })
 export default class ParamFieldSeed extends Vue {
-	@Prop({type: Number, required: false}) private value!: number
-	@Prop({type: Number, default: 0}) private min!: number
-	@Prop({type: Number, default: 1000000}) private max!: number
-	@Prop({type: Number, default: null}) private step!: number
+	@Prop({type: Number, required: true}) private value!: number
+	@Prop(Number) private min!: number
+	@Prop(Number) private max!: number
+	@Prop(Number) private step!: number
+	@Prop(Number) private preision!: number
 
 	private onInput(newValue: number) {
 		this.$emit('input', newValue)

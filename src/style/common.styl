@@ -26,6 +26,10 @@ global-reset()
 	--param-field-gap-widget 0.5em
 	--param-field-gap-box 0.3em
 
+	// Input
+	--input-height 2em
+	--param-height 2.8em
+
 *, ::after, ::before
 	box-sizing border-box
 	outline none
@@ -63,7 +67,7 @@ a
 // Parameter
 .input-label
 	padding-right 1em
-	line-height $input-height
+	line-height var(--input-height)
 
 .param-field
 	&--color-button

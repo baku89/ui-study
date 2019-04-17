@@ -1,3 +1,4 @@
+import ConfigProvider from './ConfigProvider'
 import InputAngle from './InputAngle.vue'
 import InputButton from './InputButton.vue'
 import InputCodeEditor from './InputCodeEditor'
@@ -27,10 +28,12 @@ import ParamFieldRange from './ParamFieldRange.vue'
 import ParamFieldScale from './ParamFieldScale.vue'
 import ParamFieldSeed from './ParamFieldSeed.vue'
 import ParamFieldSlider from './ParamFieldSlider.vue'
+import SelectionManager from './SelectionManager.vue'
 import Timeline from './Timeline'
 import TimelineColor from './TimelineColor.vue'
 
 export default {
+	ConfigProvider,
 	InputAngle,
 	InputButton,
 	InputCodeEditor,
@@ -60,6 +63,7 @@ export default {
 	ParamFieldSeed,
 	ParamFieldScale,
 	ParamFieldSlider,
+	SelectionManager,
 	Timeline,
 	TimelineColor
 }

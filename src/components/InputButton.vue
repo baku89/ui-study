@@ -1,6 +1,8 @@
 <template>
-	<button class="InputButton" v-on="$listeners" ref="button">
-		<slot/>
+	<button class="InputButton" :square="onlyIcon" v-on="$listeners" ref="button">
+		<Icon class="InputButton__icon" v-if="icon && iconPosition === 'left'" :src="icon" :size=".8"/>
+		<span class="InputButton__label" v-if="label">{{label}}</span>
+		<Icon class="InputButton__icon" v-if="icon && iconPosition === 'right'" :src="icon" :size=".8"/>
 	</button>
 </template>
 
@@ -8,11 +10,21 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
 import {setButtonUnfocusableForMouse} from '../util'
+import Icon from './common/Icon.vue'
+import {VNode} from 'vue'
 
-@Component
+@Component({components: {Icon}})
 export default class InputButton extends Vue {
+	@Prop(String) private label!: string
+	@Prop(String) private icon!: string
+	@Prop({type: String, default: 'left'}) private iconPosition!: 'left' | 'right'
+
 	private mounted() {
 		setButtonUnfocusableForMouse(this.$refs.button as HTMLElement)
+	}
+
+	private get onlyIcon(): boolean {
+		return this.label === undefined && this.icon !== undefined
 	}
 }
 </script>
@@ -25,10 +37,14 @@ export default class InputButton extends Vue {
 	height var(--input-height)
 	input-border-style()
 	input-field-style()
-	padding 0 0.5em
+	display flex
 	border-color var(--color-control)
 	background transparent
 	color var(--color-control-text)
+
+	&[square]
+		padding 0
+		width var(--input-height)
 
 	&:hover, &:focus
 		input-border-hover-style()
@@ -37,4 +53,13 @@ export default class InputButton extends Vue {
 		input-border-active-style()
 		background var(--color-active)
 		color var(--color-bg)
+
+	&__icon
+		display block
+		width calc(var(--input-height) - 2px)
+		height @width
+
+	&__label
+		display block
+		padding 0 0.2em
 </style>

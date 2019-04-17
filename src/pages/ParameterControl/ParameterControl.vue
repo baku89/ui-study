@@ -52,7 +52,7 @@
 			</Parameter>
 
 			<Parameter>
-				<InputButton @click="time = 0">Reset</InputButton>
+				<InputButton label="Reset" @click="time = 0"/>
 			</Parameter>
 		</div>
 		<div class="preview">

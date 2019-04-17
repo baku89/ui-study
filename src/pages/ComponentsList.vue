@@ -94,7 +94,7 @@
 					<ParamFieldSeed v-model="ex4.seed" :min="1" :max="6" :step="1"/>
 				</Parameter>
 				<Parameter>
-					<InputButton @click="ex4.seed = (ex4.seed % 6) + 1">Increment</InputButton>
+					<InputButton label="Increment" @click="ex4.seed = (ex4.seed % 6) + 1"/>
 				</Parameter>
 			</div>
 			<div class="preview">
@@ -125,13 +125,13 @@
 						:max="ex6.max"
 						style="margin-right: .5em;"
 					/>
-					<InputButton class="center" @click="ex6.playing = false; ex6.time--">«-1</InputButton>
+					<InputButton class="center" label="«-1" @click="ex6.playing = false; ex6.time--"/>
 					<InputButton
 						class="center"
 						@click="togglePlay"
-						style="width: 2em;"
-					>{{ex6.playing ? '&#10074;&#10074;' : '▶'}}</InputButton>
-					<InputButton class="center" @click="ex6.playing = false; ex6.time++">+1»</InputButton>
+						:icon="ex6.playing ? './assets/icon_pause.svg' : './assets/icon_play.svg'"
+					/>
+					<InputButton class="center" label="+1»" @click="ex6.playing = false; ex6.time++"/>
 				</Parameter>
 				<Parameter label="Value">
 					<ParamFieldSlider

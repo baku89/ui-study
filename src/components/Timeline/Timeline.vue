@@ -56,80 +56,7 @@ export default class Timeline extends Vue {
 
 	private mounted() {
 		// Mousewheel scrolling
-		this.$el.addEventListener('mousewheel', (_e: Event) => {
-			const e = _e as MouseWheelEvent
-			e.preventDefault()
-
-			const [start, end] = this.displayRange
-
-			const framesPerPixel = (end - start) / this.$el.clientWidth
-
-			let incStart, incEnd
-
-			if (keypressed(this.keyScale)) {
-				const {left, width} = this.$el.getBoundingClientRect()
-				const scaleCenter = (e.clientX - left) / width
-				const inc = e.deltaY * framesPerPixel
-
-				incStart = -inc * scaleCenter
-				incEnd = inc * (1 - scaleCenter)
-
-				// Make sure to scroll at least 1 frame
-				if (Math.abs(incStart) < 1) {
-					incStart = Math.sign(incStart)
-				}
-				if (Math.abs(incEnd) < 1) {
-					incEnd = Math.sign(incEnd)
-				}
-
-				// Then round the range to integer
-				incStart = Math.round(incStart)
-				incEnd = Math.round(incEnd)
-
-				// Minimum duration
-				const duration = end + incEnd - (start + incStart)
-				if (duration < 10) {
-					const shortage = 10 - duration
-					const incStartShortage = Math.round(shortage * scaleCenter)
-					const incEndShortage = shortage - incStartShortage
-
-					incStart -= incStartShortage
-					incEnd += incEndShortage
-				}
-
-				// Clamp within min/max
-				if (start + incStart < this.min) {
-					incStart = this.min - start
-				}
-				if (end + incEnd > this.max) {
-					incEnd = this.max - end
-				}
-			} else {
-				incStart = e.deltaX * framesPerPixel
-
-				// Make sure to scroll at least 1 frame
-				if (Math.abs(incStart) < 1) {
-					incStart = Math.sign(incStart)
-				}
-
-				// Then round the range to integer
-				incStart = Math.round(incStart)
-
-				// Clamp within min/max
-				if (start + incStart < this.min) {
-					incStart = this.min - start
-				}
-				if (end + incStart > this.max) {
-					incStart = this.max - end
-				}
-
-				incEnd = incStart
-			}
-
-			// Set
-			this.$set(this.displayRange, 0, start + incStart)
-			this.$set(this.displayRange, 1, end + incEnd)
-		})
+		this.$el.addEventListener('mousewheel', this.onScroll)
 	}
 
 	private get knobOverflow(): 'start' | 'end' | null {
@@ -227,6 +154,82 @@ export default class Timeline extends Vue {
 			this.$set(this.displayRange, 0, this.time - duration)
 			this.$set(this.displayRange, 1, this.time)
 		}
+	}
+
+	private onScroll(_e: Event) {
+		const e = _e as MouseWheelEvent
+		e.preventDefault()
+
+		const [start, end] = this.displayRange
+		const framesPerPixel = (end - start) / this.$el.clientWidth
+		let incStart, incEnd
+
+		if (keypressed(this.keyScale) || e.ctrlKey) {
+			// Zoom in-out
+			const {left, width} = this.$el.getBoundingClientRect()
+			const scaleCenter = (e.clientX - left) / width
+
+			// Fasten the speed a bit in a case of multi-touch trackpad pinching
+			const inc = e.deltaY * (e.ctrlKey ? 2 : 1) * framesPerPixel
+
+			incStart = -inc * scaleCenter
+			incEnd = inc * (1 - scaleCenter)
+
+			// Make sure to scroll at least 1 frame
+			if (Math.abs(incStart) < 1) {
+				incStart = Math.sign(incStart)
+			}
+			if (Math.abs(incEnd) < 1) {
+				incEnd = Math.sign(incEnd)
+			}
+
+			// Then round the range to integer
+			incStart = Math.round(incStart)
+			incEnd = Math.round(incEnd)
+
+			// Minimum duration
+			const duration = end + incEnd - (start + incStart)
+			if (duration < 10) {
+				const shortage = 10 - duration
+				const incStartShortage = Math.round(shortage * scaleCenter)
+				const incEndShortage = shortage - incStartShortage
+
+				incStart -= incStartShortage
+				incEnd += incEndShortage
+			}
+
+			// Clamp within min/max
+			if (start + incStart < this.min) {
+				incStart = this.min - start
+			}
+			if (end + incEnd > this.max) {
+				incEnd = this.max - end
+			}
+		} else {
+			incStart = e.deltaX * framesPerPixel
+
+			// Make sure to scroll at least 1 frame
+			if (Math.abs(incStart) < 1) {
+				incStart = Math.sign(incStart)
+			}
+
+			// Then round the range to integer
+			incStart = Math.round(incStart)
+
+			// Clamp within min/max
+			if (start + incStart < this.min) {
+				incStart = this.min - start
+			}
+			if (end + incStart > this.max) {
+				incStart = this.max - end
+			}
+
+			incEnd = incStart
+		}
+
+		// Set
+		this.$set(this.displayRange, 0, start + incStart)
+		this.$set(this.displayRange, 1, end + incEnd)
 	}
 }
 </script>

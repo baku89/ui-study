@@ -14,7 +14,7 @@
 				class="Param__remove"
 				@click="$emit('remove')"
 				src="./assets/icon_cross.svg"
-				:size="0.8"
+				:size="0.7"
 			/>
 		</div>
 	</li>

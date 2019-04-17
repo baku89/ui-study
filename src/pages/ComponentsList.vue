@@ -114,8 +114,8 @@
 
 		<h2>Example 6</h2>
 		<p>Play Controls</p>
-		<div class="example">
-			<div class="param">
+		<div class="example no-preview">
+			<div class="param" style="margin-bottom: 0.5em;">
 				<Parameter label="Timecode">
 					<InputTime
 						class="param-field--1w"
@@ -143,13 +143,18 @@
 					/>
 				</Parameter>
 			</div>
+			<Timeline
+				:time.sync="ex6.time"
+				:min="ex6.min"
+				:max="ex6.max"
+				:autoScroll="ex6.playing"
+				@scrubstart="ex6.playing = false"
+			>
+				<template v-slot="{displayRange}">
+					<TimelineColor :value="ex6.colors" :displayRange="displayRange" ref="timelineColor"/>
+				</template>
+			</Timeline>
 		</div>
-
-		<Timeline :time.sync="ex6.time" :min="ex6.min" :max="ex6.max">
-			<template v-slot="{displayRange}">
-				<TimelineColor :value="ex6.colors" :displayRange="displayRange" ref="timelineColor"/>
-			</template>
-		</Timeline>
 	</div>
 </template>
 
@@ -288,6 +293,9 @@ export default class ComponentsList extends Vue {
 	margin-bottom 4em
 	background var(--color-bg)
 	font-size 1rem
+
+	&.no-preview
+		display block
 
 	.param
 		flex-grow 1

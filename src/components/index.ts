@@ -27,7 +27,7 @@ import ParamFieldRange from './ParamFieldRange.vue'
 import ParamFieldScale from './ParamFieldScale.vue'
 import ParamFieldSeed from './ParamFieldSeed.vue'
 import ParamFieldSlider from './ParamFieldSlider.vue'
-import Timeline from './Timeline.vue'
+import Timeline from './Timeline'
 import TimelineColor from './TimelineColor.vue'
 
 export default {

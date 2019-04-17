@@ -3,27 +3,43 @@ import {isInteger} from '../math'
 const DROPFRAME_FRAMERATE = new Set([23.976, 29.97, 59.94])
 
 export default class Timecode {
-	private _frameRate!: number
-	private _dropFrame!: boolean
+	public static formatSimple(frameCount: number, frameRate: number): string {
+		let fc = Math.abs(frameCount)
 
-	private _frameCount!: number
-	private _hours!: number
-	private _minutes!: number
-	private _seconds!: number
-	private _frames!: number
+		// Adjust for dropFrame
+		// https://github.com/CrystalComputerCorp/smpte-timecode/blob/master/smpte-timecode.js
+		if (DROPFRAME_FRAMERATE.has(frameRate)) {
+			const df = frameRate === 29.97 ? 2 : 4 // 59.94 skips 4 frames
+			const d = Math.floor(frameCount / ((17982 * df) / 2))
+			let m = frameCount % ((17982 * df) / 2)
+			if (m < df) {
+				m = m + df
+			}
+			fc += 9 * df * d + df * Math.floor((m - df) / ((1798 * df) / 2))
+		}
 
-	private _hoursText!: string
-	private _minutesText!: string
-	private _secondsText!: string
-	private _framesText!: string
+		const fps = Math.round(frameRate)
 
-	constructor(frameCount: number = 0, frameRate: number = 29.97) {
-		this._frameCount = Math.round(frameCount)
+		const frames = fc % fps
+		const seconds = Math.floor(fc / fps) % 60
+		const minutes = Math.floor(fc / (fps * 60)) % 60
+		const hours = Math.floor(fc / (fps * 3600)) % 24
 
-		this.validateFrameRate(frameRate)
-		this._frameRate = frameRate
+		let text = frameCount < 0 ? '-' : ''
 
-		this.updateSMTPE()
+		if (frames) {
+			text += (frames < 10 ? '0' : '') + frames.toString() + 'f'
+		} else if (seconds) {
+			text += (seconds < 10 ? '0' : '') + seconds.toString() + 's'
+		} else if (minutes) {
+			text += (minutes < 10 ? '0' : '') + minutes.toString() + 'm'
+		} else if (hours) {
+			text += (hours < 10 ? '0' : '') + hours.toString() + 'h'
+		} else {
+			text = '0f'
+		}
+
+		return text
 	}
 
 	get frameRate(): number {
@@ -145,6 +161,29 @@ export default class Timecode {
 		this.updateSMTPE()
 	}
 
+	private _frameRate!: number
+	private _dropFrame!: boolean
+
+	private _frameCount!: number
+	private _hours!: number
+	private _minutes!: number
+	private _seconds!: number
+	private _frames!: number
+
+	private _hoursText!: string
+	private _minutesText!: string
+	private _secondsText!: string
+	private _framesText!: string
+
+	constructor(frameCount: number = 0, frameRate: number = 29.97) {
+		this._frameCount = Math.round(frameCount)
+
+		this.validateFrameRate(frameRate)
+		this._frameRate = frameRate
+
+		this.updateSMTPE()
+	}
+
 	private validateFrameRate(frameRate: number) {
 		const dropFrame = DROPFRAME_FRAMERATE.has(frameRate)
 
@@ -159,7 +198,7 @@ export default class Timecode {
 	}
 
 	private updateSMTPE() {
-		let fc = this._frameCount * (this._frameCount < 0 ? -1 : 1)
+		let fc = Math.abs(this._frameCount)
 
 		// Adjust for dropFrame
 		// https://github.com/CrystalComputerCorp/smpte-timecode/blob/master/smpte-timecode.js

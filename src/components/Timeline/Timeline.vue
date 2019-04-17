@@ -13,10 +13,11 @@
 		</div>
 		<InputRange
 			class="Timeline__range no-slit"
-			v-model="displayRange"
+			:value="displayRange"
 			:min="min"
 			:max="max"
 			:step="1"
+			@input="onUpdateDisplayRange"
 		/>
 	</div>
 </template>
@@ -39,8 +40,8 @@ export default class Timeline extends Vue {
 	@Prop({type: Number, required: true}) private max!: number
 	@Prop({type: Boolean, default: false}) private autoScroll!: boolean
 
-	@Inject({from: 'keySymmetry', default: 'alt'})
-	private readonly keySymmetry!: string
+	@Inject({from: 'keyScale', default: 'alt'})
+	private readonly keyScale!: string
 
 	private displayRange: [number, number] = [0, 0]
 
@@ -65,7 +66,7 @@ export default class Timeline extends Vue {
 
 			let incStart, incEnd
 
-			if (keypressed(this.keySymmetry)) {
+			if (keypressed(this.keyScale)) {
 				const {left, width} = this.$el.getBoundingClientRect()
 				const scaleCenter = (e.clientX - left) / width
 				const inc = e.deltaY * framesPerPixel
@@ -187,6 +188,27 @@ export default class Timeline extends Vue {
 		if (this.time !== newValue) {
 			this.$emit('update:time', newValue)
 		}
+	}
+
+	private onUpdateDisplayRange([start, end]: [number, number]) {
+		// console.log(start, end)
+		const duration = end - start
+		let incStart = start - this.displayRange[0]
+		let incEnd = end - this.displayRange[1]
+
+		if (duration < 10) {
+			const scaleCenter = 1 - ratio(-incEnd, 0, incStart - incEnd)
+
+			const shortage = 10 - duration
+			const incStartShortage = Math.round(shortage * scaleCenter)
+			const incEndShortage = shortage - incStartShortage
+
+			incStart -= incStartShortage
+			incEnd += incEndShortage
+		}
+
+		this.$set(this.displayRange, 0, this.displayRange[0] + incStart)
+		this.$set(this.displayRange, 1, this.displayRange[1] + incEnd)
 	}
 
 	@Watch('time')

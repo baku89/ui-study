@@ -23,13 +23,13 @@
 				@update:element="onUpdateElement(0, $event)"
 			/>
 			<InputColorElement
-				class="middle"
+				class="center"
 				:color="value"
 				:varying="1"
 				@update:element="onUpdateElement(1, $event)"
 			/>
 			<InputColorElement
-				:class="hasAlpha ? 'middle' : 'right'"
+				:class="hasAlpha ? 'center' : 'right'"
 				:color="value"
 				:varying="2"
 				@update:element="onUpdateElement(2, $event)"

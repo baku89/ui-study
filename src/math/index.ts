@@ -68,7 +68,7 @@ function cycleMod(value: number, inc: number, max: number) {
 }
 
 function quantize(value: number, step: number) {
-	return Math.floor(value / step + 0.5) * step
+	return Math.round(value / step) * step
 }
 
 function isInteger(value: number): boolean {

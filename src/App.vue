@@ -112,14 +112,14 @@ html, body
 		z-index 1010
 		width 100%
 		height $title-bar-height
-		background #222222
+		background var(--color-menu-bg)
 		user-select none
 
 	&__hamburger, &__settings
 		position absolute
 		top 0
 		height $title-bar-height
-		color white
+		color var(--color-menu-text)
 		vertical-align middle
 		letter-spacing 0.3em
 		line-height $title-bar-height

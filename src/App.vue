@@ -1,28 +1,30 @@
 <template>
-	<div class="App">
-		<div class="App__title-bar">
-			<button class="App__hamburger" @click="onClickMenu">
-				<Icon
-					class="mark menu"
-					:src="isNavOpened ? './assets/icon_cross.svg' : './assets/icon_hamburger.svg'"
-				></Icon>MENU
-			</button>
-			<button class="App__settings" @click="onClickSettings">
-				<Icon class="mark gear" src="./assets/icon_gear.svg"/>
-			</button>
-		</div>
-		<div class="App__nav" :open="isNavOpened">
-			<div class="App__nav-content">
-				<Home/>
+	<ConfigProvider>
+		<div class="App">
+			<div class="App__title-bar">
+				<button class="App__hamburger" @click="onClickMenu">
+					<Icon
+						class="mark menu"
+						:src="isNavOpened ? './assets/icon_cross.svg' : './assets/icon_hamburger.svg'"
+					></Icon>MENU
+				</button>
+				<button class="App__settings" @click="onClickSettings">
+					<Icon class="mark gear" src="./assets/icon_gear.svg"/>
+				</button>
 			</div>
+			<div class="App__nav" :open="isNavOpened">
+				<div class="App__nav-content">
+					<Home/>
+				</div>
+			</div>
+			<div class="App__view">
+				<router-view/>
+			</div>
+			<Modal :show="isSettingsOpened" @close="isSettingsOpened = false">
+				<h2>Settings</h2>
+			</Modal>
 		</div>
-		<div class="App__view">
-			<router-view/>
-		</div>
-		<Modal :show="isSettingsOpened" @close="isSettingsOpened = false">
-			<h2>Settings</h2>
-		</Modal>
-	</div>
+	</ConfigProvider>
 </template>
 
 <script lang="ts">
@@ -31,10 +33,13 @@ import {Component, Vue, Watch} from 'vue-property-decorator'
 import Icon from './components/common/Icon.vue'
 import Modal from './components/common/Modal.vue'
 
+import Components from './components'
+const {ConfigProvider} = Components
+
 import Home from './pages/Home'
 
 @Component({
-	components: {Home, Icon, Modal}
+	components: {Home, Icon, Modal, ConfigProvider}
 })
 export default class App extends Vue {
 	private isSettingsOpened: boolean = false

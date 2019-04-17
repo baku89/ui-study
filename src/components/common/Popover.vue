@@ -23,6 +23,10 @@ export default class Popover extends Vue {
 	private popperInstance!: Popper | null
 	private originalParentEl!: Node & ParentNode
 
+	public setReference(el: Element) {
+		this.originalParentEl = el
+	}
+
 	private mounted() {
 		this.resetPopper()
 	}
@@ -79,10 +83,6 @@ export default class Popover extends Vue {
 		if (!this.originalParentEl) {
 			this.originalParentEl = el
 		}
-	}
-
-	public setReference(el: Element) {
-		this.originalParentEl = el
 	}
 
 	private killPopper() {

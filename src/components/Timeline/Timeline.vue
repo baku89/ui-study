@@ -5,7 +5,7 @@
 				<TimelineSeekbarScale :displayRange="displayRange"/>
 			</div>
 		</Drag>
-		<div class="Timeline__knob" ref="knob" :style="knobStyles">
+		<div class="Timeline__knob" :overflow="knobOverflow" :style="knobStyles" @click="scrollToTime">
 			<div class="Timeline__knob-tip"/>
 		</div>
 		<div class="Timeline__contents">
@@ -68,7 +68,7 @@ export default class Timeline extends Vue {
 			if (keypressed(this.keySymmetry)) {
 				const {left, width} = this.$el.getBoundingClientRect()
 				const scaleCenter = (e.clientX - left) / width
-				let inc = e.deltaY * framesPerPixel
+				const inc = e.deltaY * framesPerPixel
 
 				incStart = -inc * scaleCenter
 				incEnd = inc * (1 - scaleCenter)
@@ -131,9 +131,20 @@ export default class Timeline extends Vue {
 		})
 	}
 
+	private get knobOverflow(): 'start' | 'end' | null {
+		if (this.time < this.displayRange[0]) {
+			return 'start'
+		} else if (this.time > this.displayRange[1]) {
+			return 'end'
+		} else {
+			return null
+		}
+	}
+
 	private get knobStyles(): object {
 		const left =
-			ratio(this.time, this.displayRange[0], this.displayRange[1] + 1) * 100
+			ratio(this.time, this.displayRange[0], this.displayRange[1] + 1, true) *
+			100
 		const width = Math.floor(
 			100 / (this.displayRange[1] - this.displayRange[0] + 1)
 		)
@@ -181,14 +192,18 @@ export default class Timeline extends Vue {
 	@Watch('time')
 	private onTimeChanged() {
 		if (this.autoScroll) {
-			const duration = this.displayRange[1] - this.displayRange[0]
-			if (this.time < this.displayRange[0]) {
-				this.$set(this.displayRange, 0, this.time)
-				this.$set(this.displayRange, 1, this.time + duration)
-			} else if (this.displayRange[1] < this.time) {
-				this.$set(this.displayRange, 0, this.time - duration)
-				this.$set(this.displayRange, 1, this.time)
-			}
+			this.scrollToTime()
+		}
+	}
+
+	private scrollToTime() {
+		const duration = this.displayRange[1] - this.displayRange[0]
+		if (this.time < this.displayRange[0]) {
+			this.$set(this.displayRange, 0, this.time)
+			this.$set(this.displayRange, 1, this.time + duration)
+		} else if (this.displayRange[1] < this.time) {
+			this.$set(this.displayRange, 0, this.time - duration)
+			this.$set(this.displayRange, 1, this.time)
 		}
 	}
 }
@@ -196,7 +211,7 @@ export default class Timeline extends Vue {
 
 <style lang="stylus" scoped>
 $seekbar-height = 2em
-$knob-top = 0.3em
+$knob-top = 0.2em
 
 .Timeline
 	position relative
@@ -214,8 +229,15 @@ $knob-top = 0.3em
 		top $knob-top
 		bottom 0
 		z-index 1
+		margin-left -1px
 		border-left 2px solid var(--color-seek)
 		pointer-events none
+
+		&[overflow]
+			pointer-events auto
+
+			&:before
+				display none
 
 		&:before, &:after
 			position absolute
@@ -223,13 +245,14 @@ $knob-top = 0.3em
 			width 100%
 			content ''
 
+		// Colored highlight
 		&:before
 			top $seekbar-height - $knob-top
 			margin-top -2px
 			height 2px
 			background var(--color-seek)
 
-		// Highlight
+		// Dimmed highlight
 		&:after
 			top $seekbar-height - $knob-top
 			bottom 0
@@ -237,7 +260,7 @@ $knob-top = 0.3em
 			opacity 0.2
 
 	&__knob-tip
-		$size = 0.4em
+		$size = 0.5em
 		position absolute
 		box-sizing content-box
 		margin-left 'calc(%s - 1px)' % (-1 * $size)
@@ -247,7 +270,13 @@ $knob-top = 0.3em
 		border-style solid
 		border-color var(--color-seek) transparent transparent transparent
 		transform scaleY(2)
-		transform-origin 0 0
+		transform-origin 50% 0
+
+		^[0]__knob[overflow='start'] &
+			transform rotate(90deg) translate(50%, -200%) scaleY(2)
+
+		^[0]__knob[overflow='end'] &
+			transform rotate(-90deg) translate(-50%, -200%) scaleY(2)
 
 	&__range
 		position relative

@@ -186,8 +186,6 @@ export default class InputTime extends Vue {
 			const originalPartIndex = (beginning.match(/:|;/g) || []).length
 			let partIndex = originalPartIndex
 
-			console.log(originalPartIndex)
-
 			if (partIndex === 3) {
 				if (keypressed(this.keyFaster)) {
 					partIndex = 2

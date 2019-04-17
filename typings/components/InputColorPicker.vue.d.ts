@@ -1,16 +1,16 @@
 import { Vue } from 'vue-property-decorator';
 export default class InputColorPicker extends Vue {
     private value;
-    private isDraggingSL;
+    private isDraggingSV;
     private isDraggingHue;
     private readonly mode;
     private readonly elements;
-    private readonly hsl;
+    private readonly hsv;
     private readonly cssColor;
-    private readonly SLPreviewStyles;
+    private readonly SVPreviewStyles;
     private readonly HuePreviewStyles;
     private readonly gradientPaletteColor;
-    private onDragSL;
+    private onDragSV;
     private onDragHue;
-    private emitNewHSL;
+    private emitNewValue;
 }

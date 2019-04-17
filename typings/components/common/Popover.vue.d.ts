@@ -4,6 +4,7 @@ export default class Popover extends Vue {
     private placement;
     private popperInstance;
     private originalParentEl;
+    setReference(el: Element): void;
     private mounted;
     private onActiveChanged;
     private setOriginalParent;

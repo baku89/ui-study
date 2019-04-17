@@ -1,0 +1,37 @@
+import { Vue } from 'vue-property-decorator';
+export default class InputTime extends Vue {
+    private value;
+    private min;
+    private max;
+    private readonly fps;
+    private readonly dragSpeed;
+    private readonly keyFaster;
+    private readonly keySlower;
+    private smpte;
+    private frames;
+    private dropFrameSeparator;
+    private seconds;
+    private minutes;
+    private hours;
+    private isEditing;
+    private isDragging;
+    private activePartIndex;
+    private dragFrom;
+    private dragTo;
+    private dragMinX;
+    private dragMaxX;
+    private timecode;
+    private readonly hasMin;
+    private readonly hasMax;
+    private created;
+    private onValueChanged;
+    private onChange;
+    private onKeydown;
+    private onMouseenterPart;
+    private onMouseleavePart;
+    private onDragstart;
+    private onDrag;
+    private onDragend;
+    private onClick;
+    private setSelectionByPartIndex;
+}

@@ -1,25 +1,37 @@
 import { Vue } from 'vue-property-decorator';
 export default class InputNumber extends Vue {
+    isSelected: boolean;
     private value;
     private precision;
     private label;
     private unit;
     private min;
     private max;
+    private step;
     private isEditing;
     private isDragging;
     private dragFrom;
     private dragTo;
     private dragMinX;
     private dragMaxX;
+    private shouldOmitZero;
+    private updatedRecently;
+    private updatedTimer;
+    private readonly SelectionManager;
     private readonly dragSpeed;
+    private readonly keyFaster;
+    private readonly keySlower;
     private readonly displayValue;
     private readonly hasMin;
     private readonly hasMax;
+    private readonly hasStep;
     private onChange;
+    private updateValue;
     private onClick;
+    private onFocus;
     private onKeydown;
     private onDragstart;
     private onDrag;
     private onDragend;
+    private onValueChanged;
 }

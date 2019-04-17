@@ -7,4 +7,6 @@ declare function toFixed(value: number, precision: number, omitZeros?: boolean):
 declare function toRadians(degrees: number): number;
 declare function toDegrees(radians: number): number;
 declare function cycleMod(value: number, inc: number, max: number): number;
-export { lerp, clamp, parseNumber, toFixed, ratio, mod, toRadians, toDegrees, cycleMod };
+declare function quantize(value: number, step: number): number;
+declare function isInteger(value: number): boolean;
+export { lerp, clamp, parseNumber, toFixed, ratio, mod, toRadians, toDegrees, cycleMod, quantize, isInteger };

@@ -5,7 +5,10 @@ export default class InputAngle extends Vue {
     private dragFrom;
     private dragTo;
     private roteryDrag;
+    private readonly quantizeAngles;
+    private readonly keyQuantize;
     private created;
+    private mounted;
     private onDragstart;
     private onDrag;
     private onDragend;

@@ -5,7 +5,7 @@ export default class SvgArrow extends Vue {
     private to;
     private _sub;
     private _lineTo;
-    private _n;
+    private _normalized;
     private created;
     readonly lineTo: vec2;
     readonly sub: vec2;

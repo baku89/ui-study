@@ -5,6 +5,8 @@ export default class InputPoint extends Vue {
     private isDragging;
     private dragFrom;
     private dragTo;
+    private readonly keyFaster;
+    private readonly keySlower;
     private ui;
     private onKeydown;
     private onKeyup;

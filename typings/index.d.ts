@@ -3,6 +3,7 @@ import * as util from './util';
 import * as math from './math';
 declare const _default: {
     components: {
+        ConfigProvider: typeof import("./components/ConfigProvider").default;
         InputAngle: typeof import("./components/InputAngle.vue").default;
         InputButton: typeof import("./components/InputButton.vue").default;
         InputCodeEditor: typeof import("./components/InputCodeEditor").default;
@@ -20,7 +21,9 @@ declare const _default: {
         InputRange: typeof import("./components/InputRange.vue").default;
         InputSlider: typeof import("./components/InputSlider.vue").default;
         InputString: typeof import("./components/InputString.vue").default;
+        InputTime: typeof import("./components/InputTime").default;
         InputVector: typeof import("./components/InputVector.vue").default;
+        Parameter: typeof import("./components/Parameter.vue").default;
         ParamFieldAffine: typeof import("./components/ParamFieldAffine.vue").default;
         ParamFieldAngle: typeof import("./components/ParamFieldAngle.vue").default;
         ParamFieldColor: typeof import("./components/ParamFieldColor.vue").default;
@@ -30,6 +33,9 @@ declare const _default: {
         ParamFieldSeed: typeof import("./components/ParamFieldSeed.vue").default;
         ParamFieldScale: typeof import("./components/ParamFieldScale.vue").default;
         ParamFieldSlider: typeof import("./components/ParamFieldSlider.vue").default;
+        SelectionManager: typeof import("./components/SelectionManager.vue").default;
+        Timeline: typeof import("./components/Timeline").default;
+        TimelineColor: typeof import("./components/TimelineColor.vue").default;
     };
     common: {
         Drag: typeof Drag;

@@ -1,3 +1,4 @@
+import ConfigProvider from './ConfigProvider';
 import InputAngle from './InputAngle.vue';
 import InputButton from './InputButton.vue';
 import InputCodeEditor from './InputCodeEditor';
@@ -15,7 +16,9 @@ import InputPoint from './InputPoint.vue';
 import InputRange from './InputRange.vue';
 import InputSlider from './InputSlider.vue';
 import InputString from './InputString.vue';
+import InputTime from './InputTime';
 import InputVector from './InputVector.vue';
+import Parameter from './Parameter.vue';
 import ParamFieldAffine from './ParamFieldAffine.vue';
 import ParamFieldAngle from './ParamFieldAngle.vue';
 import ParamFieldColor from './ParamFieldColor.vue';
@@ -25,7 +28,11 @@ import ParamFieldRange from './ParamFieldRange.vue';
 import ParamFieldScale from './ParamFieldScale.vue';
 import ParamFieldSeed from './ParamFieldSeed.vue';
 import ParamFieldSlider from './ParamFieldSlider.vue';
+import SelectionManager from './SelectionManager.vue';
+import Timeline from './Timeline';
+import TimelineColor from './TimelineColor.vue';
 declare const _default: {
+    ConfigProvider: typeof ConfigProvider;
     InputAngle: typeof InputAngle;
     InputButton: typeof InputButton;
     InputCodeEditor: typeof InputCodeEditor;
@@ -43,7 +50,9 @@ declare const _default: {
     InputRange: typeof InputRange;
     InputSlider: typeof InputSlider;
     InputString: typeof InputString;
+    InputTime: typeof InputTime;
     InputVector: typeof InputVector;
+    Parameter: typeof Parameter;
     ParamFieldAffine: typeof ParamFieldAffine;
     ParamFieldAngle: typeof ParamFieldAngle;
     ParamFieldColor: typeof ParamFieldColor;
@@ -53,5 +62,8 @@ declare const _default: {
     ParamFieldSeed: typeof ParamFieldSeed;
     ParamFieldScale: typeof ParamFieldScale;
     ParamFieldSlider: typeof ParamFieldSlider;
+    SelectionManager: typeof SelectionManager;
+    Timeline: typeof Timeline;
+    TimelineColor: typeof TimelineColor;
 };
 export default _default;

@@ -3,6 +3,7 @@ export default class ParamFieldSlider extends Vue {
     private value;
     private min;
     private max;
+    private step;
     private precision;
     private label;
     private unit;

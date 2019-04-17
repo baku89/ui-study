@@ -1,20 +1,20 @@
 import { Vue } from 'vue-property-decorator';
+import { DataColorMode, DataColorModeInfo } from '../../data';
 export default class InputColorElement extends Vue {
-    private value;
-    private mode;
+    private color;
     private varying;
-    private label;
-    private unit;
-    private min;
-    private max;
     private isEditing;
     private isDragging;
     private slitMaxY;
     private slitMinY;
     private slitLeft;
     private previewY;
-    private previewColor;
+    private updatedRecently;
+    private updatedTimer;
+    private readonly keyFaster;
+    readonly mode: DataColorMode;
     readonly element: number;
+    readonly cssColor: string;
     readonly slitStyles: {
         left: string;
         top: string;
@@ -25,10 +25,12 @@ export default class InputColorElement extends Vue {
         left: string;
         top: string;
     };
+    readonly info: DataColorModeInfo;
     private onChange;
     private onKeydown;
     private onClick;
     private onDragstart;
     private onDrag;
     private onDragend;
+    private onColorChanged;
 }

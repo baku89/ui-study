@@ -4,6 +4,7 @@ export default class ParamFieldSeed extends Vue {
     private min;
     private max;
     private step;
+    private preision;
     private onInput;
     private generateRandomSeed;
 }

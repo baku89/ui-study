@@ -84,7 +84,7 @@ export default class InputColorElement extends Vue {
 	private previewY: number = 0
 
 	private updatedRecently: boolean = false
-	private updatedTimer!: NodeJS.Timer
+	private updatedTimer!: number
 
 	@Inject({from: 'keyFaster', default: 'shift'})
 	private readonly keyFaster!: string
@@ -197,6 +197,7 @@ export default class InputColorElement extends Vue {
 			this.updatedRecently = true
 			clearTimeout(this.updatedTimer)
 
+			// @ts-ignore
 			this.updatedTimer = setTimeout(() => {
 				this.updatedRecently = false
 			}, 100)

@@ -83,7 +83,7 @@ export default class InputNumber extends Vue {
 	private dragMaxX: number = 0
 
 	private updatedRecently: boolean = false
-	private updatedTimer!: NodeJS.Timer
+	private updatedTimer!: number
 
 	@Inject({from: 'dragSpeed', default: 0.5}) private readonly dragSpeed!: number
 	@Inject({from: 'keyFaster', default: 'shift'})
@@ -225,6 +225,7 @@ export default class InputNumber extends Vue {
 		this.updatedRecently = true
 		clearTimeout(this.updatedTimer)
 
+		// @ts-ignore
 		this.updatedTimer = setTimeout(() => {
 			this.updatedRecently = false
 		}, 100)

@@ -48,12 +48,16 @@ export default class InputAngle extends Vue {
 		default: [0, 45, 90, 135, 180, 225, 270, 315]
 	})
 	private readonly quantizeAngles!: number[]
+
 	@Inject({from: 'keyQuantize', default: 'shift'})
 	private readonly keyQuantize!: string
 
 	private created() {
 		this.roteryDrag = new RoteryDrag()
-		this.roteryDrag.minDistance = 10
+	}
+
+	private mounted() {
+		this.roteryDrag.minDistance = this.$el.clientWidth
 	}
 
 	private onDragstart(e: {current: number[]}) {

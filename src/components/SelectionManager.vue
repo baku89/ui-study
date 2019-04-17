@@ -69,35 +69,11 @@ export default class SelectionManager extends Vue {
 	}
 
 	private mounted() {
-		window.addEventListener('mousedown', (e: Event) => {
-			if (this.items.length === 0) {
-				return
-			}
+		window.addEventListener('mousedown', this.deselectOnClickOutside)
+	}
 
-			let target = e.target
-			let clickedSelectable = false
-
-			while (
-				target !== null &&
-				target instanceof HTMLElement &&
-				target !== this.$el
-			) {
-				if (target.getAttribute('selectable') !== null) {
-					clickedSelectable = true
-				}
-				target = target.parentElement
-			}
-
-			// const path = e.composedPath() as HTMLElement[]
-
-			// const clickedSelectable = path.some(el => !!el.getAttribute('selectable'))
-
-			console.log(clickedSelectable)
-
-			if (!clickedSelectable) {
-				this.deselectAll()
-			}
-		})
+	private beforeDestroy() {
+		window.removeEventListener('mousedown', this.deselectOnClickOutside)
 	}
 
 	private get showControl(): boolean {
@@ -156,6 +132,26 @@ export default class SelectionManager extends Vue {
 
 	private onDragend() {
 		this.dragMode = null
+	}
+
+	private deselectOnClickOutside(e: Event) {
+		if (this.items.length === 0) {
+			return
+		}
+
+		let target = e.target
+		let clickedSelectable = false
+
+		while (target !== null && target instanceof HTMLElement) {
+			if (target.getAttribute('selectable') !== null) {
+				clickedSelectable = true
+			}
+			target = target.parentElement
+		}
+
+		if (!clickedSelectable) {
+			this.deselectAll()
+		}
 	}
 }
 </script>

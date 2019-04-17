@@ -7,12 +7,95 @@
 			:height="artboardSize[1]"
 			:style="{width: artboardSize[0] + 'px', height: artboardSize[1] + 'px'}"
 		></canvas>
+		<InputCodeEditor
+			class="code"
+			:value="graphicsJson"
+			@input="onGraphicsJsonChanged"
+			lang="javascript"
+		/>
 	</div>
 </template>
 
 <script lang="ts">
 import {Component, Vue, Watch} from 'vue-property-decorator'
+import JSON5 from 'json5'
+
 import Components from '../../components'
+
+type DrawFunc = (ctx: CanvasRenderingContext2D, params: object) => any
+
+const funcs: Map<string, DrawFunc> = new Map([
+	[
+		'Rect',
+		(ctx: CanvasRenderingContext2D, {x, y, width, height}: any) => {
+			ctx.strokeRect(x, y, width, height)
+		}
+	],
+	[
+		'Line',
+		(ctx: CanvasRenderingContext2D, {x0, y0, x1, y1}: any) => {
+			ctx.beginPath()
+			ctx.moveTo(x0, y0)
+			ctx.lineTo(x1, y1)
+			ctx.stroke()
+		}
+	],
+	[
+		'Polygon',
+		(ctx: CanvasRenderingContext2D, {paths}: any) => {
+			ctx.beginPath()
+			ctx.moveTo(paths[0], paths[1])
+
+			for (let i = 2; i < paths.length; i += 2) {
+				ctx.lineTo(paths[i], paths[i + 1])
+			}
+
+			ctx.closePath()
+			ctx.stroke()
+		}
+	],
+	[
+		'Circle',
+		(ctx: CanvasRenderingContext2D, {x, y, r}: any) => {
+			ctx.beginPath()
+			ctx.arc(x, y, r, 0, Math.PI * 2)
+			ctx.stroke()
+		}
+	],
+
+	// Macros
+	[
+		'Diamond',
+		(ctx: CanvasRenderingContext2D, {x, y, size}: any) => {
+			const half = size / 2
+			return [
+				[
+					'Polygon',
+					{
+						paths: [x, y - half, x + half, y, x, y + half, x - half, y]
+					}
+				]
+			]
+		}
+	],
+	[
+		'MultiDiamond',
+		(ctx: CanvasRenderingContext2D, {x, y, size, num}: any) => {
+			return Array(num)
+				.fill(null)
+				.map((item, i) => {
+					return [
+						'Diamond',
+						{
+							x,
+							y,
+							size: (size / num) * (i + 1)
+						}
+					]
+				})
+		}
+	]
+])
 
 @Component({
 	components: Components
@@ -72,8 +155,17 @@ export default class GraphicsOnLisp extends Vue {
 
 	private ctx!: CanvasRenderingContext2D | null
 
+	private get graphicsJson(): string {
+		return JSON5.stringify(this.graphics)
+	}
+
 	private mounted() {
-		this.ctx = (this.$refs.canvas as HTMLCanvasElement).getContext('2d')
+		const canvas = this.$refs.canvas as HTMLCanvasElement
+
+		canvas.width = this.artboardSize[0]
+		canvas.height = this.artboardSize[1]
+
+		this.ctx = canvas.getContext('2d')
 
 		this.evalGraphics()
 	}
@@ -85,85 +177,6 @@ export default class GraphicsOnLisp extends Vue {
 		}
 
 		const ctx = this.ctx
-
-		const funcs: Map<string, any> = new Map([
-			[
-				'Rect',
-				(params: any) => {
-					const {x, y, width, height} = params
-					ctx.strokeRect(x, y, width, height)
-				}
-			],
-			[
-				'Line',
-				(params: any) => {
-					const {x0, y0, x1, y1} = params
-					ctx.beginPath()
-					ctx.moveTo(x0, y0)
-					ctx.lineTo(x1, y1)
-					ctx.stroke()
-				}
-			],
-			[
-				'Polygon',
-				(params: any) => {
-					const {paths} = params
-					ctx.beginPath()
-					ctx.moveTo(paths[0], paths[1])
-
-					for (let i = 2; i < paths.length; i += 2) {
-						ctx.lineTo(paths[i], paths[i + 1])
-					}
-
-					ctx.closePath()
-					ctx.stroke()
-				}
-			],
-			[
-				'Circle',
-				(params: any) => {
-					const {x, y, r} = params
-					ctx.beginPath()
-					ctx.arc(x, y, r, 0, Math.PI * 2)
-					ctx.stroke()
-				}
-			],
-
-			// Macros
-			[
-				'Diamond',
-				(params: any) => {
-					const {x, y, size} = params
-					const half = size / 2
-					return [
-						[
-							'Polygon',
-							{
-								paths: [x, y - half, x + half, y, x, y + half, x - half, y]
-							}
-						]
-					]
-				}
-			],
-			[
-				'MultiDiamond',
-				(params: any) => {
-					const {x, y, size, num} = params
-					return Array(num)
-						.fill(null)
-						.map((item, i) => {
-							return [
-								'Diamond',
-								{
-									x,
-									y,
-									size: (size / num) * (i + 1)
-								}
-							]
-						})
-				}
-			]
-		])
 
 		// Evaluate lisp
 		ctx.fillStyle = 'white'
@@ -177,14 +190,30 @@ export default class GraphicsOnLisp extends Vue {
 					evalGraphics(children)
 				}
 
-				item = funcs.get(type)(params)
+				const draw = funcs.get(type)
 
-				if (item instanceof Array) {
-					evalGraphics(item)
+				if (draw) {
+					item = draw(ctx, params)
+
+					if (item instanceof Array) {
+						evalGraphics(item)
+					}
 				}
 			})
 		}
 		evalGraphics(this.graphics)
+	}
+
+	private onGraphicsJsonChanged(json: string) {
+		let graphics
+
+		try {
+			graphics = JSON5.parse(json)
+		} catch (e) {
+			return
+		}
+
+		this.graphics = graphics
 	}
 }
 </script>
@@ -199,5 +228,8 @@ export default class GraphicsOnLisp extends Vue {
 	user-select none
 
 	.canvas
-		border 1px solid black
+		border 1px solid var(--color-border)
+
+	.code
+		flex-grow 1
 </style>

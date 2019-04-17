@@ -212,7 +212,6 @@ export default class Drag extends Vue {
 		let y = absCoord[1]
 
 		// Omit clamping since absCoord has already clamped in setAbsCoordByMouseEvent() if necessary
-
 		if (this.measure === 'normalized') {
 			x = (x - left) / (right - left)
 			y = (y - top) / (bottom - top)

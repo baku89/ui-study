@@ -49,7 +49,7 @@ export default class SelectionManager extends Vue {
 	private dragMode: 'add' | 'multiply' | null = null
 
 	public add(item: any) {
-		if (!keypressed('shift') || keypressed('tab')) {
+		if (!keypressed('cmd') || keypressed('tab')) {
 			this.deselectAll()
 		}
 

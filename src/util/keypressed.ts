@@ -1,19 +1,29 @@
 import keycode from 'keycode'
 
-const KEYS = new Map<string, boolean>()
+const KEYS_TABLE = new Map<string, boolean>()
 
-window.addEventListener('keydown', (e: KeyboardEvent) => {
-	const key = keycode(e)
-	KEYS.set(key, true)
+function normalizeKeycode(e: KeyboardEvent) {
+	let key = keycode(e)
+
+	if (/^(left|right) command$/.test(key)) {
+		key = 'cmd'
+	}
+
+	return key
+}
+
+document.addEventListener('keydown', (e: KeyboardEvent) => {
+	const key = normalizeKeycode(e)
+	KEYS_TABLE.set(key, true)
 })
 
-window.addEventListener('keyup', (e: KeyboardEvent) => {
-	const key = keycode(e)
-	KEYS.set(key, false)
+document.addEventListener('keyup', (e: KeyboardEvent) => {
+	const key = normalizeKeycode(e)
+	KEYS_TABLE.set(key, false)
 })
 
 function keypressed(key: string): boolean {
-	return KEYS.get(key) || false
+	return KEYS_TABLE.get(key) || false
 }
 
 export default keypressed

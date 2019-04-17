@@ -1,5 +1,5 @@
 <template>
-	<div class="ParamFieldRange">
+	<div class="ParamFieldRange grow">
 		<InputVector
 			class="param-field--1w"
 			:value="value"

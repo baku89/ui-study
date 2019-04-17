@@ -1,5 +1,5 @@
 <template>
-	<InputNumber class="ParamFieldNumber param-field--1w" v-bind="$props" @input="onInput"/>
+	<InputNumber class="ParamFieldNumber param-field--1w" v-bind="$props" v-on="$listeners"/>
 </template>
 
 <script lang="ts">
@@ -10,17 +10,5 @@ import InputNumber from './InputNumber.vue'
 @Component({
 	components: {InputNumber}
 })
-export default class ParamFieldNumber extends Vue {
-	@Prop({type: Number, required: true}) private value!: number
-	@Prop(Number) private min!: number
-	@Prop(Number) private max!: number
-	@Prop(Number) private step!: number
-	@Prop(Number) private precision!: number
-	@Prop(String) private label!: string
-	@Prop(String) private unit!: string
-
-	private onInput(newValue: number) {
-		this.$emit('input', newValue)
-	}
-}
+export default class ParamFieldNumber extends Vue {}
 </script>

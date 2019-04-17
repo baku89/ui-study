@@ -1,5 +1,5 @@
 <template>
-	<div class="ParamFieldSlider">
+	<div class="ParamFieldSlider grow">
 		<InputNumber class="param-field--1w" v-bind="$props" @input="onInput"/>
 		<InputSlider
 			class="ParamFieldSlider__slider"

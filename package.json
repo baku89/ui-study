@@ -16,16 +16,17 @@
 	],
 	"main": "lib/perceptive-design.common.js",
 	"scripts": {
-		"serve": "vue-cli-service serve",
-		"build": "vue-cli-service build",
+		"serve": "vue-cli-service serve --modern",
+		"build": "vue-cli-service build --modern",
 		"lint": "vue-cli-service lint",
-		"build:lib": "vue-cli-service build --target lib --formats commonjs --name perceptive-design ./src/index.ts --dest lib; rm -rf ./typings/router.d.ts ./typings/main.d.ts ./typings/pages"
+		"build:lib": "vue-cli-service build --modern --target lib --formats commonjs --name perceptive-design ./src/index.ts --dest lib; rm -rf ./typings/router.d.ts ./typings/main.d.ts ./typings/pages"
 	},
 	"dependencies": {},
 	"devDependencies": {
 		"@types/color-convert": "^1.9.0",
 		"@types/gl-matrix": "^2.4.5",
 		"@types/hex-rgb": "^3.0.0",
+		"@types/json5": "^0.0.30",
 		"@types/mathjs": "^5.0.1",
 		"@types/raf": "^3.4.0",
 		"@types/webgl2": "^0.0.4",
@@ -41,6 +42,7 @@
 		"glslify-loader": "^2.0.0",
 		"hex-rgb": "^4.0.0",
 		"interactive-shader-format": "^2.9.0",
+		"json5": "^2.1.0",
 		"keycode": "^2.2.0",
 		"mathjs": "^5.9.0",
 		"mobx": "^5.9.4",

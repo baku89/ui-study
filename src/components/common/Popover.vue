@@ -32,6 +32,7 @@ export default class Popover extends Vue {
 		if (!active) {
 			return
 		}
+		// Automatically close the popover when user clicks outside of Popovers
 		const onMousedown = (e: Event) => {
 			// Search all $el of descendant "Popover"s
 			const popovers = [this.$el]
@@ -51,13 +52,13 @@ export default class Popover extends Vue {
 			searchPortals(this.$children)
 
 			const clickedOutside = popovers.every(popover => {
-				// @ts-ignore
-				return e.path.indexOf(popover) === -1
+				return !e.composedPath().includes(popover)
 			})
 
 			if (clickedOutside) {
 				window.removeEventListener('mousedown', onMousedown)
 				this.$emit('update:active', false)
+				this.$emit('close')
 			}
 		}
 		window.addEventListener('mousedown', onMousedown)
@@ -66,6 +67,7 @@ export default class Popover extends Vue {
 			if (keycode.isEventKey(e, 'esc')) {
 				window.removeEventListener('keydown', onKeydown)
 				this.$emit('update:active', false)
+				this.$emit('close')
 			}
 		}
 		window.addEventListener('keydown', onKeydown)
@@ -77,6 +79,10 @@ export default class Popover extends Vue {
 		if (!this.originalParentEl) {
 			this.originalParentEl = el
 		}
+	}
+
+	public setReference(el: Element) {
+		this.originalParentEl = el
 	}
 
 	private killPopper() {

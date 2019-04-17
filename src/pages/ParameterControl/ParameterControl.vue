@@ -6,7 +6,14 @@
 			</Parameter>
 
 			<Parameter label="Iteration">
-				<ParamFieldSlider class="param__input" v-model="iteration" :min="1" :max="5" :step="1"/>
+				<ParamFieldSlider
+					class="param__input"
+					v-model="iteration"
+					:min="1"
+					:max="5"
+					:step="1"
+					:precision="0"
+				/>
 			</Parameter>
 
 			<Parameter label="Speed">

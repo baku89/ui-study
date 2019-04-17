@@ -1,66 +1,68 @@
 <template>
-	<div class="page-content">
-		<div class="param">
-			<Parameter label="Intensity">
-				<ParamFieldSlider class="param__input" v-model="intensity" :min="0" :max="100"/>
-			</Parameter>
+	<SelectionManager>
+		<div class="page-content">
+			<div class="param">
+				<Parameter label="Intensity">
+					<ParamFieldSlider class="param__input" v-model="intensity" :min="0" :max="100"/>
+				</Parameter>
 
-			<Parameter label="Iteration">
-				<ParamFieldSlider
-					class="param__input"
-					v-model="iteration"
-					:min="1"
-					:max="5"
-					:step="1"
-					:precision="0"
-				/>
-			</Parameter>
+				<Parameter label="Iteration">
+					<ParamFieldSlider
+						class="param__input"
+						v-model="iteration"
+						:min="1"
+						:max="5"
+						:step="1"
+						:precision="0"
+					/>
+				</Parameter>
 
-			<Parameter label="Speed">
-				<ParamFieldSlider class="param__input" v-model="speed" :min="-10" :max="10"/>
-			</Parameter>
+				<Parameter label="Speed">
+					<ParamFieldSlider class="param__input" v-model="speed" :min="-10" :max="10"/>
+				</Parameter>
 
-			<Parameter label="Offset">
-				<ParamFieldPoint v-model="offset" :precision="1" unit="%"/>
-			</Parameter>
+				<Parameter label="Offset">
+					<ParamFieldPoint v-model="offset" :precision="1" unit="%"/>
+				</Parameter>
 
-			<Parameter label="Scale">
-				<ParamFieldScale v-model="scale" :keepProportion.sync="keepProportion"/>
-			</Parameter>
+				<Parameter label="Scale">
+					<ParamFieldScale v-model="scale" :keepProportion.sync="keepProportion"/>
+				</Parameter>
 
-			<Parameter label="Angle">
-				<ParamFieldAngle class="param__input" v-model="angle"/>
-			</Parameter>
+				<Parameter label="Angle">
+					<ParamFieldAngle class="param__input" v-model="angle"/>
+				</Parameter>
 
-			<Parameter label="Crop">
-				<ParamFieldScale
-					v-model="crop"
-					:precision="0"
-					:max="50"
-					:min="0"
-					:labels="['T', 'R', 'B', 'L']"
-					unit="%"
-				/>
-			</Parameter>
+				<Parameter label="Crop">
+					<ParamFieldScale
+						v-model="crop"
+						:precision="0"
+						:max="50"
+						:min="0"
+						:labels="['T', 'R', 'B', 'L']"
+						unit="%"
+					/>
+				</Parameter>
 
-			<Parameter label="Frame">
-				<ParamFieldColor v-model="frameColor"/>
-			</Parameter>
+				<Parameter label="Frame">
+					<ParamFieldColor v-model="frameColor"/>
+				</Parameter>
 
-			<Parameter label="Noise">
-				<InputMode v-model="noiseType" :labels="['Simplex', 'Periodic']" :values="[0, 1]"/>
-			</Parameter>
+				<Parameter label="Noise">
+					<InputMode v-model="noiseType" :labels="['Simplex', 'Periodic']" :values="[0, 1]"/>
+				</Parameter>
 
-			<Parameter>
-				<InputButton label="Reset" @click="time = 0"/>
-			</Parameter>
-		</div>
-		<div class="preview">
-			<div class="preview__wrapper">
-				<canvas class="preview__canvas" ref="canvas"/>
+				<Parameter>
+					<InputButton label="Reset" @click="time = 0"/>
+				</Parameter>
+			</div>
+			<div class="preview">
+				<div class="preview__wrapper">
+					<canvas class="preview__canvas" ref="canvas"/>
+				</div>
 			</div>
 		</div>
-	</div>
+	</SelectionManager>
 </template>
 
 <script lang="ts">

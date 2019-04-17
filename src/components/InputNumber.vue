@@ -1,5 +1,11 @@
 <template>
-	<div class="InputNumber" :editing="isEditing" :updating="isDragging || updatedRecently">
+	<div
+		class="InputNumber"
+		:selectable="true"
+		:editing="isEditing"
+		:selected="isSelected"
+		:updating="isDragging || updatedRecently"
+	>
 		<Drag
 			:minDragDistance="3"
 			detectDirection="horizontal"
@@ -18,7 +24,7 @@
 			class="InputNumber__input"
 			type="text"
 			:value="value.toString()"
-			@focus="isEditing = true"
+			@focus="onFocus"
 			@change="onChange"
 			@blur="isEditing = false"
 			@keydown="onKeydown"
@@ -58,6 +64,7 @@ import keycode from 'keycode'
 import Drag from './common/Drag'
 import Portal from './common/Portal'
 import SvgArrow from './common/SvgArrow.vue'
+import SelectionManager from './SelectionManager.vue'
 
 @Component({
 	components: {
@@ -67,6 +74,8 @@ import SvgArrow from './common/SvgArrow.vue'
 	}
 })
 export default class InputNumber extends Vue {
+	public isSelected: boolean = false
+
 	@Prop({type: Number, required: true}) private value!: number
 	@Prop({type: Number, default: 1}) private precision!: number
 	@Prop(String) private label!: string
@@ -82,8 +91,12 @@ export default class InputNumber extends Vue {
 	private dragMinX: number = 0
 	private dragMaxX: number = 0
 
+	private shouldOmitZero: boolean = true
 	private updatedRecently: boolean = false
 	private updatedTimer!: number
+
+	@Inject({from: 'SelectionManager', default: null})
+	private readonly SelectionManager!: SelectionManager
 
 	@Inject({from: 'dragSpeed', default: 0.5}) private readonly dragSpeed!: number
 	@Inject({from: 'keyFaster', default: 'shift'})
@@ -92,7 +105,7 @@ export default class InputNumber extends Vue {
 	private readonly keySlower!: string
 
 	private get displayValue(): string {
-		return toFixed(this.value, this.precision, !this.updatedRecently)
+		return toFixed(this.value, this.precision, this.shouldOmitZero)
 	}
 
 	private get hasMin(): boolean {
@@ -110,24 +123,28 @@ export default class InputNumber extends Vue {
 	private onChange() {
 		const input = this.$refs.input as HTMLInputElement
 		const strValue: string = input.value
-		let newValue: number = parseNumber(strValue)
+		const newValue: number = parseNumber(strValue)
 
 		if (isNaN(newValue)) {
 			input.value = this.value.toString()
 		} else {
-			if (this.hasMin) {
-				newValue = Math.max(this.min, newValue)
-			}
-			if (this.hasMax) {
-				newValue = Math.min(this.max, newValue)
-			}
-			if (this.hasStep) {
-				newValue = quantize(newValue, this.step)
-			}
-			this.$emit('input', newValue)
+			this.updateValue(newValue)
 		}
 
 		this.isEditing = false
+	}
+
+	private updateValue(newValue: number) {
+		if (this.hasMin) {
+			newValue = Math.max(this.min, newValue)
+		}
+		if (this.hasMax) {
+			newValue = Math.min(this.max, newValue)
+		}
+		if (this.hasStep) {
+			newValue = quantize(newValue, this.step)
+		}
+		this.$emit('input', newValue)
 	}
 
 	private onClick() {
@@ -143,6 +160,11 @@ export default class InputNumber extends Vue {
 			}
 		}
 		window.addEventListener('mousedown', forceChange)
+	}
+
+	private onFocus(e: Event) {
+		this.isEditing = true
+		this.SelectionManager!.add(this)
 	}
 
 	private onKeydown(e: KeyboardEvent) {
@@ -222,12 +244,16 @@ export default class InputNumber extends Vue {
 
 	@Watch('value')
 	private onValueChanged() {
+		if (this.updatedRecently) {
+			this.shouldOmitZero = false
+		}
 		this.updatedRecently = true
 		clearTimeout(this.updatedTimer)
 
 		// @ts-ignore
 		this.updatedTimer = setTimeout(() => {
 			this.updatedRecently = false
+			this.shouldOmitZero = true
 		}, 100)
 	}
 }
@@ -246,7 +272,7 @@ export default class InputNumber extends Vue {
 		z-index 1
 		input-border-hover-style()
 
-	&[editing], &[updating]
+	&[editing], &[selected], &[updating]
 		z-index 2
 		input-border-focus-style()
 

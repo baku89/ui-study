@@ -1,161 +1,163 @@
 <template>
-	<div class="page-content article">
-		<h2>Example 1</h2>
-		<p>Slider, Scale, Position, and Color.</p>
-		<div class="example">
-			<div class="param">
-				<Parameter label="Radius">
-					<ParamFieldSlider class="input" v-model="ex1.radius" :min="0" :max="50"/>
-				</Parameter>
-				<Parameter label="Scale">
-					<ParamFieldScale class="input" v-model="ex1.scale" unit="%"/>
-				</Parameter>
-				<Parameter label="Position">
-					<ParamFieldPoint class="input" v-model="ex1.position" :min="0" :max="100" unit="%"/>
-				</Parameter>
-				<Parameter label="Color">
-					<ParamFieldColor class="input" v-model="ex1.color"/>
-				</Parameter>
-			</div>
-			<div class="preview">
-				<div class="aspect">
-					<svg class="canvas" viewBox="0 0 100 100">
-						<circle
-							:fill="toCSSColor(ex1.color)"
-							cx="0"
-							cy="0"
-							:r="ex1.radius"
-							:transform="`translate(${ex1.position[0]}, ${ex1.position[1]}) scale(${ex1.scale[0] / 100}, ${ex1.scale[1] / 100})`"
-						></circle>
-					</svg>
+	<SelectionManager>
+		<div class="page-content article">
+			<h2>Example 1</h2>
+			<p>Slider, Scale, Position, and Color.</p>
+			<div class="example">
+				<div class="param">
+					<Parameter label="Radius">
+						<ParamFieldSlider class="input" v-model="ex1.radius" :min="0" :max="50"/>
+					</Parameter>
+					<Parameter label="Scale">
+						<ParamFieldScale class="input" v-model="ex1.scale" unit="%"/>
+					</Parameter>
+					<Parameter label="Position">
+						<ParamFieldPoint class="input" v-model="ex1.position" :min="0" :max="100" unit="%"/>
+					</Parameter>
+					<Parameter label="Color">
+						<ParamFieldColor class="input" v-model="ex1.color"/>
+					</Parameter>
 				</div>
-			</div>
-		</div>
-
-		<h2>Example 2</h2>
-		<p>String, Angle, and Range (min/max).</p>
-		<div class="example">
-			<div class="param">
-				<Parameter label="Text">
-					<InputString class="input long" v-model="ex2.text"/>
-				</Parameter>
-				<Parameter label="Angle">
-					<ParamFieldAngle class="input" v-model="ex2.rotation"/>
-				</Parameter>
-				<Parameter label="Trim">
-					<ParamFieldRange class="input" v-model="ex2.trim" :min="0" :max="100" unit="%"/>
-				</Parameter>
-			</div>
-			<div class="preview">
-				<div class="aspect">
-					<svg class="canvas" viewBox="0 0 100 100">
-						<text
-							fill="#222"
-							font-size="10"
-							text-anchor="middle"
-							dominant-baseline="central"
-							:transform="`translate(50, 50) rotate(${ex2.rotation})`"
-						>{{trimText(ex2.text, ...ex2.trim)}}</text>
-					</svg>
-				</div>
-			</div>
-		</div>
-
-		<h2>Example 3</h2>
-		<p>Dropdown, Checkbox, and Select.</p>
-		<div class="example">
-			<div class="param">
-				<Parameter label="Image">
-					<InputDropdown
-						class="input long"
-						v-model="ex3.image"
-						:values="['Mochi', 'Dango', 'Beko-mochi']"
-					/>
-				</Parameter>
-				<Parameter label="Inverted">
-					<InputCheckbox class="input" v-model="ex3.inverted"/>
-				</Parameter>
-				<Parameter label="Edge">
-					<InputMode class="input no-grow" v-model="ex3.edge" :values="['Rounded', 'Circle', 'Glow']"/>
-				</Parameter>
-			</div>
-			<div class="preview">
-				<div class="aspect" :style="{filter: ex3.inverted ? 'invert(1)' : ''}">
-					<img :class="['canvas', ex3.edge]" :src="`./assets/${ex3.image}.jpg`">
-				</div>
-			</div>
-		</div>
-
-		<h2>Example 4</h2>
-		<p>Random seed, Button.</p>
-		<div class="example">
-			<div class="param">
-				<Parameter label="Roll">
-					<ParamFieldSeed v-model="ex4.seed" :min="1" :max="6" :step="1"/>
-				</Parameter>
-				<Parameter>
-					<InputButton label="Increment" @click="ex4.seed = (ex4.seed % 6) + 1"/>
-				</Parameter>
-			</div>
-			<div class="preview">
-				<div class="aspect">
-					<div class="canvas">
-						<img class="dice" src="../assets/dice.svg" :style="{left: `${(ex4.seed-1) * -100}%`}">
+				<div class="preview">
+					<div class="aspect">
+						<svg class="canvas" viewBox="0 0 100 100">
+							<circle
+								:fill="toCSSColor(ex1.color)"
+								cx="0"
+								cy="0"
+								:r="ex1.radius"
+								:transform="`translate(${ex1.position[0]}, ${ex1.position[1]}) scale(${ex1.scale[0] / 100}, ${ex1.scale[1] / 100})`"
+							></circle>
+						</svg>
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<h2>Example 5</h2>
-		<p>Code Editor.</p>
-		<div class="example">
-			<InputCodeEditor class="code" v-model="ex5.code" lang="javascript"/>
-		</div>
-
-		<h2>Example 6</h2>
-		<p>Play Controls</p>
-		<div class="example no-preview">
-			<div class="param" style="margin-bottom: 0.5em;">
-				<Parameter label="Timecode">
-					<InputTime
-						class="param-field--1w"
-						v-model="ex6.time"
-						:fps="24"
-						:min="ex6.min"
-						:max="ex6.max"
-						style="margin-right: .5em;"
-					/>
-					<InputButton class="center" label="«-1" @click="ex6.playing = false; ex6.time--"/>
-					<InputButton
-						class="center"
-						@click="togglePlay"
-						:icon="ex6.playing ? './assets/icon_pause.svg' : './assets/icon_play.svg'"
-					/>
-					<InputButton class="center" label="+1»" @click="ex6.playing = false; ex6.time++"/>
-				</Parameter>
-				<Parameter label="Value">
-					<ParamFieldSlider
-						class="input"
-						:value="ex6.currentValue"
-						@input="onUpdateCurrentValue"
-						:min="0"
-						:max="255"
-					/>
-				</Parameter>
+			<h2>Example 2</h2>
+			<p>String, Angle, and Range (min/max).</p>
+			<div class="example">
+				<div class="param">
+					<Parameter label="Text">
+						<InputString class="input long" v-model="ex2.text"/>
+					</Parameter>
+					<Parameter label="Angle">
+						<ParamFieldAngle class="input" v-model="ex2.rotation"/>
+					</Parameter>
+					<Parameter label="Trim">
+						<ParamFieldRange class="input" v-model="ex2.trim" :min="0" :max="100" unit="%"/>
+					</Parameter>
+				</div>
+				<div class="preview">
+					<div class="aspect">
+						<svg class="canvas" viewBox="0 0 100 100">
+							<text
+								fill="#222"
+								font-size="10"
+								text-anchor="middle"
+								dominant-baseline="central"
+								:transform="`translate(50, 50) rotate(${ex2.rotation})`"
+							>{{trimText(ex2.text, ...ex2.trim)}}</text>
+						</svg>
+					</div>
+				</div>
 			</div>
-			<Timeline
-				:time.sync="ex6.time"
-				:min="ex6.min"
-				:max="ex6.max"
-				:autoScroll="ex6.playing"
-				@scrubstart="ex6.playing = false"
-			>
-				<template v-slot="{displayRange}">
-					<TimelineColor :value="ex6.colors" :displayRange="displayRange" ref="timelineColor"/>
-				</template>
-			</Timeline>
+
+			<h2>Example 3</h2>
+			<p>Dropdown, Checkbox, and Select.</p>
+			<div class="example">
+				<div class="param">
+					<Parameter label="Image">
+						<InputDropdown
+							class="input long"
+							v-model="ex3.image"
+							:values="['Mochi', 'Dango', 'Beko-mochi']"
+						/>
+					</Parameter>
+					<Parameter label="Inverted">
+						<InputCheckbox class="input" v-model="ex3.inverted"/>
+					</Parameter>
+					<Parameter label="Edge">
+						<InputMode class="input no-grow" v-model="ex3.edge" :values="['Rounded', 'Circle', 'Glow']"/>
+					</Parameter>
+				</div>
+				<div class="preview">
+					<div class="aspect" :style="{filter: ex3.inverted ? 'invert(1)' : ''}">
+						<img :class="['canvas', ex3.edge]" :src="`./assets/${ex3.image}.jpg`">
+					</div>
+				</div>
+			</div>
+
+			<h2>Example 4</h2>
+			<p>Random seed, Button.</p>
+			<div class="example">
+				<div class="param">
+					<Parameter label="Roll">
+						<ParamFieldSeed v-model="ex4.seed" :min="1" :max="6" :step="1"/>
+					</Parameter>
+					<Parameter>
+						<InputButton label="Increment" @click="ex4.seed = (ex4.seed % 6) + 1"/>
+					</Parameter>
+				</div>
+				<div class="preview">
+					<div class="aspect">
+						<div class="canvas">
+							<img class="dice" src="../assets/dice.svg" :style="{left: `${(ex4.seed-1) * -100}%`}">
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<h2>Example 5</h2>
+			<p>Code Editor.</p>
+			<div class="example">
+				<InputCodeEditor class="code" v-model="ex5.code" lang="javascript"/>
+			</div>
+
+			<h2>Example 6</h2>
+			<p>Play Controls</p>
+			<div class="example no-preview">
+				<div class="param" style="margin-bottom: 0.5em;">
+					<Parameter label="Timecode">
+						<InputTime
+							class="param-field--1w"
+							v-model="ex6.time"
+							:fps="24"
+							:min="ex6.min"
+							:max="ex6.max"
+							style="margin-right: .5em;"
+						/>
+						<InputButton class="center" label="«-1" @click="ex6.playing = false; ex6.time--"/>
+						<InputButton
+							class="center"
+							@click="togglePlay"
+							:icon="ex6.playing ? './assets/icon_pause.svg' : './assets/icon_play.svg'"
+						/>
+						<InputButton class="center" label="+1»" @click="ex6.playing = false; ex6.time++"/>
+					</Parameter>
+					<Parameter label="Value">
+						<ParamFieldSlider
+							class="input"
+							:value="ex6.currentValue"
+							@input="onUpdateCurrentValue"
+							:min="0"
+							:max="255"
+						/>
+					</Parameter>
+				</div>
+				<Timeline
+					:time.sync="ex6.time"
+					:min="ex6.min"
+					:max="ex6.max"
+					:autoScroll="ex6.playing"
+					@scrubstart="ex6.playing = false"
+				>
+					<template v-slot="{displayRange}">
+						<TimelineColor :value="ex6.colors" :displayRange="displayRange" ref="timelineColor"/>
+					</template>
+				</Timeline>
+			</div>
 		</div>
-	</div>
+	</SelectionManager>
 </template>
 
 <script lang="ts">
@@ -289,7 +291,7 @@ export default class ComponentsList extends Vue {
 
 .example
 	display flex
-	align-items center
+	align-items flex-start
 	margin-bottom 4em
 	background var(--color-bg)
 	font-size 1rem
@@ -299,7 +301,7 @@ export default class ComponentsList extends Vue {
 
 	.param
 		flex-grow 1
-		margin 2em 1em 2em 2em
+		margin 1em
 
 	.preview
 		position relative

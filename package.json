@@ -1,6 +1,6 @@
 {
 	"name": "ui-study",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"author": {
 		"name": "Baku Hashimoto",
 		"email": "mail@baku89.com"
@@ -19,7 +19,7 @@
 		"serve": "vue-cli-service serve",
 		"build": "vue-cli-service build",
 		"lint": "vue-cli-service lint",
-		"build:lib": "vue-cli-service build --target lib --formats commonjs --name perceptive-design ./src/index.ts --dest lib"
+		"build:lib": "vue-cli-service build --target lib --formats commonjs --name perceptive-design ./src/index.ts --dest lib; rm -rf ./typings/router.d.ts ./typings/main.d.ts ./typings/pages"
 	},
 	"dependencies": {
 		"dts-bundle-webpack": "^1.0.2"

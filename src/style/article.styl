@@ -1,7 +1,12 @@
+::selection
+	background var(--color-border)
+
+
 .article
 	margin 0 auto
 	max-width 45em
 	font-size 1.5em
+	padding 3em 2em 2em
 	font-family "YakuHanMPs", "YakuHanJPs", 'EB Garamond', Georgia, yu-mincho-pr6n, YuMincho, "游明朝", "Yu Mincho", YuMincho, "Hiragino Mincho ProN", serif
 
 	section
@@ -10,9 +15,8 @@
 	em
 		// font-weight 500
 		font-style italic
-		// text-decoration underline
-		border 1px solid var(--color-border)
-		margin -1px
+		box-shadow 0 0 0 1px var(--color-border), 0 0 0 2px white, 0 0 0 3px var(--color-border)
+		margin 0 2px
 
 	h1, h2, h3, h4, h5, h6
 		font-family Roboto, sans-serif
@@ -22,7 +26,7 @@
 		margin-bottom 1em
 		font-weight 500
 		font-size 3em
-		color white
+		color transparent
 		text-stroke 1px var(--color-text)
 		-webkit-text-stroke 1px var(--color-text)
 
@@ -34,8 +38,12 @@
 		font-size 1.2em
 
 	p
-		margin-bottom 1em
-		line-height 1.5
+		margin-bottom 1.5em
+		line-height 1.6
+
+		&[lang=ja], ^[0] [lang=ja] ^[-1..-1]
+			font-size .95em
+			line-height 1.8
 
 		a
 			color var(--color-active)
@@ -43,6 +51,16 @@
 			&:hover, &:focus, &:active
 				text-decoration underline
 	
+	[lang=en]
+		display none
+		.en &
+			display block
+
+	[lang=ja]
+		display none
+		.ja &
+				display block
+
 	.outline
 		display inline-block
 		margin-bottom .1em
@@ -51,6 +69,7 @@
 		-webkit-text-stroke 1px var(--color-text)
 
 	.ui
+		user-select none
 		font-size 1rem
 		background var(--color-bg)
 		font-family var(--font-normal)

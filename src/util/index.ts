@@ -1,8 +1,12 @@
 import colorConvert from 'color-convert'
+import mouse from 'mouse-event'
+
 import RoteryDrag from './RoteryDrag'
 import keypressed from './keypressed'
+import MouseDragEvent from './MouseDragEvent'
+
 import {DataColor, DataColorMode, DataColorElements} from '../data'
-import mouse from 'mouse-event'
+import {mod, lerp, clamp} from '../math'
 
 function getDOMCenter(el: HTMLElement): number[] {
 	const {top, right, bottom, left} = el.getBoundingClientRect()
@@ -77,11 +81,58 @@ function convertColorElements(
 	}
 }
 
+function adjustHSB(
+	color: DataColor,
+	hueRotate: number,
+	saturate: number,
+	brightness: number
+): DataColor {
+	const isHS = /^hs(v|l)/.test(color[0])
+
+	// Convert to HSV if the color is neither HSV nor HSL
+	let elements: number[]
+	if (isHS) {
+		elements = [...color[1]] as number[]
+	} else {
+		elements = convertColorElements(
+			color[0],
+			'hsv',
+			color[1] as number[]
+		) as number[]
+	}
+
+	// Hue-rotate
+	if (hueRotate % 360 !== 0) {
+		elements[0] = mod(elements[0] + hueRotate, 360)
+	}
+
+	// Saturate / Brightness (%)
+	for (let [i, inc] of [saturate, brightness].entries()) {
+		i += 1
+		if (inc !== 0) {
+			if (inc < 0) {
+				elements[i] = lerp(0, elements[i], clamp(inc / 100 + 1, 0, 1))
+			} else {
+				elements[i] = lerp(elements[i], 100, clamp(inc / 100, 0, 1))
+			}
+		}
+	}
+
+	// Convert to original color mode
+	if (!isHS) {
+		elements = convertColorElements('hsv', color[0], elements) as number[]
+	}
+
+	return [color[0], elements]
+}
+
 export {
 	getDOMCenter,
 	setButtonUnfocusableForMouse,
 	toCSSColor,
 	convertColorElements,
 	RoteryDrag,
-	keypressed
+	keypressed,
+	MouseDragEvent,
+	adjustHSB
 }

@@ -1,9 +1,12 @@
 <template>
 	<SelectionManager>
 		<div class="page-content article">
-			<h2>Example 1</h2>
+			<h2>
+				Example
+				<span class="outline">#1</span>
+			</h2>
 			<p>Slider, Scale, Position, and Color.</p>
-			<div class="example">
+			<div class="ui">
 				<div class="param">
 					<Parameter label="Radius">
 						<ParamFieldSlider class="input" v-model="ex1.radius" :min="0" :max="50"/>
@@ -48,9 +51,12 @@
 				</div>
 			</div>
 
-			<h2>Example 2</h2>
+			<h2>
+				Example
+				<span class="outline">#2</span>
+			</h2>
 			<p>String, Angle, and Range (min/max).</p>
-			<div class="example">
+			<div class="ui">
 				<div class="param">
 					<Parameter label="Text">
 						<InputString class="input long" v-model="ex2.text"/>
@@ -77,9 +83,12 @@
 				</div>
 			</div>
 
-			<h2>Example 3</h2>
+			<h2>
+				Example
+				<span class="outline">#3</span>
+			</h2>
 			<p>Dropdown, Checkbox, and Select.</p>
-			<div class="example">
+			<div class="ui">
 				<div class="param">
 					<Parameter label="Image">
 						<InputDropdown
@@ -102,9 +111,12 @@
 				</div>
 			</div>
 
-			<h2>Example 4</h2>
+			<h2>
+				Example
+				<span class="outline">#4</span>
+			</h2>
 			<p>Random seed, Button.</p>
-			<div class="example">
+			<div class="ui">
 				<div class="param">
 					<Parameter label="Roll">
 						<ParamFieldSeed v-model="ex4.seed" :min="1" :max="6" :step="1"/>
@@ -122,15 +134,21 @@
 				</div>
 			</div>
 
-			<h2>Example 5</h2>
+			<h2>
+				Example
+				<span class="outline">#5</span>
+			</h2>
 			<p>Code Editor.</p>
-			<div class="example">
+			<div class="ui">
 				<InputCodeEditor class="code" v-model="ex5.code" lang="javascript"/>
 			</div>
 
-			<h2>Example 6</h2>
+			<h2>
+				Example
+				<span class="outline">#6</span>
+			</h2>
 			<p>Play Controls</p>
-			<div class="example no-preview">
+			<div class="ui no-preview">
 				<div class="param" style="margin-bottom: 0.5em;">
 					<Parameter label="Timecode">
 						<InputTime
@@ -323,12 +341,10 @@ export default class ComponentsList extends Vue {
 	height 100%
 	user-select none
 
-.example
+.ui
 	display flex
 	align-items flex-start
 	margin-bottom 4em
-	background var(--color-bg)
-	font-size 1rem
 
 	&.no-preview
 		display block

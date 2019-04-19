@@ -115,16 +115,18 @@ html, body
 		top 0
 		left 0
 		z-index 1010
+		box-sizing content-box
 		width 100%
 		height $title-bar-height
-		background var(--color-menu-bg)
+		border-bottom 1px solid var(--color-text)
+		background white
+		box-shadow 0 1px 0 0 white, 0 2px 0 0 var(--color-text)
 		user-select none
 
 	&__hamburger, &__settings
 		position absolute
 		top 0
 		height $title-bar-height
-		color var(--color-menu-text)
 		vertical-align middle
 		letter-spacing 0.3em
 		line-height $title-bar-height
@@ -135,7 +137,7 @@ html, body
 
 	&__hamburger
 		width 10em
-		background #333
+		border-right 1px dashed var(--color-text)
 
 	&__settings
 		right 0
@@ -148,7 +150,7 @@ html, body
 		line-height 1em
 
 		&.menu
-			margin-right 0.1em
+			margin-right 0.2em
 			margin-bottom 0.22em
 			width 1.4em
 			height @width

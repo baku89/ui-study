@@ -6,7 +6,10 @@
 			:to="linkType === 'internal' ? to : undefined"
 			:href="linkType === 'external' ? to : undefined"
 		>
-			<h2 class="PageLink__title">{{title}}</h2>
+			<h2 class="PageLink__title">
+				<span class="outline">{{numbering}}</span>
+				{{title}}
+			</h2>
 			<p class="PageLink__desc">
 				<slot/>
 			</p>
@@ -22,6 +25,7 @@ type LinkType = 'internal' | 'external' | null
 
 @Component
 export default class Home extends Vue {
+	@Prop({type: String, required: true}) private numbering!: string
 	@Prop({type: String, required: true}) private title!: string
 	@Prop(String) private to!: string
 	@Prop(String) private thumb!: string
@@ -63,10 +67,16 @@ export default class Home extends Vue {
 
 			&:hover
 				border-color var(--color-active)
+				box-shadow 0 0 0 2px white, 0 0 0 3px var(--color-active)
 				color var(--color-active)
 
 			&:active
-				box-shadow 0 0 0 1px var(--color-active)
+				box-shadow 0 0 0 2px white, 0 0 0 4px var(--color-active)
+
+			&:hover, &:active
+				.outline
+					text-stroke-color var(--color-active)
+					-webkit-text-stroke-color var(--color-active)
 
 		h2^[0]__title
 			^[-1].draft &, ^[-1].external &
@@ -80,6 +90,10 @@ export default class Home extends Vue {
 					vertical-align bottom
 					font-weight normal
 					font-size 0.7em
+
+				.outline
+					text-stroke-color #bbb
+					-webkit-text-stroke-color #bbb
 
 			^[-1].draft &
 				color #bbb

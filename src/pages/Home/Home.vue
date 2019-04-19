@@ -7,7 +7,7 @@
 				<a
 					href="https://baku89.com"
 					target="_blank"
-				>Baku Hashimoto</a> has been developing since 2019.
+				>Baku Hashimoto (橋本 麦)</a> has been developing since 2019.
 				The several demos showing below explain the way of thinking behind Perceptive Design and how it actually works.
 			</p>
 			<!-- <p class="highlight">
@@ -23,40 +23,47 @@
 		</section>
 
 		<PageLink
-			title="0. Abstract"
+			numbering="0. "
+			title="Abstract"
 		>This section explains what Perceptive Design is aiming and how it changes the way of designing.</PageLink>
 
 		<PageLink
-			title="1. List of Components"
+			numbering="1. "
+			title="List of Components"
 			to="/components-list"
 			thumb="./assets/page-link_components-list.png"
 		>The list of UI components to adjust parameters such as a slider, number input, rotery knob, and more.</PageLink>
 
 		<PageLink
-			title="2. Parameter Control"
+			numbering="2. "
+			title="Parameter Control"
 			to="/parameter-control"
 			thumb="./assets/page-link_parameter-control.png"
 		>A simple example to control parameters of an image effect.</PageLink>
 
 		<PageLink
-			title="3. Transformation Matrix"
+			numbering="3. "
+			title="Transformation Matrix"
 			to="/transformation-matrix"
 			thumb="./assets/page-link_transformation-matrix.png"
 		>A new paradigm to transform objects by stacking transform functions in any order, instead of fixed fields of position/scale/rotation.</PageLink>
 
 		<PageLink
-			title="4. Binding Parameters with Hardware Controller"
+			numbering="4. "
+			title="Binding Parameters with Hardware Controller"
 			thumb="./assets/page-link_hardware-assign.png"
 		>The UI enables to assign each parameter any hardwares not only mice and keyboards but also MIDI controllers, 3D mice, and even LeapMotion. Artists can interact to their graphics using full of their body as if musicians play intruments.</PageLink>
 
 		<PageLink
-			title="5. Velocity Curve Editor"
+			numbering="5. "
+			title="Velocity Curve Editor"
 			to="https://www.youtube.com/watch?v=6aBBHjqAc4Y"
 			thumb="./assets/page-link_velocity-curve.png"
 		>The more intuitive and flexible way to make an animation.</PageLink>
 
 		<PageLink
-			title="6. Programmable Pen Tool"
+			numbering="6. "
+			title="Programmable Pen Tool"
 			to="https://s.baku89.com/pentool/animation"
 			thumb="./assets/page-link_pentool.png"
 		>This is a rough prototype of doodling app. Though it just looks like orthodox vector graphics editor, all of tools (Pencil, Selection, Pen, Ellipse...) are implemented as a form of script on the right pane. Artists can modify and create any tools which ideal "touching" for them. Or some coders also introduce an approach of generative arts to classical graphics software. Thus, this is a tool to create tools.</PageLink>

@@ -1,4 +1,4 @@
-import ConfigProvider from './ConfigProvider'
+import ConfigProvider from './ConfigProvider.vue'
 import InputAngle from './InputAngle.vue'
 import InputButton from './InputButton.vue'
 import InputCodeEditor from './InputCodeEditor'
@@ -18,6 +18,9 @@ import InputSlider from './InputSlider.vue'
 import InputString from './InputString.vue'
 import InputTime from './InputTime'
 import InputVector from './InputVector.vue'
+import LayoutSplitter from './LayoutSplitter'
+import LayoutTabs from './LayoutTabs'
+import LayoutTab from './LayoutTab.vue'
 import Parameter from './Parameter.vue'
 import ParamFieldAffine from './ParamFieldAffine.vue'
 import ParamFieldAngle from './ParamFieldAngle.vue'
@@ -54,6 +57,9 @@ export default {
 	InputString,
 	InputTime,
 	InputVector,
+	LayoutSplitter,
+	LayoutTabs,
+	LayoutTab,
 	Parameter,
 	ParamFieldAffine,
 	ParamFieldAngle,

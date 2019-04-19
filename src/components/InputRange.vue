@@ -2,7 +2,6 @@
 	<div class="InputRange">
 		<Drag
 			measure="normalized"
-			coordinate="relative"
 			detectDirection="horizontal"
 			@dragstart="onDragstart"
 			@drag="onDrag"
@@ -42,6 +41,7 @@ import Drag from './common/Drag'
 import {vec2} from 'gl-matrix'
 import {lerp, clamp, ratio, quantize} from '../math'
 import keypressed from '../util/keypressed'
+import {MouseDragEvent} from '../util'
 
 @Component({
 	components: {
@@ -117,11 +117,11 @@ export default class InputRange extends Vue {
 		this.dragStartValue = [this.value[0], this.value[1]]
 	}
 
-	private onDrag(e: {current: vec2}) {
+	private onDrag(e: MouseDragEvent) {
 		const isSymmetrical = keypressed(this.keySymmetry)
 		const middle = lerp(this.dragStartValue[0], this.dragStartValue[1], 0.5)
 
-		let inc = e.current[0] * (this.max - this.min)
+		let inc = e.offset[0] * (this.max - this.min)
 
 		if (keypressed(this.keySlower)) {
 			inc *= 0.1

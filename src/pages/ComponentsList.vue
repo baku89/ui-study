@@ -14,15 +14,30 @@
 					<Parameter label="Position">
 						<ParamFieldPoint class="input" v-model="ex1.position" :min="0" :max="100" unit="%"/>
 					</Parameter>
-					<Parameter label="Color">
-						<ParamFieldColor class="input" v-model="ex1.color"/>
+					<Parameter label="Fill">
+						<ParamFieldColor class="input" v-model="ex1.fill"/>
+					</Parameter>
+					<Parameter label="Stroke">
+						<ParamFieldColor class="input" v-model="ex1.stroke"/>
+					</Parameter>
+					<Parameter label="Stroke Width">
+						<ParamFieldSlider
+							class="input"
+							v-model="ex1.strokeWidth"
+							:min="0"
+							:max="10"
+							:step="1"
+							:precision="0"
+						/>
 					</Parameter>
 				</div>
 				<div class="preview">
 					<div class="aspect">
 						<svg class="canvas" viewBox="0 0 100 100">
 							<circle
-								:fill="toCSSColor(ex1.color)"
+								:fill="toCSSColor(ex1.fill)"
+								:stroke="toCSSColor(ex1.stroke)"
+								:stroke-width="ex1.strokeWidth"
 								cx="0"
 								cy="0"
 								:r="ex1.radius"
@@ -152,7 +167,7 @@
 					@scrubstart="ex6.playing = false"
 				>
 					<template v-slot="{displayRange}">
-						<TimelineColor :value="ex6.colors" :displayRange="displayRange" ref="timelineColor"/>
+						<TimelineDraw :drawFunc="draw" :displayRange="displayRange" ref="timelineColor"/>
 					</template>
 				</Timeline>
 			</div>
@@ -171,24 +186,28 @@ import TimelineColor from '../components/TimelineColor.vue'
 
 import Components from '../components'
 
+const PI_2 = Math.PI * 2
+
 @Component({
 	components: Components,
 	data() {
 		const time = 2
 		const min = 0
-		const max = 60000
-		const colors = new Uint8ClampedArray(
-			Array((max - min + 1) * 4)
-				.fill(0)
-				.map((v, i) => (i % 4 === 3 ? 255 : 0))
-		)
+		const max = 6000
+		// const colors = new Uint8ClampedArray(
+		// 	Array((max - min + 1) * 4)
+		// 		.fill(0)
+		// 		.map((v, i) => (i % 4 === 3 ? 255 : 0))
+		const values = new Uint8ClampedArray(Array(max - min + 1).fill(0))
 
 		return {
 			ex1: {
 				radius: 25,
 				scale: [100, 100],
 				position: [50, 50],
-				color: ['hsv', [332, 74, 80]]
+				fill: ['hsv', [339, 64, 100]],
+				stroke: ['hsv', [331, 83, 89]],
+				strokeWidth: 3
 			},
 			ex2: {
 				text: 'Hello World',
@@ -211,8 +230,8 @@ import Components from '../components'
 				min,
 				max,
 				playing: false,
-				colors,
-				currentValue: colors[time]
+				values,
+				currentValue: values[time]
 			}
 		}
 	},
@@ -229,28 +248,30 @@ export default class ComponentsList extends Vue {
 	}
 
 	private togglePlay() {
-		const playing = !this.$data.ex6.playing
-		this.$data.ex6.playing = playing
+		const {ex6} = this.$data
+		const playing = !ex6.playing
+		ex6.playing = playing
 
 		if (playing) {
 			let prevTime = performance.now()
 
 			const update = (time: number) => {
-				if (!this.$data.ex6.playing) {
+				if (!ex6.playing) {
+					ex6.currentValue = ex6.values[ex6.time]
 					return
 				}
 
 				if (time - prevTime > 1000 / 24) {
-					this.$data.ex6.time += 1
+					ex6.time += 1
 
-					if (this.$data.ex6.time > this.$data.ex6.max) {
-						this.$data.ex6.time = this.$data.ex6.max
+					if (ex6.time > ex6.max) {
+						ex6.time = ex6.max
 						return
 					}
 
-					this.$data.ex6.currentValue = this.$data.ex6.colors[
-						this.$data.ex6.time
-					]
+					// ex6.currentValue = ex6.values[ex6.time]
+					ex6.values[ex6.time] = ex6.currentValue
+
 					prevTime = time
 				}
 
@@ -263,19 +284,32 @@ export default class ComponentsList extends Vue {
 
 	@Watch('ex6.time')
 	private onTimeChanged() {
-		this.$data.ex6.currentValue = this.$data.ex6.colors[this.$data.ex6.time * 4]
+		const {ex6} = this.$data
+
+		if (!ex6.playing) {
+			ex6.currentValue = ex6.values[ex6.time]
+		}
 	}
 
 	private onUpdateCurrentValue(newValue: number) {
 		const time = this.$data.ex6.time
 
-		this.$data.ex6.colors[time * 4] = newValue
-		this.$data.ex6.colors[time * 4 + 1] = newValue
-		this.$data.ex6.colors[time * 4 + 2] = newValue
+		this.$data.ex6.values[time] = newValue
 		this.$data.ex6.currentValue = newValue
 
 		const timelineColor = this.$refs.timelineColor as TimelineColor
 		timelineColor.renderColors()
+	}
+
+	private draw(
+		ctx: CanvasRenderingContext2D,
+		frame: number,
+		width: number,
+		height: number
+	) {
+		const value = this.$data.ex6.values[frame]
+		ctx.fillStyle = `rgb(${value}, ${value}, ${value})`
+		ctx.fillRect(0, 0, width, height)
 	}
 }
 </script>

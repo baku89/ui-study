@@ -117,7 +117,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Watch} from 'vue-property-decorator'
+import {Component, Vue, Watch, Inject} from 'vue-property-decorator'
 import changeCase, {isUpperCase} from 'change-case'
 import {vec2, mat2d} from 'gl-matrix'
 import {Observer} from 'mobx-vue'
@@ -133,7 +133,7 @@ import {
 	DataTransformStack,
 	DataTransformValue
 } from '../../data'
-import {convertColorElements} from '../../util'
+import {convertColorElements, MouseDragEvent, keypressed} from '../../util'
 import {toRadians, ratio} from '../../math'
 
 import Components from '../../components'
@@ -202,6 +202,8 @@ export default class TransformationMatrix extends Vue {
 		| 'left'
 	private isSymmetrical: boolean = false
 
+	@Inject({from: 'keySymmetry'}) private keySymmetry!: string
+
 	// Lifecycle events
 	private mounted() {
 		this.onResize = this.onResize.bind(this)
@@ -227,17 +229,9 @@ export default class TransformationMatrix extends Vue {
 	}
 
 	// bbox: scale
-	private onDragstartScale({
-		current,
-		preventDefault,
-		originalEvent
-	}: {
-		current: vec2
-		preventDefault: () => void
-		originalEvent: MouseEvent
-	}) {
+	private onDragstartScale({current, abort, originalEvent}: MouseDragEvent) {
 		if (this.state.activeScaleMatrixInverse === null) {
-			preventDefault()
+			abort()
 		} else {
 			// Store the initial matrix and its inverse
 			mat2d.copy(this.initialMatrix, this.state.matrix)
@@ -283,17 +277,11 @@ export default class TransformationMatrix extends Vue {
 				}
 			}
 
-			this.isSymmetrical = originalEvent.altKey
+			this.isSymmetrical = keypressed(this.keySymmetry)
 		}
 	}
 
-	private onDragScale({
-		current,
-		originalEvent
-	}: {
-		current: vec2
-		originalEvent: MouseEvent
-	}) {
+	private onDragScale({current, originalEvent}: MouseDragEvent) {
 		// Calc current position on the local coordinate
 		const position = vec2.scaleAndAdd(vec2.create(), [-10, -10], current, 20)
 		vec2.transformMat2d(position, position, this.initialMatrixInverse)
@@ -301,7 +289,7 @@ export default class TransformationMatrix extends Vue {
 		// Set the pivot and corner to scale
 		const pivot = vec2.create()
 		const corner = vec2.create()
-		const isSymmetrical = originalEvent.altKey
+		const isSymmetrical = keypressed(this.keySymmetry)
 		let constraint: 'horizontal' | 'vertical' | null = null
 
 		switch (this.draggedPart) {
@@ -391,7 +379,7 @@ export default class TransformationMatrix extends Vue {
 		this.state.calcBackTransform({destination, type: 'translate'})
 	}
 
-	private onDragRotate({delta}: {delta: vec2}) {
+	private onDragRotate({delta}: MouseDragEvent) {
 		const angle = -delta[0] / 100
 
 		const destination = mat2d.create()

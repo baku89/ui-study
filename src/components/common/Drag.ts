@@ -3,15 +3,13 @@ import mouse from 'mouse-event'
 import {vec2} from 'gl-matrix'
 
 import {clamp} from '../../math'
+import {MouseDragEvent} from '../../util'
 
 @Component
 export default class Drag extends Vue {
 	@Prop({type: String, default: 'pixel'}) private measure!:
 		| 'pixel'
 		| 'normalized'
-	@Prop({type: String, default: 'absolute'}) private coordinate!:
-		| 'absolute'
-		| 'relative'
 	@Prop({type: String, default: 'uniform'}) private detectDirection!:
 		| 'uniform'
 		| 'horizontal'
@@ -26,6 +24,7 @@ export default class Drag extends Vue {
 	private current!: vec2
 	private prev!: vec2
 	private delta!: vec2
+	private offset!: vec2
 
 	private absOrigin!: vec2
 	private absCurrent!: vec2
@@ -37,6 +36,7 @@ export default class Drag extends Vue {
 		this.current = vec2.create()
 		this.prev = vec2.create()
 		this.delta = vec2.create()
+		this.offset = vec2.create()
 
 		this.absOrigin = vec2.create()
 		this.absCurrent = vec2.create()
@@ -75,15 +75,14 @@ export default class Drag extends Vue {
 			this.dragStarted = true
 			this.toSpecifiedCoord(this.origin, this.absOrigin)
 			vec2.copy(this.current, this.origin)
-			if (this.coordinate === 'relative') {
-				vec2.set(this.current, 0, 0)
-			}
 			vec2.set(this.delta, 0, 0)
+			vec2.set(this.offset, 0, 0)
 
-			const event = {
+			const event: MouseDragEvent = {
 				current: this.current,
 				delta: this.delta,
-				preventDefault: this.quitDrag,
+				offset: this.offset,
+				abort: this.quitDrag,
 				originalEvent: e
 			}
 			this.$emit('dragstart', event)
@@ -101,10 +100,11 @@ export default class Drag extends Vue {
 
 	private onKeyToggle(e: KeyboardEvent) {
 		if (this.dragStarted) {
-			const event = {
+			const event: MouseDragEvent = {
 				current: this.current,
 				delta: this.delta,
-				preventDefault: this.quitDrag,
+				offset: this.offset,
+				abort: this.quitDrag,
 				originalEvent: e
 			}
 
@@ -132,15 +132,14 @@ export default class Drag extends Vue {
 					// Re-assign origin and emit
 					this.toSpecifiedCoord(this.origin, this.absCurrent)
 					vec2.copy(this.current, this.origin)
-					if (this.coordinate === 'relative') {
-						vec2.set(this.current, 0, 0)
-					}
 					vec2.set(this.delta, 0, 0)
+					vec2.set(this.offset, 0, 0)
 
-					const event = {
+					const event: MouseDragEvent = {
 						current: this.current,
 						delta: this.delta,
-						preventDefault: this.quitDrag,
+						offset: this.offset,
+						abort: this.quitDrag,
 						originalEvent: e
 					}
 
@@ -151,15 +150,14 @@ export default class Drag extends Vue {
 			} else {
 				// Detect drag and emit
 				this.toSpecifiedCoord(this.current, this.absCurrent)
-				if (this.coordinate === 'relative') {
-					vec2.sub(this.current, this.current, this.origin)
-				}
 				vec2.sub(this.delta, this.current, this.prev)
+				vec2.sub(this.offset, this.current, this.origin)
 
-				const event = {
+				const event: MouseDragEvent = {
 					current: this.current,
 					delta: this.delta,
-					preventDefault: this.quitDrag,
+					offset: this.offset,
+					abort: this.quitDrag,
 					originalEvent: e
 				}
 

@@ -28,7 +28,7 @@ import {vec2} from 'gl-matrix'
 
 import Drag from '../common/Drag'
 import {ratio, quantize, clamp, lerp} from '../../math'
-import {keypressed} from '../../util'
+import {keypressed, MouseDragEvent} from '../../util'
 
 import InputRange from '../InputRange.vue'
 import TimelineSeekbarScale from './TimelineSeekbarScale.vue'
@@ -83,7 +83,7 @@ export default class Timeline extends Vue {
 		}
 	}
 
-	private onDragstart(e: {current: vec2; originalEvent: MouseEvent}) {
+	private onDragstart(e: MouseDragEvent) {
 		let newValue = lerp(
 			this.displayRange[0],
 			this.displayRange[1],
@@ -95,7 +95,7 @@ export default class Timeline extends Vue {
 		this.$emit('scrubstart')
 	}
 
-	private onDrag(e: {current: vec2}) {
+	private onDrag(e: MouseDragEvent) {
 		const originX = ratio(
 			this.dragStartTime,
 			this.displayRange[0],
@@ -261,13 +261,14 @@ $knob-top = 0.2em
 		&[overflow]
 			pointer-events auto
 
-			&:before
+			&:before, &:after
 				display none
 
 		&:before, &:after
 			position absolute
+			right -2px
+			left 0
 			display block
-			width 100%
 			content ''
 
 		// Colored highlight

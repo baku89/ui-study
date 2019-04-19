@@ -1,5 +1,11 @@
 <template>
-	<div class="InputColorElement" :editing="isEditing" :updating="isDragging || updatedRecently">
+	<div
+		class="InputColorElement"
+		:selectable="true"
+		:editing="isEditing"
+		:selected="isSelected"
+		:updating="isDragging || updatedRecently"
+	>
 		<Drag
 			:minDragDistance="3"
 			detectDirection="vertical"
@@ -10,7 +16,7 @@
 		>
 			<div class="InputColorElement__display">
 				<div class="InputColorElement__label" v-if="info.label[varying]">{{info.label[varying]}}</div>
-				{{element.toFixed(0)}}
+				{{value.toFixed(0)}}
 				<span
 					v-if="info.unit[varying]"
 					class="InputColorElement__unit"
@@ -20,8 +26,8 @@
 		<input
 			class="InputColorElement__input"
 			type="text"
-			:value="element"
-			@focus="isEditing = true"
+			:value="value"
+			@focus="onFocus"
 			@change="onChange"
 			@blur="isEditing = false"
 			@keydown="onKeydown"
@@ -60,6 +66,7 @@ import Drag from '../common/Drag'
 import Portal from '../common/Portal'
 import SvgArrow from '../common/SvgArrow.vue'
 import GradientPalette from '../common/GradientPalette'
+import SelectionManager from '../SelectionManager.vue'
 
 const SLIT_HEIGHT = 200
 const SLIT_WIDTH = 6
@@ -73,6 +80,8 @@ const SLIT_WIDTH = 6
 	}
 })
 export default class InputColorElement extends Vue {
+	public isSelected: boolean = false
+
 	@Prop(Array) private color!: DataColor
 	@Prop(Number) private varying!: number
 
@@ -86,6 +95,9 @@ export default class InputColorElement extends Vue {
 	private updatedRecently: boolean = false
 	private updatedTimer!: number
 
+	@Inject({from: 'SelectionManager', default: null})
+	private readonly SelectionManager!: SelectionManager
+
 	@Inject({from: 'keyFaster', default: 'shift'})
 	private readonly keyFaster!: string
 
@@ -93,7 +105,7 @@ export default class InputColorElement extends Vue {
 		return this.color[0]
 	}
 
-	get element(): number {
+	get value(): number {
 		return this.color[1][this.varying] as number
 	}
 
@@ -121,21 +133,29 @@ export default class InputColorElement extends Vue {
 		return DataColorInfo.get(this.mode)!
 	}
 
+	private onFocus(e: Event) {
+		this.isEditing = true
+		this.SelectionManager!.add(this)
+	}
+
 	private onChange() {
 		const input = this.$refs.input as HTMLInputElement
-		const strValue: string = input.value
-		let value: number = parseNumber(strValue)
+		const newValue: number = parseNumber(input.value)
 
 		// If the new value is valid, fire input event.
 		// Otherwise, reset the field with original value
-		if (!isNaN(value)) {
-			value = clamp(value, 0, this.info.max[this.varying])
-			this.$emit('update:element', value)
+		if (!isNaN(newValue)) {
+			this.updateValue(newValue)
 		} else {
-			input.value = this.element.toFixed(0)
+			input.value = this.value.toFixed(0)
 		}
 
 		this.isEditing = false
+	}
+
+	private updateValue(newValue: number) {
+		newValue = clamp(newValue, 0, this.info.max[this.varying])
+		this.$emit('update:element', newValue)
 	}
 
 	private onKeydown(e: KeyboardEvent) {
@@ -147,11 +167,7 @@ export default class InputColorElement extends Vue {
 			if (keypressed(this.keyFaster)) {
 				inc *= 10
 			}
-
-			let newElement = this.element + inc
-
-			newElement = clamp(newElement, 0, this.info.max[this.varying])
-			this.$emit('update:element', newElement)
+			this.updateValue(this.value + inc)
 		}
 	}
 
@@ -171,7 +187,7 @@ export default class InputColorElement extends Vue {
 	}
 
 	private onDragstart(e: {current: vec2}) {
-		const position = ratio(this.element, 0, this.info.max[this.varying])
+		const position = ratio(this.value, 0, this.info.max[this.varying])
 
 		this.slitMinY = e.current[1] + position * SLIT_HEIGHT
 		this.slitMaxY = e.current[1] - (1 - position) * SLIT_HEIGHT
@@ -219,7 +235,7 @@ export default class InputColorElement extends Vue {
 		z-index 1
 		input-border-hover-style()
 
-	&[editing], &[updating]
+	&[editing], &[selected], &[updating]
 		z-index 2
 		input-border-focus-style()
 

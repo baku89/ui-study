@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import Abstract from './pages/Abstract.vue'
 import ComponentsList from './pages/ComponentsList.vue'
 import ParameterControl from './pages/ParameterControl'
 import TransformationMatrix from './pages/TransformationMatrix'
@@ -12,6 +13,11 @@ export default new Router({
 	mode: 'history',
 	base: process.env.BASE_URL,
 	routes: [
+		{
+			path: '/abstract',
+			name: 'abstract',
+			component: Abstract
+		},
 		{
 			path: '/components-list',
 			name: 'components-list',

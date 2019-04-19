@@ -25,6 +25,10 @@ export default class Popover extends Vue {
 
 	public setReference(el: Element) {
 		this.originalParentEl = el
+		if (this.popperInstance) {
+			this.killPopper()
+			this.bindPopper()
+		}
 	}
 
 	private mounted() {

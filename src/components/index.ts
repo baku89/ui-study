@@ -31,6 +31,7 @@ import ParamFieldSlider from './ParamFieldSlider.vue'
 import SelectionManager from './SelectionManager.vue'
 import Timeline from './Timeline'
 import TimelineColor from './TimelineColor.vue'
+import TimelineDraw from './TimelineDraw.vue'
 
 export default {
 	ConfigProvider,
@@ -65,5 +66,6 @@ export default {
 	ParamFieldSlider,
 	SelectionManager,
 	Timeline,
-	TimelineColor
+	TimelineColor,
+	TimelineDraw
 }

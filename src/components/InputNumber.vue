@@ -26,7 +26,7 @@
 			:value="value.toString()"
 			@focus="onFocus"
 			@change="onChange"
-			@blur="isEditing = false"
+			@blur="onBlur"
 			@keydown="onKeydown"
 			ref="input"
 		>
@@ -57,7 +57,7 @@
 <script lang="ts">
 import {Component, Prop, Vue, Inject, Watch} from 'vue-property-decorator'
 import {parseNumber, toFixed, quantize} from '../math'
-import {getDOMCenter, keypressed} from '../util'
+import {getDOMCenter, keypressed, MouseDragEvent} from '../util'
 import {vec2} from 'gl-matrix'
 import keycode from 'keycode'
 
@@ -152,19 +152,26 @@ export default class InputNumber extends Vue {
 		input.focus()
 		input.select()
 		this.isEditing = true
-
-		const forceChange = (e: Event) => {
-			if (e.target !== input) {
-				this.onChange()
-				window.removeEventListener('mousedown', forceChange)
-			}
-		}
-		window.addEventListener('mousedown', forceChange)
+		// window.addEventListener('mousedown', this.forceChangeOnClickOutside)
 	}
+
+	// private forceChangeOnClickOutside(e: Event) {
+	// 	console.log('asdfsf')
+	// 	if (e.target !== this.$refs.input) {
+	// 		console.log('thau')
+	// 		this.onChange()
+	// 		window.removeEventListener('mousedown', this.forceChangeOnClickOutside)
+	// 	}
+	// }
 
 	private onFocus(e: Event) {
 		this.isEditing = true
-		this.SelectionManager!.add(this)
+		this.SelectionManager.add(this)
+	}
+
+	private onBlur() {
+		this.isEditing = false
+		this.onChange()
 	}
 
 	private onKeydown(e: KeyboardEvent) {
@@ -193,9 +200,9 @@ export default class InputNumber extends Vue {
 		}
 	}
 
-	private onDragstart(e: {current: vec2}) {
-		this.$set(this.dragFrom, 0, e.current[0])
-		this.$set(this.dragTo, 0, e.current[0])
+	private onDragstart({current}: MouseDragEvent) {
+		this.$set(this.dragFrom, 0, current[0])
+		this.$set(this.dragTo, 0, current[0])
 		this.$set(
 			this.dragFrom,
 			1,
@@ -204,16 +211,16 @@ export default class InputNumber extends Vue {
 		this.$set(this.dragTo, 1, this.dragFrom[1])
 
 		if (this.hasMin) {
-			this.dragMinX = e.current[0] + (this.min - this.value) / this.dragSpeed
+			this.dragMinX = current[0] + (this.min - this.value) / this.dragSpeed
 		}
 		if (this.hasMax) {
-			this.dragMaxX = e.current[0] + (this.max - this.value) / this.dragSpeed
+			this.dragMaxX = current[0] + (this.max - this.value) / this.dragSpeed
 		}
 
 		this.isDragging = true
 	}
 
-	private onDrag(e: {current: vec2; delta: vec2}) {
+	private onDrag(e: MouseDragEvent) {
 		let newValue
 		let x = e.current[0]
 

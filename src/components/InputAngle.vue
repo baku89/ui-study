@@ -20,7 +20,7 @@
 <script lang="ts">
 import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
-import {getDOMCenter, RoteryDrag, keypressed} from '../util'
+import {getDOMCenter, RoteryDrag, keypressed, MouseDragEvent} from '../util'
 
 import Drag from './common/Drag'
 import Portal from './common/Portal'
@@ -60,23 +60,23 @@ export default class InputAngle extends Vue {
 		this.roteryDrag.minDistance = this.$el.clientWidth
 	}
 
-	private onDragstart(e: {current: number[]}) {
+	private onDragstart({current}: MouseDragEvent) {
 		this.isDragging = true
 
 		const $knob = this.$refs.knob as HTMLElement
 		this.dragFrom = getDOMCenter($knob)
-		this.dragTo[0] = e.current[0]
-		this.dragTo[1] = e.current[1]
+		this.dragTo[0] = current[0]
+		this.dragTo[1] = current[1]
 
 		this.roteryDrag.start(this.value, this.dragFrom, this.dragTo)
 	}
 
-	private onDrag(e: {delta: vec2; current: vec2}) {
+	private onDrag({current}: MouseDragEvent) {
 		// Update HUD
 		const $knob = this.$refs.knob as HTMLElement
 		this.dragFrom = getDOMCenter($knob)
-		this.dragTo[0] = e.current[0]
-		this.dragTo[1] = e.current[1]
+		this.dragTo[0] = current[0]
+		this.dragTo[1] = current[1]
 
 		let newValue = this.roteryDrag.getAngle(this.dragTo)
 

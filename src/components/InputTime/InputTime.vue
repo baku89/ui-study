@@ -85,7 +85,7 @@ import {Component, Prop, Vue, Inject, Watch} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 import keycode from 'keycode'
 
-import {getDOMCenter, keypressed} from '../../util'
+import {getDOMCenter, keypressed, MouseDragEvent} from '../../util'
 import Timecode from '../../util/Timecode'
 
 import Drag from '../common/Drag'
@@ -242,9 +242,9 @@ export default class InputTime extends Vue {
 		}
 	}
 
-	private onDragstart(e: {current: vec2}) {
-		this.$set(this.dragFrom, 0, e.current[0])
-		this.$set(this.dragTo, 0, e.current[0])
+	private onDragstart({current}: MouseDragEvent) {
+		this.$set(this.dragFrom, 0, current[0])
+		this.$set(this.dragTo, 0, current[0])
 		this.$set(
 			this.dragFrom,
 			1,
@@ -253,17 +253,17 @@ export default class InputTime extends Vue {
 		this.$set(this.dragTo, 1, this.dragFrom[1])
 
 		if (this.hasMin) {
-			this.dragMinX = e.current[0] + (this.min - this.value) / this.dragSpeed
+			this.dragMinX = current[0] + (this.min - this.value) / this.dragSpeed
 		}
 		if (this.hasMax) {
-			this.dragMaxX = e.current[0] + (this.max - this.value) / this.dragSpeed
+			this.dragMaxX = current[0] + (this.max - this.value) / this.dragSpeed
 		}
 
 		this.activePartIndex = 3
 		this.isDragging = true
 	}
 
-	private onDrag(e: {current: vec2; delta: vec2}) {
+	private onDrag(e: MouseDragEvent) {
 		let newValue
 		let x = e.current[0]
 

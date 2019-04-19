@@ -44,7 +44,7 @@ import {vec2} from 'gl-matrix'
 import {clamp} from '../math'
 
 import {DataColor, DataColorMode, DataColorElements} from '../data'
-import {toCSSColor, convertColorElements} from '../util'
+import {toCSSColor, convertColorElements, MouseDragEvent} from '../util'
 
 import GradientPalette from './common/GradientPalette'
 import Drag from './common/Drag'
@@ -104,7 +104,7 @@ export default class InputColorPicker extends Vue {
 		}
 	}
 
-	private onDragSV(type: 'dragstart' | 'drag' | 'dragend', e: {current: vec2}) {
+	private onDragSV(type: 'dragstart' | 'drag' | 'dragend', e: MouseDragEvent) {
 		if (type === 'dragstart') {
 			this.isDraggingSV = true
 		} else if (type === 'dragend') {
@@ -118,10 +118,7 @@ export default class InputColorPicker extends Vue {
 		}
 	}
 
-	private onDragHue(
-		type: 'dragstart' | 'drag' | 'dragend',
-		e: {current: vec2}
-	) {
+	private onDragHue(type: 'dragstart' | 'drag' | 'dragend', e: MouseDragEvent) {
 		if (type === 'dragstart') {
 			this.isDraggingHue = true
 		} else if (type === 'dragend') {

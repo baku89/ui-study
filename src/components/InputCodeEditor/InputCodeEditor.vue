@@ -4,7 +4,6 @@
 
 <script lang="ts">
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
-
 import ace from 'brace'
 
 @Component
@@ -20,7 +19,7 @@ export default class InputCodeEditor extends Vue {
 		const theme = 'clouds'
 
 		require(`brace/theme/${theme}`)
-		require('brace/mode/javascript')
+		require(`brace/mode/${this.lang}`)
 
 		this.editor.getSession().setMode(`ace/mode/${this.lang}`)
 		this.editor.setTheme(`ace/theme/${theme}`)
@@ -37,6 +36,7 @@ export default class InputCodeEditor extends Vue {
 			tabSize: 2,
 			useSoftTabs: false
 		})
+		this.editor.$blockScrolling = Infinity
 	}
 
 	private beforeDestroy() {

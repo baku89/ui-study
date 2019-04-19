@@ -2,13 +2,20 @@
 	<div class="article">
 		<h1>Perceptive Design</h1>
 		<section>
-			<p>
+			<p lang="en">
 				<em>Perceptive Design</em> is a UX language and a research project to explore ideal user interfaces for all designing processes that
 				<a
 					href="https://baku89.com"
 					target="_blank"
-				>Baku Hashimoto (橋本 麦)</a> has been developing since 2019.
+				>Baku Hashimoto</a> has been developing since 2019.
 				The several demos showing below explain the way of thinking behind Perceptive Design and how it actually works.
+			</p>
+			<p lang="ja">
+				<em>Perceptive Design</em>《知覚的デザイン》は、全てのデザインに理想的なユーザーインターフェースについて探求するプロジェクトであり、ツール開発において使用可能なUIコンポーネント群です。2019年より
+				<a
+					href="https://baku89.com"
+					target="_blank"
+				>橋本麦</a>が開発しています。以下のデモやテキストの中で、Perceptive Designが指向する設計思想や、それらが実際にどのように機能するか説明します。
 			</p>
 			<!-- <p class="highlight">
 				<em>Dear Adobe Creative Residency Team,</em>
@@ -25,6 +32,7 @@
 		<PageLink
 			numbering="0. "
 			title="Abstract"
+			to="/abstract"
 		>This section explains what Perceptive Design is aiming and how it changes the way of designing.</PageLink>
 
 		<PageLink

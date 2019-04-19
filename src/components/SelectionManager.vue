@@ -63,6 +63,7 @@ interface SelectableNode<T> {
 		value: T
 	}
 }
+
 type SelectionContext = 'scalar' | 'color'
 
 interface Selection {
@@ -74,6 +75,10 @@ type DragOperatorFunc = (
 	value: number | DataColor,
 	e: MouseDragEvent
 ) => {value: number | DataColor; text: string}
+
+function getValue(node: SelectableNode<any>) {
+	return node.value !== undefined ? node.value : node._props.value
+}
 
 @Component({components: {Drag, Popover, Portal, InputIconButton}})
 export default class SelectionManager extends Vue {
@@ -141,7 +146,7 @@ export default class SelectionManager extends Vue {
 			const isNumSelectionEven = this.items.length % 2 === 0
 			this.controls.swap = isNumSelectionEven && commonContext !== null
 		} else {
-			for (const key in this.controls) {
+			for (const key of Object.keys(this.controls)) {
 				this.controls[key] = false
 			}
 		}
@@ -182,8 +187,6 @@ export default class SelectionManager extends Vue {
 			}
 		}
 
-		console.log(mode)
-
 		if (mode !== null) {
 			if (mode === 'add') {
 				this.dragOperator = (startValue, _e) => {
@@ -207,7 +210,6 @@ export default class SelectionManager extends Vue {
 					return {value, text}
 				}
 			} else if (mode === 'saturate' || mode === 'brightness') {
-				console.log(mode)
 				this.dragOperator = (startColor, _e) => {
 					const inc = clamp(_e.offset[0] / 2, -100, 100)
 
@@ -220,9 +222,10 @@ export default class SelectionManager extends Vue {
 				}
 			}
 
-			this.dragStartValues = this.items.map(
-				({node}) => node.value || node._props.value
-			)
+			this.dragStartValues = this.items.map(({node}) => getValue(node))
+
+			this.$set(this.dragPosition, 0, e.current[0])
+			this.$set(this.dragPosition, 1, e.current[1])
 		} else {
 			this.dragOperator = null
 			e.abort()
@@ -250,12 +253,13 @@ export default class SelectionManager extends Vue {
 			const nodeA = this.items[i].node
 			const nodeB = this.items[i + 1].node
 
-			const valueA = nodeA.value || nodeA._props.value
-			const valueB = nodeB.value || nodeB._props.value
+			const valueA = getValue(nodeA)
+			const valueB = getValue(nodeB)
 
 			nodeA.updateValue(valueB)
 			await this.$nextTick()
 			nodeB.updateValue(valueA)
+			await this.$nextTick()
 		}
 	}
 

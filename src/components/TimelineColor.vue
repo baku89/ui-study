@@ -27,14 +27,6 @@ export default class TimelineColor extends Vue {
 		const data = this.value.subarray(start * 4, (end + 1) * 4)
 		const imageData = new ImageData(data, displayDuration, 1)
 		this.ctx.putImageData(imageData, 0, 0)
-
-		// for (let i = start, x = 0; i <= end; i++) {
-		// 	const b = this.value[i]
-
-		// 	// Draw
-		// 	this.ctx.fillStyle = `rgb(${b}, ${b}, ${b})`
-		// 	this.ctx.fillRect(x, 0, 1, 1)
-		// }
 	}
 
 	private mounted() {
@@ -73,6 +65,7 @@ export default class TimelineColor extends Vue {
 	&__canvas
 		width 100%
 		height 100%
+		image-rendering pixelated
 </style>
 
 

@@ -83,7 +83,9 @@ export default class InputColorButton extends Vue {
 
 	private onFocus() {
 		this.isEditing = true
-		this.SelectionManager!.add(this, 'color')
+		if (this.SelectionManager) {
+			this.SelectionManager.add(this, 'color')
+		}
 	}
 
 	private onChangeMode(mode: DataColorMode) {

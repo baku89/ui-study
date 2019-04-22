@@ -136,7 +136,9 @@ export default class InputColorElement extends Vue {
 
 	private onFocus(e: Event) {
 		this.isEditing = true
-		this.SelectionManager!.add(this)
+		if (this.SelectionManager) {
+			this.SelectionManager.add(this)
+		}
 	}
 
 	private onChange() {

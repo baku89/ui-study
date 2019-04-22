@@ -11,6 +11,19 @@ import {Component, Vue, Watch, Provide} from 'vue-property-decorator'
 const angleStep = 30
 
 @Component({
+	data() {
+		return {
+			lang: 'en',
+			keySlower: 'alt',
+			keyFaster: 'shift',
+			keySymmetry: 's',
+			keyQuantize: 'q',
+			keyScale: 'alt',
+			quantizeAngles: Array(360 / angleStep)
+				.fill(0)
+				.map((v, i) => i * angleStep)
+		}
+	},
 	provide() {
 		return {
 			Config: this.$data,
@@ -19,16 +32,6 @@ const angleStep = 30
 	}
 })
 export default class ConfigProvider extends Vue {
-	private lang: string = 'en'
-	private keySlower: string = 'alt'
-	private keyFaster: string = 'shift'
-	private keySymmetry: string = 's'
-	private keyQuantize: string = 'q'
-	private keyScale: string = 'alt'
-	private quantizeAngles: number[] = Array(360 / angleStep)
-		.fill(0)
-		.map((v, i) => i * angleStep)
-
 	public set(name: string, value: any) {
 		this.$set(this.$data, name, value)
 
@@ -39,7 +42,7 @@ export default class ConfigProvider extends Vue {
 	}
 
 	private mounted() {
-		document.body.classList.add(this.lang)
+		document.body.classList.add(this.$data.lang)
 	}
 }
 </script>

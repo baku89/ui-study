@@ -67,6 +67,7 @@ import Portal from '../common/Portal'
 import SvgArrow from '../common/SvgArrow.vue'
 import GradientPalette from '../common/GradientPalette'
 import SelectionManager from '../SelectionManager.vue'
+import {DefaultConfig, DataConfig} from '../../core'
 
 const SLIT_HEIGHT = 200
 const SLIT_WIDTH = 6
@@ -98,8 +99,8 @@ export default class InputColorElement extends Vue {
 	@Inject({from: 'SelectionManager', default: null})
 	private readonly SelectionManager!: SelectionManager
 
-	@Inject({from: 'keyFaster', default: 'shift'})
-	private readonly keyFaster!: string
+	@Inject({from: 'Config', default: DefaultConfig})
+	private readonly Config!: DataConfig
 
 	get mode(): DataColorMode {
 		return this.color[0]
@@ -164,7 +165,7 @@ export default class InputColorElement extends Vue {
 		if (key === 'up' || key === 'down') {
 			let inc = key === 'up' ? 1 : -1
 
-			if (keypressed(this.keyFaster)) {
+			if (keypressed(this.Config.keyFaster)) {
 				inc *= 10
 			}
 			this.updateValue(this.value + inc)

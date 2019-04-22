@@ -42,6 +42,7 @@ import {vec2} from 'gl-matrix'
 import {lerp, clamp, ratio, quantize} from '../math'
 import keypressed from '../util/keypressed'
 import {MouseDragEvent} from '../util'
+import {DefaultConfig, DataConfig} from '../core'
 
 @Component({
 	components: {
@@ -54,11 +55,8 @@ export default class InputRange extends Vue {
 	@Prop({type: Number, required: true}) private max!: number
 	@Prop(Number) private step!: number
 
-	@Inject({from: 'keySymmetry', default: 's'})
-	private readonly keySymmetry!: string
-
-	@Inject({from: 'keySlower', default: 'alt'})
-	private readonly keySlower!: string
+	@Inject({from: 'Config', default: DefaultConfig})
+	private readonly Config!: DataConfig
 
 	private hoverTarget: 'bar' | 'first' | 'second' | null = null
 	private dragMode: 'bar' | 'first' | 'second' | null = null
@@ -118,12 +116,12 @@ export default class InputRange extends Vue {
 	}
 
 	private onDrag(e: MouseDragEvent) {
-		const isSymmetrical = keypressed(this.keySymmetry)
+		const isSymmetrical = keypressed(this.Config.keySymmetry)
 		const middle = lerp(this.dragStartValue[0], this.dragStartValue[1], 0.5)
 
 		let inc = e.offset[0] * (this.max - this.min)
 
-		if (keypressed(this.keySlower)) {
+		if (keypressed(this.Config.keySlower)) {
 			inc *= 0.1
 		}
 

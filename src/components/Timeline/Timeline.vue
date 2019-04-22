@@ -32,11 +32,11 @@ import {keypressed, MouseDragEvent} from '../../util'
 
 import InputRange from '../InputRange.vue'
 import TimelineSeekbarScale from './TimelineSeekbarScale.vue'
+import {DataConfig, DefaultConfig} from '../../core'
 
 @Component({
 	components: {Drag, InputRange, TimelineSeekbarScale},
 	provide() {
-		console.log(this.$data.Timeline)
 		return {
 			Timeline: this.$data.Timeline
 		}
@@ -48,15 +48,12 @@ export default class Timeline extends Vue {
 	@Prop({type: Number, required: true}) private max!: number
 	@Prop({type: Boolean, default: false}) private autoScroll!: boolean
 
-	@Inject({from: 'keyScale', default: 'alt'})
-	private readonly keyScale!: string
+	@Inject({from: 'Config', default: DefaultConfig})
+	private readonly Config!: DataConfig
 
 	private Timeline = {
 		displayRange: [0, 0]
 	}
-
-	@Inject({from: 'keySlower', default: 'alt'})
-	private readonly keySlower!: string
 
 	private dragStartTime!: number
 
@@ -107,7 +104,7 @@ export default class Timeline extends Vue {
 		const originX = ratio(this.dragStartTime, start, end)
 		let inc = (e.current[0] - originX) * (end - start)
 
-		if (keypressed(this.keySlower)) {
+		if (keypressed(this.Config.keySlower)) {
 			inc *= 0.1
 		}
 
@@ -168,7 +165,7 @@ export default class Timeline extends Vue {
 		const framesPerPixel = (end - start) / this.$el.clientWidth
 		let incStart, incEnd
 
-		if (keypressed(this.keyScale) || e.ctrlKey) {
+		if (keypressed(this.Config.keyScale) || e.ctrlKey) {
 			// Zoom in-out
 			const {left, width} = this.$el.getBoundingClientRect()
 			const scaleCenter = (e.clientX - left) / width

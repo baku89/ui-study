@@ -91,6 +91,7 @@ import Timecode from '../../util/Timecode'
 import Drag from '../common/Drag'
 import Portal from '../common/Portal'
 import SvgArrow from '../common/SvgArrow.vue'
+import {DefaultConfig, DataConfig} from '../../core'
 
 @Component({
 	components: {Drag, Portal, SvgArrow}
@@ -101,11 +102,8 @@ export default class InputTime extends Vue {
 	@Prop(Number) private max!: number
 
 	@Inject({from: 'fps', default: 24}) private readonly fps!: number
-	@Inject({from: 'dragSpeed', default: 0.5}) private readonly dragSpeed!: number
-	@Inject({from: 'keyFaster', default: 'shift'})
-	private readonly keyFaster!: string
-	@Inject({from: 'keySlower', default: 'alt'})
-	private readonly keySlower!: string
+	@Inject({from: 'Config', default: DefaultConfig})
+	private readonly Config!: DataConfig
 
 	private smpte: string = ''
 	private frames: string = '00'
@@ -187,13 +185,13 @@ export default class InputTime extends Vue {
 			let partIndex = originalPartIndex
 
 			if (partIndex === 3) {
-				if (keypressed(this.keyFaster)) {
+				if (keypressed(this.Config.keyFaster)) {
 					partIndex = 2
 				}
 			} else {
-				if (keypressed(this.keyFaster)) {
+				if (keypressed(this.Config.keyFaster)) {
 					inc *= 10
-				} else if (keypressed(this.keySlower)) {
+				} else if (keypressed(this.Config.keySlower)) {
 					inc /= 10
 				}
 			}
@@ -253,10 +251,12 @@ export default class InputTime extends Vue {
 		this.$set(this.dragTo, 1, this.dragFrom[1])
 
 		if (this.hasMin) {
-			this.dragMinX = current[0] + (this.min - this.value) / this.dragSpeed
+			this.dragMinX =
+				current[0] + (this.min - this.value) / this.Config.dragSpeed
 		}
 		if (this.hasMax) {
-			this.dragMaxX = current[0] + (this.max - this.value) / this.dragSpeed
+			this.dragMaxX =
+				current[0] + (this.max - this.value) / this.Config.dragSpeed
 		}
 
 		this.activePartIndex = 3
@@ -270,14 +270,14 @@ export default class InputTime extends Vue {
 		if (this.hasMin || this.hasMax) {
 			if (this.hasMin) {
 				x = Math.max(this.dragMinX, x)
-				newValue = this.min + (x - this.dragMinX) * this.dragSpeed
+				newValue = this.min + (x - this.dragMinX) * this.Config.dragSpeed
 			}
 			if (this.hasMax) {
 				x = Math.min(this.dragMaxX, x)
-				newValue = this.max + (x - this.dragMaxX) * this.dragSpeed
+				newValue = this.max + (x - this.dragMaxX) * this.Config.dragSpeed
 			}
 		} else {
-			newValue = this.value + e.delta[0] * this.dragSpeed
+			newValue = this.value + e.delta[0] * this.Config.dragSpeed
 		}
 
 		this.$set(this.dragTo, 0, x)

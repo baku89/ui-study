@@ -65,6 +65,7 @@ import Drag from './common/Drag'
 import Portal from './common/Portal'
 import SvgArrow from './common/SvgArrow.vue'
 import SelectionManager from './SelectionManager.vue'
+import {DataConfig, DefaultConfig} from '../core'
 
 @Component({
 	components: {
@@ -98,11 +99,8 @@ export default class InputNumber extends Vue {
 	@Inject({from: 'SelectionManager', default: null})
 	private readonly SelectionManager!: SelectionManager
 
-	@Inject({from: 'dragSpeed', default: 0.5}) private readonly dragSpeed!: number
-	@Inject({from: 'keyFaster', default: 'shift'})
-	private readonly keyFaster!: string
-	@Inject({from: 'keySlower', default: 'alt'})
-	private readonly keySlower!: string
+	@Inject({from: 'Config', default: DefaultConfig})
+	private readonly Config!: DataConfig
 
 	private get displayValue(): string {
 		return toFixed(this.value, this.precision, this.shouldOmitZero)
@@ -182,9 +180,9 @@ export default class InputNumber extends Vue {
 
 			if (this.hasStep) {
 				inc *= this.step
-			} else if (keypressed(this.keyFaster)) {
+			} else if (keypressed(this.Config.keyFaster)) {
 				inc *= 10
-			} else if (keypressed(this.keySlower)) {
+			} else if (keypressed(this.Config.keySlower)) {
 				inc /= 10
 			}
 
@@ -211,10 +209,12 @@ export default class InputNumber extends Vue {
 		this.$set(this.dragTo, 1, this.dragFrom[1])
 
 		if (this.hasMin) {
-			this.dragMinX = current[0] + (this.min - this.value) / this.dragSpeed
+			this.dragMinX =
+				current[0] + (this.min - this.value) / this.Config.dragSpeed
 		}
 		if (this.hasMax) {
-			this.dragMaxX = current[0] + (this.max - this.value) / this.dragSpeed
+			this.dragMaxX =
+				current[0] + (this.max - this.value) / this.Config.dragSpeed
 		}
 
 		this.isDragging = true
@@ -227,14 +227,14 @@ export default class InputNumber extends Vue {
 		if (this.hasMin || this.hasMax) {
 			if (this.hasMin) {
 				x = Math.max(this.dragMinX, x)
-				newValue = this.min + (x - this.dragMinX) * this.dragSpeed
+				newValue = this.min + (x - this.dragMinX) * this.Config.dragSpeed
 			}
 			if (this.hasMax) {
 				x = Math.min(this.dragMaxX, x)
-				newValue = this.max + (x - this.dragMaxX) * this.dragSpeed
+				newValue = this.max + (x - this.dragMaxX) * this.Config.dragSpeed
 			}
 		} else {
-			newValue = this.value + e.delta[0] * this.dragSpeed
+			newValue = this.value + e.delta[0] * this.Config.dragSpeed
 		}
 
 		if (this.hasStep) {

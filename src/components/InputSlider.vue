@@ -23,6 +23,7 @@ import {lerp, clamp, ratio, quantize} from '../math'
 
 import Drag from './common/Drag'
 import {keypressed} from '../util'
+import {DefaultConfig, DataConfig} from '../core'
 
 @Component({
 	components: {
@@ -35,8 +36,8 @@ export default class InputSlider extends Vue {
 	@Prop({type: Number, required: true}) private max!: number
 	@Prop(Number) private step!: number
 
-	@Inject({from: 'keySlower', default: 'alt'})
-	private readonly keySlower!: string
+	@Inject({from: 'Config', default: DefaultConfig})
+	private readonly Config!: DataConfig
 
 	private dragStartValue!: number
 
@@ -84,7 +85,7 @@ export default class InputSlider extends Vue {
 		const originX = ratio(this.dragStartValue, this.min, this.max)
 		let inc = (e.current[0] - originX) * (this.max - this.min)
 
-		if (keypressed(this.keySlower)) {
+		if (keypressed(this.Config.keySlower)) {
 			inc *= 0.1
 		}
 

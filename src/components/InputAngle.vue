@@ -26,6 +26,7 @@ import Drag from './common/Drag'
 import Portal from './common/Portal'
 import SvgArcArrow from './common/SvgArcArrow.vue'
 import {mod} from '../math'
+import {DataConfig, DefaultConfig} from '../core'
 
 @Component({
 	components: {
@@ -44,13 +45,10 @@ export default class InputAngle extends Vue {
 	private roteryDrag!: RoteryDrag
 
 	@Inject({
-		from: 'quantizeAngles',
-		default: [0, 45, 90, 135, 180, 225, 270, 315]
+		from: 'Config',
+		default: DefaultConfig
 	})
-	private readonly quantizeAngles!: number[]
-
-	@Inject({from: 'keyQuantize', default: 'shift'})
-	private readonly keyQuantize!: string
+	private readonly Config!: DataConfig
 
 	private created() {
 		this.roteryDrag = new RoteryDrag()
@@ -81,13 +79,13 @@ export default class InputAngle extends Vue {
 		let newValue = this.roteryDrag.getAngle(this.dragTo)
 
 		// Quantize the angle
-		if (keypressed(this.keyQuantize)) {
+		if (keypressed(this.Config.keyQuantize)) {
 			// Find the closest angle out of quantizeAngles
 			// https://stackoverflow.com/questions/8584902/get-closest-number-out-of-array
 			let angle = mod(newValue, 360)
 			const turn = Math.floor(newValue / 360)
 
-			angle = this.quantizeAngles.reduce((prev, curr) => {
+			angle = this.Config.quantizeAngles.reduce((prev, curr) => {
 				return Math.abs(curr - angle) < Math.abs(prev - angle) ? curr : prev
 			})
 

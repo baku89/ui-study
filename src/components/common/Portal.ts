@@ -26,7 +26,7 @@ export default class Portal extends Vue {
 		if (this.attachToParent && this.$el.parentNode!.parentNode) {
 			this.changeParentEl(this.$el.parentNode!.parentNode)
 		} else if (document) {
-			this.changeParentEl(this.target || document.body)
+			this.changeParentEl(this.target || this.$root.$el || document.body)
 		}
 	}
 

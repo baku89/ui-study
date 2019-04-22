@@ -1,67 +1,47 @@
 <template>
 	<SelectionManager>
-		<div class="page-content">
-			<div class="param">
-				<Parameter label="Intensity">
-					<ParamFieldSlider class="param__input" v-model="intensity" :min="0" :max="100"/>
-				</Parameter>
-
-				<Parameter label="Iteration">
-					<ParamFieldSlider
-						class="param__input"
-						v-model="iteration"
-						:min="1"
-						:max="5"
-						:step="1"
-						:precision="0"
-					/>
-				</Parameter>
-
-				<Parameter label="Speed">
-					<ParamFieldSlider class="param__input" v-model="speed" :min="-10" :max="10"/>
-				</Parameter>
-
-				<Parameter label="Offset">
-					<ParamFieldPoint v-model="offset" :precision="1" unit="%"/>
-				</Parameter>
-
-				<Parameter label="Scale">
-					<ParamFieldScale v-model="scale" :keepProportion.sync="keepProportion"/>
-				</Parameter>
-
-				<Parameter label="Angle">
-					<ParamFieldAngle class="param__input" v-model="angle"/>
-				</Parameter>
-
-				<Parameter label="Crop">
-					<ParamFieldScale
-						v-model="crop"
-						:precision="0"
-						:max="50"
-						:min="0"
-						:labels="['T', 'R', 'B', 'L']"
-						unit="%"
-					/>
-				</Parameter>
-
-				<Parameter label="Frame">
-					<ParamFieldColor v-model="frameColor"/>
-				</Parameter>
-
-				<Parameter label="Noise">
-					<InputMode v-model="noiseType" :labels="['Simplex', 'Periodic']" :values="[0, 1]"/>
-				</Parameter>
-
-				<Parameter>
-					<InputButton label="Reset" @click="time = 0"/>
-				</Parameter>
-			</div>
-			<div class="preview">
-				<div class="preview__wrapper">
+		<LayoutSplitter class="page-content" split="vertical" default="30em" min="30em" max="60%">
+			<template slot="first">
+				<div class="control">
+					<LayoutTabs class="tabs">
+						<LayoutTab label="Control" class="tab-control">
+							<Parameter v-for="param of params" :key="param.name" :label="param.label">
+								<component
+									:is="'ParamField' + param.type[0].toUpperCase() + param.type.substr(1, param.type.length - 1)"
+									v-model="param.value"
+									:min="param.min"
+									:max="param.max"
+									:step="param.step"
+									:precision="param.precision"
+									:values="param.values"
+									:labels="param.labels"
+									:unit="param.unit"
+								/>
+							</Parameter>
+						</LayoutTab>
+						<LayoutTab label="Code">
+							<LayoutSplitter class="tab-code" split="horizontal" default="50%">
+								<template slot="first">
+									<div class="code-wrapper">
+										<InputCodeEditor class="code first" v-model="codeShader" lang="glsl"/>
+									</div>
+								</template>
+								<template slot="second">
+									<div class="code-wrapper">
+										<InputCodeEditor class="code second" v-model="codeMeta" lang="json"/>
+									</div>
+								</template>
+							</LayoutSplitter>
+						</LayoutTab>
+					</LayoutTabs>
+				</div>
+			</template>
+			<template slot="second">
+				<div class="preview">
 					<canvas class="preview__canvas" ref="canvas"/>
 				</div>
-			</div>
-		</div>
+			</template>
+		</LayoutSplitter>
 	</SelectionManager>
 </template>
 
@@ -72,152 +52,274 @@ import raf from 'raf'
 // @ts-ignore
 import {Renderer as ISFRenderer} from 'interactive-shader-format'
 
-import {DataColor} from '../../data'
+import {DataColor, DataColorMode} from '../../data'
 import {convertColorElements} from '../../util'
 
 import Components from '../../components'
+import {toRadians} from '../../math'
+
+interface ParamData {
+	name: string
+	value: number | number[] | DataColor
+	type: string
+	label: string
+	min?: any
+	max?: any
+	precision?: number
+	step?: number
+	default?: any
+	unit?: string
+	values?: any[]
+	labels?: string[]
+}
 
 @Component({
 	components: Components
 })
 export default class ParameterControl extends Vue {
-	private intensity = 20
-	private iteration = 2
-	private speed = 1
-	private offset = [0, 0]
-	private scale = [30, 30]
-	private angle = 0
-	private keepProportion = true
-	private crop = [5, 5, 5, 5]
-	private frameColor: DataColor = ['hsl', [28, 100, 87]]
-	private noiseType: number = 0
+	private codeShader: string = require('./polar-disp.frag')
+	private codeMeta: string = require('raw-loader!./polar-disp.meta.txt')
 
-	private time!: number
+	private params: ParamData[] = []
+	private isRendering: boolean = false
 
+	// private time!: number
 	private renderer!: ISFRenderer
-	private stopRendering!: boolean
+	private shouldReset!: boolean
+	private gl!: WebGL2RenderingContext
 
 	private mounted() {
 		const canvas = this.$refs.canvas as HTMLCanvasElement
-		const gl = canvas.getContext('webgl2')
-		this.renderer = new ISFRenderer(gl)
-		this.renderer.loadSource(require('./polar-disp.frag'))
+		this.gl = canvas.getContext('webgl2') as WebGL2RenderingContext
+		this.updateShader()
+	}
 
-		this.updateIntensity()
-		this.updateIteration()
-		this.updateOffset()
-		this.updateScale()
-		this.updateAngle()
-		this.updateCrop()
-		this.updateFrameColor()
-		this.updateNoiseType()
+	private setupDraw() {
+		const canvas = this.$refs.canvas as HTMLCanvasElement
+		this.renderer = new ISFRenderer(this.gl)
 
-		let lastTime = performance.now()
-		let deltaTime = 0
-		this.time = 0
+		// Compile
+		const log = console.log
+		// @ts-ignore
+		console.log = () => {}
+		this.renderer.loadSource(`/*${this.codeMeta}*/\n${this.codeShader}`)
+		console.log = log
+
+		if (this.renderer.error) {
+			console.error(this.renderer)
+			this.isRendering = false
+			return
+		}
+
+		// Parse params
+		{
+			this.params.splice(0, this.params.length)
+
+			const {INPUTS: inputs} = JSON.parse(this.codeMeta)
+
+			for (const input of inputs) {
+				let type = 'number'
+				let step
+				let dim = 1
+				let value = input.DEFAULT
+
+				const hasRange = input.MIN !== undefined && input.MAX !== undefined
+
+				if (input.TYPE === 'float') {
+					dim = 1
+					if (input.UI_TYPE === 'angle') {
+						type = 'angle'
+					} else if (hasRange) {
+						type = 'slider'
+					} else {
+						type = 'number'
+					}
+				} else if (input.TYPE === 'point2D') {
+					dim = 2
+					if (input.UI_TYPE === 'scale') {
+						type = 'scale'
+					} else {
+						type = 'point'
+					}
+				} else if (input.TYPE === 'long') {
+					dim = 1
+					if (input.UI_TYPE === 'integer') {
+						type = hasRange ? 'slider' : 'number'
+						step = 1
+					} else if (input.UI_TYPE === 'mode') {
+						type = 'mode'
+					} else {
+						type = 'dropdown'
+					}
+				} else if (input.TYPE === 'color') {
+					dim = 3
+					type = 'color'
+				}
+
+				if (value === undefined) {
+					if (input.TYPE === 'color') {
+						value = ['hsv', [0, 0, 100]]
+					} else {
+						value = dim === 1 ? 0 : Array(dim).fill(0)
+					}
+				}
+
+				const param: ParamData = {
+					name: input.NAME,
+					label: input.LABEL !== undefined ? input.LABEL : input.NAME,
+					type,
+					value,
+					default: value,
+					min: input.MIN,
+					max: input.MAX,
+					step,
+					unit: input.UNIT,
+					values: input.VALUES,
+					labels: input.LABELS
+				}
+
+				// @ts-ignore
+				Object.keys(param).forEach(
+					// @ts-ignore
+					key => param[key] === undefined && delete param[key]
+				)
+
+				this.params.push(param)
+			}
+		}
+
+		// let lastTime = performance.now()
+		// let deltaTime = 0
+		// this.time = 0
+		this.isRendering = true
 
 		const draw = (currentTime: number) => {
-			if (this.stopRendering) {
+			if (!this.isRendering) {
+				return
+			}
+			if (this.shouldReset) {
+				this.shouldReset = false
+				this.setupDraw()
 				return
 			}
 
-			deltaTime = currentTime - lastTime
-			this.time += (deltaTime * this.speed) / 10000
+			// Update Time
+			// deltaTime = currentTime - lastTime
+			// this.time += (deltaTime * this.speed) / 10000
+			// this.renderer.setValue('TIME', this.time)
+			// lastTime = currentTime
+
 			twgl.resizeCanvasToDisplaySize(canvas)
-			this.renderer.setValue('time', this.time)
+			// canvas.width =
+			// 	Math.min(canvas.clientWidth, canvas.clientHeight) *
+			// 	window.devicePixelRatio
+			// canvas.height = canvas.width
 			this.renderer.draw(canvas)
 
-			lastTime = currentTime
 			raf(draw)
 		}
 		draw(performance.now())
 	}
 
+	private updateShader() {
+		if (this.renderer) {
+			this.renderer.cleanup()
+			this.renderer = null
+		}
+
+		if (this.isRendering) {
+			this.shouldReset = true
+		} else {
+			this.setupDraw()
+		}
+	}
+
 	private beforeDestroy() {
 		this.renderer.cleanup()
-		this.stopRendering = true
+		this.renderer = null
+		this.isRendering = false
 	}
 
-	@Watch('intensity')
-	private updateIntensity() {
-		this.renderer.setValue('intensity', this.intensity / 100)
+	@Watch('params', {deep: true})
+	private onParamsChanged(newParams: ParamData[]) {
+		for (const param of newParams) {
+			const {type, unit, name} = param
+			let {value} = param
+
+			if (type === 'angle') {
+				value = toRadians(value as number)
+			} else if (type === 'color') {
+				const color = value as DataColor
+				let rgb = convertColorElements(color[0], 'rgb', color[1])
+				rgb = (rgb as number[]).map((x: number) => x / 255)
+				rgb.push(1)
+				value = rgb
+			} else if (type !== 'scale' && unit === '%') {
+				if (value instanceof Array) {
+					value = (value as number[]).map(v => v / 100)
+				} else {
+					value = value / 100
+				}
+			}
+
+			this.renderer.setValue(name, value)
+		}
 	}
 
-	@Watch('iteration')
-	private updateIteration() {
-		this.renderer.setValue('iteration', this.iteration)
-	}
-
-	@Watch('offset')
-	private updateOffset() {
-		this.renderer.setValue('offset', [
-			this.offset[0] / 100,
-			this.offset[1] / 100
-		])
-	}
-
-	@Watch('scale')
-	private updateScale() {
-		this.renderer.setValue('scale', [this.scale[0] / 100, this.scale[1] / 100])
-	}
-
-	@Watch('angle')
-	private updateAngle() {
-		this.renderer.setValue('angle', (this.angle / 180) * Math.PI)
-	}
-
-	@Watch('crop')
-	private updateCrop() {
-		this.renderer.setValue('cropTop', this.crop[0] / 100)
-		this.renderer.setValue('cropRight', this.crop[1] / 100)
-		this.renderer.setValue('cropBottom', this.crop[2] / 100)
-		this.renderer.setValue('cropLeft', this.crop[3] / 100)
-	}
-
-	@Watch('frameColor')
-	private updateFrameColor() {
-		let color = convertColorElements(
-			this.frameColor[0],
-			'rgb',
-			this.frameColor[1]
-		)
-		color = (color as number[]).map((x: number) => x / 255)
-		this.renderer.setValue('frameColor', [...color, 1])
-	}
-
-	@Watch('noiseType')
-	private updateNoiseType() {
-		this.renderer.setValue('noiseType', this.noiseType)
+	@Watch('code')
+	private onCodeChanged() {
+		this.updateShader()
 	}
 }
 </script>
 
 <style lang="stylus" scoped>
 .page-content
-	display flex
-	padding 2rem
+	// display flex
+	align-items stretch
 	width 100%
 	height 100%
 	background var(--color-bg)
 	user-select none
 
-.param
-	margin-right 1em
-	width 30em
+.control
+	height 100%
+
+.tabs
+	height 100%
+
+.tab-control
+	padding 1em
+
+.tab-code
+	width 100%
+	height 100%
+
+.code-wrapper
+	position relative
+	height 100%
+
+.code
+	position absolute
+	top 0.4em
+	right 0.4em
+	bottom 0.4em
+	left 0.4em
+
+	&.first
+		bottom 0.2em
+
+	&.second
+		top 0.2em
 
 .preview
 	position relative
-	flex-grow 1
-
-	&__wrapper
-		position relative
-		padding-top 100%
-		height 0
+	height 100%
 
 	&__canvas
-		position absolute
-		top 0
-		left 0
 		width 100%
 		height 100%
+		background white
+		object-fit contain
+		// object-position 100% 0
 </style>

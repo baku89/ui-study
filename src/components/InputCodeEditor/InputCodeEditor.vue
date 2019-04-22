@@ -1,5 +1,7 @@
 <template>
-	<div class="InputCodeEditor"></div>
+	<div class="InputCodeEditor">
+		<div class="InputCodeEditor__editor" ref="editor"/>
+	</div>
 </template>
 
 <script lang="ts">
@@ -14,7 +16,7 @@ export default class InputCodeEditor extends Vue {
 	private editor!: ace.Editor
 
 	private mounted() {
-		this.editor = ace.edit(this.$el as HTMLElement)
+		this.editor = ace.edit(this.$refs.editor as HTMLElement)
 
 		const theme = 'clouds'
 
@@ -34,9 +36,9 @@ export default class InputCodeEditor extends Vue {
 			highlightActiveLine: false,
 			showGutter: false,
 			tabSize: 2,
-			useSoftTabs: false
+			useSoftTabs: false,
+			maxLines: Infinity
 		})
-		this.editor.$blockScrolling = Infinity
 	}
 
 	private beforeDestroy() {
@@ -45,9 +47,9 @@ export default class InputCodeEditor extends Vue {
 	}
 
 	@Watch('value')
-	private onValueChanged(value: string) {
-		if (this.editor.getValue() !== value) {
-			this.editor.setValue(value)
+	private onValueChanged(newValue: string) {
+		if (this.editor.getValue() !== newValue) {
+			this.editor.setValue(newValue)
 		}
 	}
 
@@ -62,9 +64,13 @@ export default class InputCodeEditor extends Vue {
 @import '../../style/config.styl'
 
 .InputCodeEditor
-	padding 1em
+	position relative
+	overflow scroll
 	border 1px solid var(--color-border)
 	border-radius $border-radius
-	background var(--color-field)
 	font-family var(--font-code)
+
+	&__editor
+		position relative
+		width 100%
 </style>

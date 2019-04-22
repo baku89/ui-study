@@ -1,6 +1,6 @@
 <template>
 	<div class="LayoutSplitter" @mouseup="onMouseup" @mousemove="onMousemove" :style="elStyles">
-		<div :style="{[paneWidthAttr]: percent}">
+		<div :style="{[paneWidthAttr]: percent}" ref="first">
 			<slot name="first"/>
 		</div>
 
@@ -51,6 +51,15 @@ export default class LayoutSplitter extends Vue {
 			userSelect: this.isDragging ? 'none' : '',
 			cursor: this.isDragging ? 'col-resize' : ''
 		}
+	}
+
+	// Lifecycle hooks
+	private mounted() {
+		window.addEventListener('resize', this.calcSplitPosition)
+	}
+
+	private beforeDestroy() {
+		window.removeEventListener('resize', this.calcSplitPosition)
 	}
 
 	// Methods
@@ -105,6 +114,21 @@ export default class LayoutSplitter extends Vue {
 		}
 	}
 
+	private calcSplitPosition() {
+		const currentWidth = (this.$refs.first as HTMLElement).clientWidth
+		const widthAttr = this.split === 'vertical' ? 'offsetWidth' : 'offsetHeight'
+
+		const measureMin = this.$refs.measureMin as HTMLElement
+		const measureMax = this.$refs.measureMax as HTMLElement
+
+		if (currentWidth <= measureMin[widthAttr]) {
+			this.percent = this.min
+		} else if (currentWidth >= measureMax[widthAttr]) {
+			this.percent = this.max
+		}
+	}
+
+	// Watchers
 	@Watch('defaultPercent')
 	private onDefaultPercentChanged(newValue: string) {
 		this.percent = newValue

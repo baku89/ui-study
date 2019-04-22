@@ -1,42 +1,72 @@
 <template>
 	<div class="ParamFieldScale">
-		<InputVector
-			class="param-field--2w"
-			:value="value"
+		<InputNumber
+			v-if="isScalar"
+			class="param-field--1w"
+			:value="percentValue"
 			:precision="precision"
 			:max="max"
 			:min="min"
-			:labels="labels"
+			:step="step"
+			:label="label"
 			unit="%"
 			@input="onInput"
 		/>
-		<InputIconToggle
-			:value="_keepProportion"
-			@input="onChangeKeepProportion"
-			src-on="./assets/icon_chain.svg"
-			src-off="./assets/icon_unlinked-chain.svg"
-		/>
+		<template v-else>
+			<InputVector
+				class="param-field--2w"
+				:value="percentValue"
+				:precision="precision"
+				:max="max"
+				:min="min"
+				:step="step"
+				:labels="labels"
+				unit="%"
+				@input="onInput"
+			/>
+			<InputIconToggle
+				:value="_keepProportion"
+				@input="onChangeKeepProportion"
+				src-on="./assets/icon_chain.svg"
+				src-off="./assets/icon_unlinked-chain.svg"
+			/>
+		</template>
 	</div>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
+import InputNumber from './InputNumber.vue'
 import InputVector from './InputVector.vue'
 import InputIconToggle from './InputIconToggle.vue'
 
 @Component({
-	components: {InputVector, InputIconToggle}
+	components: {InputNumber, InputVector, InputIconToggle}
 })
 export default class ParamFieldScale extends Vue {
-	@Prop({type: Array, required: true}) private value!: number[]
+	@Prop({type: [Number, Array], required: true}) private value!:
+		| number
+		| number[]
 	@Prop([Number, Array]) private min!: number | number[]
 	@Prop([Number, Array]) private max!: number | number[]
+	@Prop(Number) private step!: number
 	@Prop(Number) private precision!: number
+	@Prop(String) private label!: string[]
 	@Prop(Array) private labels!: string[]
 	@Prop({type: Boolean, default: null}) private keepProportion!: boolean | null
 
 	private internalKeepProportion: boolean | null = null
+
+	private get isScalar(): boolean {
+		return !(this.value instanceof Array)
+	}
+
+	private get percentValue(): number | number[] {
+		return this.isScalar
+			? (this.value as number) * 100
+			: (this.value as number[]).map(v => v * 100)
+	}
 
 	private created() {
 		if (this.keepProportion === null) {
@@ -50,18 +80,28 @@ export default class ParamFieldScale extends Vue {
 			: (this.internalKeepProportion as boolean)
 	}
 
-	private onInput(newValue: number[], index: number) {
-		if (this._keepProportion) {
-			const proportion = newValue[index] / this.value[index]
+	private onInput(_newValue: number | number[], index: number) {
+		let newValue
 
-			if (isFinite(proportion)) {
-				for (let i = 0; i < newValue.length; i++) {
-					newValue[i] =
-						i === index ? newValue[index] : this.value[i] * proportion
-				}
-			} else {
-				for (let i = 0; i < newValue.length; i++) {
-					newValue[i] = newValue[index]
+		if (this.isScalar) {
+			newValue = (_newValue as number) / 100
+		} else {
+			newValue = (_newValue as number[]).map(v => v / 100)
+
+			if (this._keepProportion) {
+				const proportion = newValue[index] / (this.value as number[])[index]
+
+				if (isFinite(proportion)) {
+					for (let i = 0; i < newValue.length; i++) {
+						newValue[i] =
+							i === index
+								? newValue[index]
+								: (this.value as number[])[i] * proportion
+					}
+				} else {
+					for (let i = 0; i < newValue.length; i++) {
+						newValue[i] = newValue[index]
+					}
 				}
 			}
 		}

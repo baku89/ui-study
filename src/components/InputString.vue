@@ -5,7 +5,12 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-@Component
+@Component({
+	model: {
+		prop: 'value',
+		event: 'change'
+	}
+})
 export default class InputString extends Vue {
 	@Prop(String) private value!: string
 	@Prop(Function) private validator!: (value: string) => string | false
@@ -31,7 +36,7 @@ export default class InputString extends Vue {
 			}
 		}
 
-		this.$emit('input', newValue)
+		this.$emit('change', newValue)
 	}
 }
 </script>

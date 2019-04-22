@@ -21,7 +21,6 @@ export default class LayoutTab extends Vue {
 	}
 
 	private setTabData() {
-		console.log('setTabData')
 		this.$set(this.Tabs.items, this.id, {
 			label: this.label
 		})

@@ -26,7 +26,7 @@ export default class Parameter extends Vue {
 	padding-bottom calc(0.5 * (var(--param-height) - var(--input-height)))
 
 	&__label
-		width 6em
+		width 7em
 		line-height var(--input-height)
 
 	&__field

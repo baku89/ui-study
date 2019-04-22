@@ -1,0 +1,99 @@
+{
+	"CREDIT": "Baku Hashimoto",
+	"CATEGORIES": ["BAKU"],
+	"INPUTS": [
+		{
+			"NAME": "time",
+			"LABEL": "Time",
+			"TYPE": "float",
+			"DEFAULT": 0
+		},
+		{
+			"NAME": "intensity",
+			"LABEL": "Intensity",
+			"TYPE": "float",
+			"DEFAULT": 20,
+			"MIN": 0,
+			"MAX": 100,
+			"UNIT": "%"
+		},
+		{
+			"NAME": "iteration",
+			"LABEL": "Iteration",
+			"TYPE": "long",
+			"DEFAULT": 2,
+			"MIN": 1,
+			"MAX": 5,
+			"UI_TYPE": "integer"
+		},
+		{
+			"NAME": "scale",
+			"LABEL": "Scale",
+			"TYPE": "point2D",
+			"UI_TYPE": "scale",
+			"DEFAULT": [0.2, 0.2]
+		},
+		{
+			"NAME": "angle",
+			"LABEL": "Angle",
+			"TYPE": "float",
+			"UI_TYPE": "angle"
+		},
+		{
+			"NAME": "offset",
+			"LABEL": "Offset",
+			"TYPE": "point2D",
+			"UNIT": "%"
+		},
+		{
+			"NAME": "cropTop",
+			"LABEL": "Crop Top",
+			"TYPE": "float",
+			"DEFAULT": 5,
+			"MIN": 0,
+			"MAX": 50,
+			"UNIT": "%"
+		},
+		{
+			"NAME": "cropRight",
+			"LABEL": "Crop Right",
+			"TYPE": "float",
+			"DEFAULT": 5,
+			"MIN": 0,
+			"MAX": 50,
+			"UNIT": "%"
+		},
+		{
+			"NAME": "cropBottom",
+			"LABEL": "Crop Bottom",
+			"TYPE": "float",
+			"DEFAULT": 5,
+			"MIN": 0,
+			"MAX": 50,
+			"UNIT": "%"
+		},
+		{
+			"NAME": "cropLeft",
+			"LABEL": "Crop Left",
+			"TYPE": "float",
+			"DEFAULT": 5,
+			"MIN": 0,
+			"MAX": 50,
+			"UNIT": "%"
+		},
+		{
+			"NAME": "noiseType",
+			"LABEL": "Noise Type",
+			"TYPE": "long",
+			"VALUES": [0, 1],
+			"LABELS": ["Simplex", "Periodic"],
+			"UI_TYPE": "mode"
+		},
+		{
+			"NAME": "frameColor",
+			"LABEL": "Frame Color",
+			"TYPE": "color"
+		}
+	],
+	"PASSES": [{}]
+}

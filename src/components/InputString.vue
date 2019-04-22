@@ -5,19 +5,15 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-@Component({
-	model: {
-		prop: 'value',
-		event: 'change'
-	}
-})
+@Component({})
 export default class InputString extends Vue {
-	@Prop(String) private value!: string
+	@Prop({type: String, required: true}) private value!: string
 	@Prop(Function) private validator!: (value: string) => string | false
 
 	get inputListeners() {
 		return Object.assign({}, this.$listeners, {
-			change: this.onChange
+			change: this.onChange,
+			input: () => {}
 		})
 	}
 
@@ -36,7 +32,7 @@ export default class InputString extends Vue {
 			}
 		}
 
-		this.$emit('change', newValue)
+		this.$emit('input', newValue)
 	}
 }
 </script>
@@ -46,6 +42,7 @@ export default class InputString extends Vue {
 @import '../style/config.styl'
 
 .InputString
+	width 100%
 	input-border-style()
 	input-field-style()
 	font-family var(--font-normal)

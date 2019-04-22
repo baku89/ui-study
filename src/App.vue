@@ -1,5 +1,5 @@
 <template>
-	<ConfigProvider v-slot="{lang}" ref="provider">
+	<ConfigProvider v-slot="{Config}" ref="provider">
 		<div class="App">
 			<div class="App__title-bar">
 				<button class="App__hamburger" @click="onClickMenu">
@@ -11,10 +11,9 @@
 				<div style="flex-grow:1;"/>
 				<InputMode
 					class="App__lang"
-					:value="lang"
+					v-model="Config.lang"
 					:values="['en', 'ja']"
 					:labels="['EN', 'JA']"
-					@input="onChangeLang"
 					style="--color-bg: white; --color-border: var(--color-text);"
 				/>
 				<button class="App__settings" @click="onClickSettings">
@@ -29,26 +28,26 @@
 			<div class="App__view">
 				<router-view/>
 			</div>
-			<Modal :show="isSettingsOpened" @close="isSettingsOpened = false">
-				<h2>Settings</h2>
+			<Modal :active.sync="isSettingsOpened">
+				<Settings/>
 			</Modal>
 		</div>
 	</ConfigProvider>
 </template>
 
 <script lang="ts">
-import {Component, Vue, Watch, Inject} from 'vue-property-decorator'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 
 import Icon from './components/common/Icon.vue'
 import Modal from './components/common/Modal.vue'
 
 import Components from './components'
-const {ConfigProvider} = Components
 
 import Home from './pages/Home'
+import Settings from './pages/Settings.vue'
 
 @Component({
-	components: {...Components, Home, Icon, Modal, ConfigProvider}
+	components: {...Components, Home, Settings, Icon, Modal}
 })
 export default class App extends Vue {
 	private isSettingsOpened: boolean = false
@@ -64,11 +63,6 @@ export default class App extends Vue {
 		}
 	}
 
-	private onChangeLang(newValue: string) {
-		// @ts-ignore
-		this.$refs.provider.set('lang', newValue)
-	}
-
 	private onClickSettings() {
 		this.isSettingsOpened = !this.isSettingsOpened
 	}
@@ -78,16 +72,27 @@ export default class App extends Vue {
 
 <style lang="stylus">
 @import './style/common.styl'
+@import './style/article.styl'
 
 $title-bar-height = 3em
 
 html, body
 	height 100%
 
+a
+	&:link, &:visited
+		color inherit
+		text-decoration none
+
 .App
 	position relative
 	width 100%
 	height 100%
+	color var(--color-text)
+	font-size var(--font-size)
+	font-family var(--font-normal)
+	-webkit-font-smoothing antialiased
+	-moz-osx-font-smoothing grayscale
 
 	&__nav
 		$dur = 0.3s

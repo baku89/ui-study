@@ -3,12 +3,6 @@
 	"CATEGORIES": ["BAKU"],
 	"INPUTS": [
 		{
-			"NAME": "time",
-			"LABEL": "Time",
-			"TYPE": "float",
-			"DEFAULT": 0
-		},
-		{
 			"NAME": "intensity",
 			"LABEL": "Intensity",
 			"TYPE": "float",

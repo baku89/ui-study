@@ -10,11 +10,13 @@ export default class InputString extends Vue {
 	@Prop({type: String, required: true}) private value!: string
 	@Prop(Function) private validator!: (value: string) => string | false
 
-	get inputListeners() {
-		return Object.assign({}, this.$listeners, {
+	private get inputListeners() {
+		const listeners = Object.assign({}, this.$listeners, {
 			change: this.onChange,
-			input: () => {}
+			input: undefined
 		})
+		delete listeners.input
+		return listeners
 	}
 
 	private onChange() {

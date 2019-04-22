@@ -1,6 +1,6 @@
 <template>
-	<Portal v-if="show">
-		<div class="Modal" @click="$emit('close')">
+	<Portal v-if="active">
+		<div class="Modal" @click="close">
 			<div class="Modal__frame" @click.stop>
 				<slot/>
 			</div>
@@ -17,7 +17,11 @@ import Portal from './Portal'
 	components: {Portal}
 })
 export default class Modal extends Vue {
-	@Prop({type: Boolean, required: true}) private show!: boolean
+	@Prop({type: Boolean, required: true}) private active!: boolean
+
+	private close() {
+		this.$emit('update:active', false)
+	}
 }
 </script>
 
@@ -39,6 +43,7 @@ export default class Modal extends Vue {
 
 	&__frame
 		position relative
+		overflow scroll
 		padding 1em
 		width 50%
 		height 50%

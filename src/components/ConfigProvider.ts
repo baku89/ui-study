@@ -1,44 +1,67 @@
-import {Component, Vue, Watch, Provide} from 'vue-property-decorator'
+import {Component, Vue, Watch, Provide, Inject} from 'vue-property-decorator'
+import deepcopy from 'deepcopy'
+import Case from 'case'
 
-const angleStep = 30
+import {DefaultConfig, DataConfig} from '../core'
+import {convertColorElements, toCSSColor} from '../util'
 
 @Component({
 	data() {
 		return {
-			Config: {
-				lang: 'en',
-				keySlower: 'alt',
-				keyFaster: 'shift',
-				keySymmetry: 's',
-				keyQuantize: 'q',
-				keyScale: 'alt',
-				quantizeAngles: Array(360 / angleStep)
-					.fill(0)
-					.map((v, i) => i * angleStep)
-			}
+			Config: deepcopy(DefaultConfig)
 		}
 	},
 	provide() {
 		return {
-			Config: this.$data.Config,
-			...this.$data.Config
+			Config: this.$data.Config
 		}
 	}
 })
 export default class ConfigProvider extends Vue {
+	@Inject({from: 'Config', default: null}) private ParentConfig!: DataConfig
 
-	@Watch('Config', {deep: true})
-	public onChangeConfig(Config: any) {
-		document.body.classList.remove('en', 'ja')
-		document.body.classList.add(Config.lang)
+	private get attrElement(): HTMLElement {
+		return this.ParentConfig
+			? (this.$el as HTMLElement)
+			: document.documentElement
 	}
+
 	private mounted() {
-		document.body.classList.add(this.$data.Config.lang)
+		this.updateLang()
+
+		// Set theme
+		const {theme} = this.$data.Config
+		for (const key of Object.keys(theme)) {
+			this.$watch(`Config.theme.${key}`, (newValue: any) => {
+				this.updateThemeProperty(key, newValue)
+			})
+			this.updateThemeProperty(key, theme[key])
+		}
 	}
 
 	private render() {
 		return this.$scopedSlots.default!({
 			Config: this.$data.Config
 		})
+	}
+
+	@Watch('Config.lang', {deep: true})
+	private updateLang(lang: string = this.$data.Config.lang) {
+		this.attrElement.classList.remove('en', 'ja')
+		this.attrElement.classList.add(lang)
+	}
+
+	private updateThemeProperty(key: string, newValue: any) {
+		const variableName = `--${Case.kebab(key)}`
+		let value = newValue
+
+		if (/^color/.test(key)) {
+			value = toCSSColor(value)
+		} else if (/^layout/.test(key)) {
+			value += 'em'
+		} else if (key === 'fontSize') {
+			value += 'px'
+		}
+		this.attrElement.style.setProperty(variableName, value)
 	}
 }

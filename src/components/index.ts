@@ -22,6 +22,7 @@ import LayoutSplitter from './LayoutSplitter'
 import LayoutTabs from './LayoutTabs'
 import LayoutTab from './LayoutTab.vue'
 import Parameter from './Parameter.vue'
+import ParameterList from './ParameterList.vue'
 import ParamFieldAffine from './ParamFieldAffine.vue'
 import ParamFieldAngle from './ParamFieldAngle.vue'
 import ParamFieldColor from './ParamFieldColor.vue'
@@ -33,6 +34,7 @@ import ParamFieldRange from './ParamFieldRange.vue'
 import ParamFieldScale from './ParamFieldScale.vue'
 import ParamFieldSeed from './ParamFieldSeed.vue'
 import ParamFieldSlider from './ParamFieldSlider.vue'
+import ParamFieldString from './ParamFieldString.vue'
 import SelectionManager from './SelectionManager.vue'
 import Timeline from './Timeline'
 import TimelineColor from './TimelineColor.vue'
@@ -63,6 +65,7 @@ export default {
 	LayoutTabs,
 	LayoutTab,
 	Parameter,
+	ParameterList,
 	ParamFieldAffine,
 	ParamFieldAngle,
 	ParamFieldColor,
@@ -74,6 +77,7 @@ export default {
 	ParamFieldSeed,
 	ParamFieldScale,
 	ParamFieldSlider,
+	ParamFieldString,
 	SelectionManager,
 	Timeline,
 	TimelineColor,

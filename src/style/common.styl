@@ -24,14 +24,15 @@ global-reset()
 	--font-normal 'Roboto', Helvetica, Arial, sans-serif
 	--color-menu-bg #000000
 	--color-menu-text #ffffff
+	--color-menu-field #000000
 	--color-menu-border #333
-	// ParamField
-	--param-field-1w 6em
-	--param-field-gap-widget 0.5em
-	--param-field-gap-box 0.3em
-	// Input
-	--input-height 2em
-	--param-height 2.8em
+	// Layout
+	--layout-param-height 2.8em
+	--layout-param-field-1w 6em
+	--layout-param-field-gap-widget 0.5em
+	--layout-param-field-gap-box 0.3em
+	--layout-input-height 2em
+	--layout-popover-padding 0.5em
 
 *, ::after, ::before
 	box-sizing border-box
@@ -70,27 +71,27 @@ a
 // Parameter
 .input-label
 	padding-right 1em
-	line-height var(--input-height)
+	line-height var(--layout-input-height)
 
 .param-field
 	&--color-button
-		margin-right var(--param-field-gap-box)
-		width 'calc(%s / 1.5 - %s)' % (var(--param-field-1w) var(--param-field-gap-box)) !important
+		margin-right var(--layout-param-field-gap-box)
+		width 'calc(%s / 1.5 - %s)' % (var(--layout-param-field-1w) var(--layout-param-field-gap-box)) !important
 
 	&--1w, &--2w, &--3n, &--4n
-		margin-right var(--param-field-gap-widget)
+		margin-right var(--layout-param-field-gap-widget)
 
 	&--1w
-		width var(--param-field-1w)
+		width var(--layout-param-field-1w)
 
 	&--2w
-		width 'calc(%s * 2)' % var(--param-field-1w)
+		width 'calc(%s * 2)' % var(--layout-param-field-1w)
 
 	&--3n
-		width 'calc(%s / 1.5 * 3)' % var(--param-field-1w)
+		width 'calc(%s / 1.5 * 3)' % var(--layout-param-field-1w)
 
 	&--4n
-		width 'calc(%s / 1.5 * 4)' % var(--param-field-1w)
+		width 'calc(%s / 1.5 * 4)' % var(--layout-param-field-1w)
 
 // SVG
 .svg-overlay

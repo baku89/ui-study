@@ -1,5 +1,5 @@
 <template>
-	<div :class="['InputMatrix', direction]" :style="{height: `calc(var(--input-height) * ${rows}`}">
+	<div :class="['InputMatrix', direction]" :style="{height: `calc(var(--layout-input-height) * ${rows}`}">
 		<InputNumber
 			v-for="(v, index) in value"
 			:key="index + 1"

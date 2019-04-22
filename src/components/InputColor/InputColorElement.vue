@@ -262,7 +262,7 @@ export default class InputColorElement extends Vue {
 		height 100%
 		color var(--color-border-text)
 		font-size 0.9em
-		line-height 'calc(var(--input-height) * %s)' % (1 / @font-size)
+		line-height 'calc(var(--layout-input-height) * %s)' % (1 / @font-size)
 
 	&__unit
 		margin-right -0.1em

@@ -38,8 +38,8 @@ export default class InputIconToggle extends Vue {
 
 .InputIconToggle
 	position relative
-	width var(--input-height)
-	height var(--input-height)
+	width var(--layout-input-height)
+	height var(--layout-input-height)
 
 	&__input, &__icon
 		top 10%

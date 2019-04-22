@@ -31,17 +31,17 @@ export default class InputCheckbox extends Vue {
 .InputCheckbox
 	position relative
 	display flex
-	height var(--input-height)
+	height var(--layout-input-height)
 	// background red
 
 .InputCheckbox__input
 	position relative
 	display block
 	input-border-style()
-	margin-top calc(var(--input-height) * 0.2)
+	margin-top calc(var(--layout-input-height) * 0.2)
 	margin-right 0.4em
-	width calc(var(--input-height) * 0.6)
-	height calc(var(--input-height) * 0.6)
+	width calc(var(--layout-input-height) * 0.6)
+	height calc(var(--layout-input-height) * 0.6)
 
 	&:hover
 		input-border-hover-style()
@@ -66,7 +66,7 @@ export default class InputCheckbox extends Vue {
 			color var(--color-active)
 
 .InputCheckbox__label
-	height var(--input-height)
-	line-height var(--input-height)
+	height var(--layout-input-height)
+	line-height var(--layout-input-height)
 </style>
 

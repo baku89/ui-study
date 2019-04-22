@@ -249,10 +249,10 @@ export default class InputRange extends Vue {
 
 		&:before
 			position absolute
-			top 'calc((var(--input-height) - %s) / -2)' % $bar-width
+			top 'calc((var(--layout-input-height) - %s) / -2)' % $bar-width
 			display block
 			width 300%
-			height var(--input-height)
+			height var(--layout-input-height)
 			content ' '
 
 		&[hover], &[dragging]

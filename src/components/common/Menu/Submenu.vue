@@ -183,7 +183,7 @@ export default class Submenu extends Vue {
 		display flex
 		padding 0 1em
 		padding-left 1em
-		line-height var(--input-height)
+		line-height var(--layout-input-height)
 
 		u
 			text-decoration underline
@@ -196,7 +196,7 @@ export default class Submenu extends Vue {
 
 	&__arrow
 		margin-right -1.2em
-		width var(--input-height)
+		width var(--layout-input-height)
 
 		^[0]__li.sub-selected &
 			color var(--color-active)

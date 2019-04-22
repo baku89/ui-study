@@ -137,8 +137,8 @@ export default class InputPoint extends Vue {
 
 .InputPoint
 	position relative
-	width var(--input-height)
-	height var(--input-height)
+	width var(--layout-input-height)
+	height var(--layout-input-height)
 
 .InputPoint__knob
 	position relative

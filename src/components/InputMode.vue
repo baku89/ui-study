@@ -39,7 +39,7 @@ export default class InputMode extends Vue {
 .InputMode
 	position relative
 	display flex
-	height var(--input-height)
+	height var(--layout-input-height)
 	border 1px solid var(--color-border)
 	border-radius $border-radius
 	background var(--color-border)
@@ -48,9 +48,9 @@ export default class InputMode extends Vue {
 		position relative
 		z-index 1
 		margin -1px -1px -1px 0
-		height var(--input-height)
+		height var(--layout-input-height)
 		color var(--color-border-text)
-		line-height 'calc(%s - 2px)' % var(--input-height)
+		line-height 'calc(%s - 2px)' % var(--layout-input-height)
 
 		&:first-child
 			margin-left -1px
@@ -69,7 +69,7 @@ export default class InputMode extends Vue {
 	&__label
 		display block
 		padding 0 0.8em
-		height var(--input-height)
+		height var(--layout-input-height)
 		border 1px solid transparent
 		border-radius $border-radius
 

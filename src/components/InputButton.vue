@@ -34,7 +34,7 @@ export default class InputButton extends Vue {
 @import '../style/config.styl'
 
 .InputButton
-	height var(--input-height)
+	height var(--layout-input-height)
 	input-border-style()
 	input-field-style()
 	display flex
@@ -44,7 +44,7 @@ export default class InputButton extends Vue {
 
 	&[square]
 		padding 0
-		width var(--input-height)
+		width var(--layout-input-height)
 
 	&:hover, &:focus
 		input-border-hover-style()
@@ -56,7 +56,7 @@ export default class InputButton extends Vue {
 
 	&__icon
 		display block
-		width calc(var(--input-height) - 2px)
+		width calc(var(--layout-input-height) - 2px)
 		height @width
 
 	&__label

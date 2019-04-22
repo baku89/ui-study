@@ -300,11 +300,11 @@ export default class SelectionManager extends Vue {
 		display flex
 		box-sizing content-box
 		margin 0.2em
-		height var(--input-height)
+		height var(--layout-input-height)
 		border solid 1px var(--color-bg)
 		border-radius $border-radius
 		background var(--color-bg)
-		line-height var(--input-height)
+		line-height var(--layout-input-height)
 		opacity 0.3
 		transition all 0.1s ease
 		// transform scale(0.5)

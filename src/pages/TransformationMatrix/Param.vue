@@ -58,11 +58,11 @@ export default class Param extends Vue {
 
 	&__icon
 		position relative
-		margin calc(var(--input-height) * 0.2)
-		width calc(var(--input-height) * 0.6)
-		height calc(var(--input-height) * 0.6)
+		margin calc(var(--layout-input-height) * 0.2)
+		width calc(var(--layout-input-height) * 0.6)
+		height calc(var(--layout-input-height) * 0.6)
 		text-align center
-		line-height calc(var(--input-height) * 0.6)
+		line-height calc(var(--layout-input-height) * 0.6)
 
 		&[active]
 			border-radius 50%
@@ -72,21 +72,21 @@ export default class Param extends Vue {
 	&__label
 		padding 0 0.2em
 		width 7em
-		line-height var(--input-height)
+		line-height var(--layout-input-height)
 
 	&__field
 		flex-grow 1
 
 	&__menu
 		display none
-		width calc(var(--input-height) * 2)
-		height var(--input-height)
+		width calc(var(--layout-input-height) * 2)
+		height var(--layout-input-height)
 
 		^[0]:hover &
 			display flex
 
 	&__drag, &__remove
-		width var(--input-height)
+		width var(--layout-input-height)
 		color var(--color-control)
 
 	&__drag

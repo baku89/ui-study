@@ -3,7 +3,7 @@ $border-radius-large = 6px
 $color-preview-size = 60px
 
 input-border-style()
-	height var(--input-height)
+	height var(--layout-input-height)
 	border 1px solid var(--color-border)
 	border-radius $border-radius
 	background var(--color-field)
@@ -50,9 +50,10 @@ input-border-focus-style()
 input-field-style()
 	padding 0 0.3em
 	color var(--color-text)
-	line-height calc(var(--input-height) - 2px)
+	line-height calc(var(--layout-input-height) - 2px)
 
 enable-menu-color()
 	--color-bg var(--color-menu-bg)
 	--color-text var(--color-menu-text)
 	--color-border var(--color-menu-border)
+	--color-field var(--color-menu-field)

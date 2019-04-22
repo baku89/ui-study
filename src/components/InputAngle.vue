@@ -108,8 +108,8 @@ export default class InputAngle extends Vue {
 
 .InputAngle
 	position relative
-	width var(--input-height)
-	height var(--input-height)
+	width var(--layout-input-height)
+	height var(--layout-input-height)
 
 .InputAngle__knob
 	position relative

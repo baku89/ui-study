@@ -1,32 +1,30 @@
 ::selection
 	background var(--color-border)
 
-
 .article
 	margin 0 auto
+	padding 3em 2em 2em
 	max-width 45em
 	font-size 1.5em
-	padding 3em 2em 2em
-	font-family "YakuHanMPs", "YakuHanJPs", 'EB Garamond', Georgia, yu-mincho-pr6n, YuMincho, "游明朝", "Yu Mincho", YuMincho, "Hiragino Mincho ProN", serif
+	font-family 'YakuHanMPs', 'YakuHanJPs', 'EB Garamond', Georgia, yu-mincho-pr6n, YuMincho, '游明朝', 'Yu Mincho', YuMincho, 'Hiragino Mincho ProN', serif
 
 	section
 		margin-bottom 2em
 
 	em
+		margin 0 2px
+		box-shadow 0 0 0 1px var(--color-border), 0 0 0 2px white, 0 0 0 3px var(--color-border)
 		// font-weight 500
 		font-style italic
-		box-shadow 0 0 0 1px var(--color-border), 0 0 0 2px white, 0 0 0 3px var(--color-border)
-		margin 0 2px
 
 	h1, h2, h3, h4, h5, h6
 		font-family Roboto, sans-serif
 
-
 	h1
 		margin-bottom 1em
+		color transparent
 		font-weight 500
 		font-size 3em
-		color transparent
 		text-stroke 1px var(--color-text)
 		-webkit-text-stroke 1px var(--color-text)
 
@@ -41,35 +39,35 @@
 		margin-bottom 1.5em
 		line-height 1.6
 
-		&[lang=ja], ^[0] [lang=ja] ^[-1..-1]
-			font-size .95em
-			line-height 1.8
-
 		a
 			color var(--color-active)
 
 			&:hover, &:focus, &:active
 				text-decoration underline
-	
+
 	[lang=en]
 		display none
+
 		.en &
 			display block
 
 	[lang=ja]
 		display none
+		font-size 0.95em
+		line-height 1.8
+
 		.ja &
-				display block
+			display block
 
 	.outline
 		display inline-block
-		margin-bottom .1em
-		color transparent		
+		margin-bottom 0.1em
+		color transparent
 		text-stroke 1px var(--color-text)
 		-webkit-text-stroke 1px var(--color-text)
 
 	.ui
-		user-select none
-		font-size 1rem
 		background var(--color-bg)
+		font-size 1rem
 		font-family var(--font-normal)
+		user-select none

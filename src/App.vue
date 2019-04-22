@@ -1,5 +1,5 @@
 <template>
-	<ConfigProvider>
+	<ConfigProvider v-slot="{lang}" ref="provider">
 		<div class="App">
 			<div class="App__title-bar">
 				<button class="App__hamburger" @click="onClickMenu">
@@ -8,6 +8,15 @@
 						:src="isNavOpened ? './assets/icon_cross.svg' : './assets/icon_hamburger.svg'"
 					></Icon>MENU
 				</button>
+				<div style="flex-grow:1;"/>
+				<InputMode
+					class="App__lang"
+					:value="lang"
+					:values="['en', 'ja']"
+					:labels="['EN', 'JA']"
+					@input="onChangeLang"
+					style="--color-bg: white; --color-border: var(--color-text);"
+				/>
 				<button class="App__settings" @click="onClickSettings">
 					<Icon class="mark gear" src="./assets/icon_gear.svg"/>
 				</button>
@@ -28,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Watch} from 'vue-property-decorator'
+import {Component, Vue, Watch, Inject} from 'vue-property-decorator'
 
 import Icon from './components/common/Icon.vue'
 import Modal from './components/common/Modal.vue'
@@ -39,7 +48,7 @@ const {ConfigProvider} = Components
 import Home from './pages/Home'
 
 @Component({
-	components: {Home, Icon, Modal, ConfigProvider}
+	components: {...Components, Home, Icon, Modal, ConfigProvider}
 })
 export default class App extends Vue {
 	private isSettingsOpened: boolean = false
@@ -53,6 +62,11 @@ export default class App extends Vue {
 		} else {
 			this.$router.push('/')
 		}
+	}
+
+	private onChangeLang(newValue: string) {
+		// @ts-ignore
+		this.$refs.provider.set('lang', newValue)
 	}
 
 	private onClickSettings() {
@@ -115,6 +129,8 @@ html, body
 		top 0
 		left 0
 		z-index 1010
+		display flex
+		align-items center
 		box-sizing content-box
 		width 100%
 		height $title-bar-height
@@ -124,20 +140,21 @@ html, body
 		user-select none
 
 	&__hamburger, &__settings
-		position absolute
-		top 0
 		height $title-bar-height
-		vertical-align middle
-		letter-spacing 0.3em
 		line-height $title-bar-height
 		cursor pointer
 
 		&:hover
 			background var(--color-active)
+			color white
 
 	&__hamburger
 		width 10em
 		border-right 1px dashed var(--color-text)
+		letter-spacing 0.3em
+
+	&__lang
+		margin-right 1em
 
 	&__settings
 		right 0
@@ -161,6 +178,7 @@ html, body
 			height @width
 
 	&__view
+		overflow scroll
 		padding-top $title-bar-height
 		height 100%
 </style>

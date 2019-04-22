@@ -29,25 +29,36 @@
 			</p>-->
 		</section>
 
-		<PageLink
-			numbering="0. "
-			title="Abstract"
-			to="/abstract"
-		>This section explains what Perceptive Design is aiming and how it changes the way of designing.</PageLink>
+		<PageLink numbering="0. " title="Abstract" to="/abstract">
+			<span
+				lang="en"
+			>This section explains what Perceptive Design is aiming and how it changes the way of designing.</span>
+			<span lang="ja">Perceptive Designは何を指向しているか。デザインツールのあり方をどのようにを変えようとしているかについて。</span>
+		</PageLink>
 
 		<PageLink
 			numbering="1. "
 			title="List of Components"
 			to="/components-list"
 			thumb="./assets/page-link_components-list.png"
-		>The list of UI components to adjust parameters such as a slider, number input, rotery knob, and more.</PageLink>
+		>
+			<span
+				lang="en"
+			>The list of UI components to adjust parameters such as a slider, number input, rotery knob, and more.</span>
+			<span lang="ja">スライダー、数値ボックス、角度コントローラといった、UIコンポーネントの一覧。</span>
+		</PageLink>
 
 		<PageLink
 			numbering="2. "
 			title="Parameter Control"
 			to="/parameter-control"
 			thumb="./assets/page-link_parameter-control.png"
-		>A simple example to control parameters of an image effect.</PageLink>
+		>
+			<span
+				lang="en"
+			>A simple example to control parameters of an image filter written in Interactive Shader Format.</span>
+			<span lang="ja">イメージエフェクト用パラメータ調整画面のサンプル。Interactive Shader Format形式で。</span>
+		</PageLink>
 
 		<PageLink
 			numbering="3. "
@@ -74,7 +85,14 @@
 			title="Programmable Pen Tool"
 			to="https://s.baku89.com/pentool/animation"
 			thumb="./assets/page-link_pentool.png"
-		>This is a rough prototype of doodling app. Though it just looks like orthodox vector graphics editor, all of tools (Pencil, Selection, Pen, Ellipse...) are implemented as a form of script on the right pane. Artists can modify and create any tools which ideal "touching" for them. Or some coders also introduce an approach of generative arts to classical graphics software. Thus, this is a tool to create tools.</PageLink>
+		>
+			<span
+				lang="en"
+			>This is a rough prototype of doodling app. Though it just looks like orthodox vector graphics editor, all of tools (Pencil, Selection, Pen, Ellipse...) are implemented as a form of script on the right pane. Artists can modify and create any tools which ideal "touching" for them. Or some coders also introduce an approach of generative arts to classical graphics software. Thus, this is a tool to create tools.</span>
+			<span
+				lang="ja"
+			>簡易的なお絵描きアプリのデモです。一見ただのベクターグラフィックエディタのようですが、鉛筆、ペンツール、楕円ツールといったすべてのツールがスクリプトの形で記述されており、その挙動を自由にプログラムすることができます。新しいスタイルのグラフィックを描くための、新しい使い勝手のツールから開発することができ、またグラフィックデザインの領域に、ジェネレーティブ・アート的なアプローチを取り入れることも可能です。すなわち、「ツールをつくるためのツール」です。</span>
+		</PageLink>
 	</div>
 </template>
 

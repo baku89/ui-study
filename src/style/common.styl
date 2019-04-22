@@ -6,7 +6,6 @@ flex-version = flex
 global-reset()
 
 @import './config.styl'
-@import './article.styl'
 
 // Variables
 :root
@@ -39,15 +38,6 @@ global-reset()
 	outline none
 	-webkit-tap-highlight-color transparent
 
-html
-	font-size 12px
-	-webkit-font-smoothing antialiased
-	-moz-osx-font-smoothing grayscale
-
-body
-	color var(--color-text)
-	font-family var(--font-normal)
-
 // Reset form elements
 input, button, select
 	margin 0
@@ -63,16 +53,16 @@ input, button, select
 		margin 0
 		-webkit-appearance none
 
-a
-	&:link, &:visited
-		color inherit
-		text-decoration none
+html
+	font-size var(--font-size)
+
+.ui
+	background var(--color-bg)
+	font-size var(--font-size)
+	font-family var(--font-normal)
+	user-select none
 
 // Parameter
-.input-label
-	padding-right 1em
-	line-height var(--layout-input-height)
-
 .param-field
 	&--color-button
 		margin-right var(--layout-param-field-gap-box)
@@ -98,7 +88,7 @@ a
 	position fixed
 	top 0
 	left 0
-	z-index 100
+	z-index 2001
 	width 100vw
 	height 100vh
 

@@ -126,6 +126,6 @@ export default class Popover extends Vue {
 @import '../../style/config.styl'
 
 .Popover
-	z-index 90
+	z-index 2000
 </style>
 

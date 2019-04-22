@@ -1,4 +1,4 @@
-import ConfigProvider from './ConfigProvider.vue'
+import ConfigProvider from './ConfigProvider'
 import InputAngle from './InputAngle.vue'
 import InputButton from './InputButton.vue'
 import InputCodeEditor from './InputCodeEditor'

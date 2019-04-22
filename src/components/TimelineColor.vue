@@ -10,14 +10,16 @@ import {Component, Prop, Vue, Inject, Watch} from 'vue-property-decorator'
 @Component
 export default class TimelineColor extends Vue {
 	@Prop({type: Uint8ClampedArray, required: true})
+	@Inject({from: 'Timeline'})
+	private Timeline!: any
+
 	private value!: Uint8ClampedArray
-	@Prop({type: Array, required: true}) private displayRange!: [number, number]
 
 	private ctx!: CanvasRenderingContext2D
 
-	@Watch('displayRange')
+	@Watch('Timeline', {deep: true})
 	public renderColors() {
-		const [start, end] = this.displayRange
+		const [start, end] = this.Timeline.displayRange
 
 		const displayDuration = end - start + 1
 

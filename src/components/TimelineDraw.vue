@@ -18,13 +18,12 @@ type DrawFunc = (
 @Component
 export default class TimelineDraw extends Vue {
 	@Prop({type: Function, required: true}) private drawFunc!: DrawFunc
-	@Prop({type: Array, required: true}) private displayRange!: [number, number]
+	@Inject({from: 'Timeline'}) private Timeline!: any
 
 	private ctx!: CanvasRenderingContext2D
 
-	@Watch('displayRange')
 	public renderColors() {
-		const [start, end] = this.displayRange
+		const [start, end] = this.Timeline.displayRange
 		const canvas = this.ctx.canvas
 		const duration = end - start + 1
 
@@ -34,7 +33,7 @@ export default class TimelineDraw extends Vue {
 		canvas.height = height
 
 		if (pixelsPerFrame >= 1) {
-			// More than 1px
+			// If width is more than 1px, round it to integer pixels and render all frames
 			pixelsPerFrame = Math.ceil(pixelsPerFrame)
 			canvas.width = pixelsPerFrame * duration
 
@@ -72,6 +71,8 @@ export default class TimelineDraw extends Vue {
 
 		this.renderColors = this.renderColors.bind(this)
 		this.renderColors()
+
+		this.$watch('Timeline', this.renderColors, {deep: true})
 
 		window.addEventListener('resize', this.renderColors)
 	}

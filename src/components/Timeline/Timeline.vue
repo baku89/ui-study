@@ -2,18 +2,18 @@
 	<div class="Timeline">
 		<Drag detectDirection="horizontal" measure="normalized" @dragstart="onDragstart" @drag="onDrag">
 			<div class="Timeline__seekbar">
-				<TimelineSeekbarScale :displayRange="displayRange"/>
+				<TimelineSeekbarScale :displayRange="Timeline.displayRange"/>
 			</div>
 		</Drag>
 		<div class="Timeline__knob" :overflow="knobOverflow" :style="knobStyles" @click="scrollToTime">
 			<div class="Timeline__knob-tip"/>
 		</div>
 		<div class="Timeline__contents">
-			<slot :displayRange="displayRange"></slot>
+			<slot :displayRange="Timeline.displayRange"></slot>
 		</div>
 		<InputRange
 			class="Timeline__range no-slit"
-			:value="displayRange"
+			:value="Timeline.displayRange"
 			:min="min"
 			:max="max"
 			:step="1"
@@ -33,7 +33,15 @@ import {keypressed, MouseDragEvent} from '../../util'
 import InputRange from '../InputRange.vue'
 import TimelineSeekbarScale from './TimelineSeekbarScale.vue'
 
-@Component({components: {Drag, InputRange, TimelineSeekbarScale}})
+@Component({
+	components: {Drag, InputRange, TimelineSeekbarScale},
+	provide() {
+		console.log(this.$data.Timeline)
+		return {
+			Timeline: this.$data.Timeline
+		}
+	}
+})
 export default class Timeline extends Vue {
 	@Prop({type: Number, required: true}) private time!: number
 	@Prop({type: Number, required: true}) private min!: number
@@ -43,7 +51,9 @@ export default class Timeline extends Vue {
 	@Inject({from: 'keyScale', default: 'alt'})
 	private readonly keyScale!: string
 
-	private displayRange: [number, number] = [0, 0]
+	private Timeline = {
+		displayRange: [0, 0]
+	}
 
 	@Inject({from: 'keySlower', default: 'alt'})
 	private readonly keySlower!: string
@@ -51,7 +61,7 @@ export default class Timeline extends Vue {
 	private dragStartTime!: number
 
 	private created() {
-		this.displayRange = [this.min, this.max]
+		this.Timeline.displayRange = [this.min, this.max]
 	}
 
 	private mounted() {
@@ -60,9 +70,9 @@ export default class Timeline extends Vue {
 	}
 
 	private get knobOverflow(): 'start' | 'end' | null {
-		if (this.time < this.displayRange[0]) {
+		if (this.time < this.Timeline.displayRange[0]) {
 			return 'start'
-		} else if (this.time > this.displayRange[1]) {
+		} else if (this.time > this.Timeline.displayRange[1]) {
 			return 'end'
 		} else {
 			return null
@@ -70,12 +80,9 @@ export default class Timeline extends Vue {
 	}
 
 	private get knobStyles(): object {
-		const left =
-			ratio(this.time, this.displayRange[0], this.displayRange[1] + 1, true) *
-			100
-		const width = Math.floor(
-			100 / (this.displayRange[1] - this.displayRange[0] + 1)
-		)
+		const [start, end] = this.Timeline.displayRange
+		const left = ratio(this.time, start, end + 1, true) * 100
+		const width = Math.floor(100 / (end - start + 1))
 
 		return {
 			left: `${left}%`,
@@ -85,8 +92,8 @@ export default class Timeline extends Vue {
 
 	private onDragstart(e: MouseDragEvent) {
 		let newValue = lerp(
-			this.displayRange[0],
-			this.displayRange[1],
+			this.Timeline.displayRange[0],
+			this.Timeline.displayRange[1],
 			e.current[0]
 		)
 		newValue = Math.round(newValue)
@@ -96,13 +103,9 @@ export default class Timeline extends Vue {
 	}
 
 	private onDrag(e: MouseDragEvent) {
-		const originX = ratio(
-			this.dragStartTime,
-			this.displayRange[0],
-			this.displayRange[1]
-		)
-		let inc =
-			(e.current[0] - originX) * (this.displayRange[1] - this.displayRange[0])
+		const [start, end] = this.Timeline.displayRange
+		const originX = ratio(this.dragStartTime, start, end)
+		let inc = (e.current[0] - originX) * (end - start)
 
 		if (keypressed(this.keySlower)) {
 			inc *= 0.1
@@ -110,7 +113,7 @@ export default class Timeline extends Vue {
 
 		let newValue = this.dragStartTime + inc
 		newValue = Math.round(newValue)
-		newValue = clamp(newValue, this.displayRange[0], this.displayRange[1])
+		newValue = clamp(newValue, start, end)
 
 		if (this.time !== newValue) {
 			this.$emit('update:time', newValue)
@@ -118,10 +121,10 @@ export default class Timeline extends Vue {
 	}
 
 	private onUpdateDisplayRange([start, end]: [number, number]) {
-		// console.log(start, end)
+		const {displayRange} = this.Timeline
 		const duration = end - start
-		let incStart = start - this.displayRange[0]
-		let incEnd = end - this.displayRange[1]
+		let incStart = start - displayRange[0]
+		let incEnd = end - displayRange[1]
 
 		if (duration < 10) {
 			const scaleCenter = 1 - ratio(-incEnd, 0, incStart - incEnd)
@@ -134,8 +137,8 @@ export default class Timeline extends Vue {
 			incEnd += incEndShortage
 		}
 
-		this.$set(this.displayRange, 0, this.displayRange[0] + incStart)
-		this.$set(this.displayRange, 1, this.displayRange[1] + incEnd)
+		this.$set(displayRange, 0, displayRange[0] + incStart)
+		this.$set(displayRange, 1, displayRange[1] + incEnd)
 	}
 
 	@Watch('time')
@@ -146,13 +149,14 @@ export default class Timeline extends Vue {
 	}
 
 	private scrollToTime() {
-		const duration = this.displayRange[1] - this.displayRange[0]
-		if (this.time < this.displayRange[0]) {
-			this.$set(this.displayRange, 0, this.time)
-			this.$set(this.displayRange, 1, this.time + duration)
-		} else if (this.displayRange[1] < this.time) {
-			this.$set(this.displayRange, 0, this.time - duration)
-			this.$set(this.displayRange, 1, this.time)
+		const {displayRange} = this.Timeline
+		const duration = displayRange[1] - displayRange[0]
+		if (this.time < displayRange[0]) {
+			this.$set(displayRange, 0, this.time)
+			this.$set(displayRange, 1, this.time + duration)
+		} else if (displayRange[1] < this.time) {
+			this.$set(displayRange, 0, this.time - duration)
+			this.$set(displayRange, 1, this.time)
 		}
 	}
 
@@ -160,7 +164,7 @@ export default class Timeline extends Vue {
 		const e = _e as MouseWheelEvent
 		e.preventDefault()
 
-		const [start, end] = this.displayRange
+		const [start, end] = this.Timeline.displayRange
 		const framesPerPixel = (end - start) / this.$el.clientWidth
 		let incStart, incEnd
 
@@ -228,8 +232,8 @@ export default class Timeline extends Vue {
 		}
 
 		// Set
-		this.$set(this.displayRange, 0, start + incStart)
-		this.$set(this.displayRange, 1, end + incEnd)
+		this.$set(this.Timeline.displayRange, 0, start + incStart)
+		this.$set(this.Timeline.displayRange, 1, end + incEnd)
 	}
 }
 </script>

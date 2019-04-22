@@ -44,7 +44,7 @@
 								cx="0"
 								cy="0"
 								:r="ex1.radius"
-								:transform="`translate(${ex1.position[0]}, ${ex1.position[1]}) scale(${ex1.scale[0] / 100}, ${ex1.scale[1] / 100})`"
+								:transform="`translate(${ex1.position[0]}, ${ex1.position[1]}) scale(${ex1.scale[0]}, ${ex1.scale[1]})`"
 							></circle>
 						</svg>
 					</div>
@@ -221,7 +221,7 @@ const PI_2 = Math.PI * 2
 		return {
 			ex1: {
 				radius: 25,
-				scale: [100, 100],
+				scale: [1, 1],
 				position: [50, 50],
 				fill: ['hsv', [339, 64, 100]],
 				stroke: ['hsv', [331, 83, 89]],
@@ -334,12 +334,6 @@ export default class ComponentsList extends Vue {
 
 <style lang="stylus" scoped>
 @import '../style/config.styl'
-
-.page-content
-	padding 2rem
-	width 100%
-	height 100%
-	user-select none
 
 .ui
 	display flex

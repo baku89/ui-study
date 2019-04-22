@@ -1,119 +1,121 @@
 <template>
-	<div class="page-content">
-		<aside class="parameters">
-			<header class="box-header">
-				<h3 class="box-title">TRANSFORM</h3>
-				<InputIconAction
-					class="box-add"
-					:items="transformItems"
-					@click="state.addStack({type: $event})"
-					src="./assets/icon_plus.svg"
-				/>
-			</header>
-			<VueDraggable
-				tag="ul"
-				:value="state.transform"
-				@input="state.setTransform({transform: $event})"
-				:options="{handle: '.handle'}"
-			>
-				<Param
-					v-for="(stack, index) in state.transform"
-					:key="index"
-					:icon="toIcon(stack)"
-					@remove="state.removeStack({index})"
-					@icon-clicked="state.toggleActive({index})"
-				>
-					<template slot="label">{{toLabel(stack.type)}}</template>
-					<component
-						:is="toComponentName(stack.type)"
-						:value="toFieldValue(stack)"
-						:unit="stack.type.includes('scale') ? '%' : (stack.type === 'skew' ? '°' : null)"
-						@input="state.setValue({index, value: toDataValue(stack.type, $event)})"
+	<SelectionManager>
+		<div class="page-content">
+			<aside class="parameters">
+				<header class="box-header">
+					<h3 class="box-title">TRANSFORM</h3>
+					<InputIconAction
+						class="box-add"
+						:items="transformItems"
+						@click="state.addStack({type: $event})"
+						src="./assets/icon_plus.svg"
 					/>
-				</Param>
-			</VueDraggable>
-		</aside>
-		<main class="preview">
-			<div class="preview__frame">
-				<svg class="preview__canvas" ref="canvas" viewBox="0 0 20 20" :style="{'--px': pixelSize}">
-					<defs>
-						<symbol id="corner-circle" overflow="visible">
-							<circle class="bbox-corner" :r="pixelSize * 4"></circle>
-						</symbol>
-						<symbol id="corner-square" overflow="visible">
-							<rect
-								class="bbox-corner"
-								:x="-pixelSize * 3"
-								:y="-pixelSize * 3"
-								:width="pixelSize * 6"
-								:height="pixelSize * 6"
-							></rect>
-						</symbol>
-						<symbol id="rotate-handle" overflow="visible">
-							<rect class="bbox-rotate-handle" :x="-0.3" :y="-0.3" :width="0.6" :height="0.6"></rect>
-						</symbol>
-					</defs>
-					<g transform="translate(10 10)">
-						<text class="axis-label x" x="9.7" y=".5" :font-size="pixelSize * 15 + 'px'">+X</text>
-						<text class="axis-label y" x=".5" y="9.7" :font-size="pixelSize * 15 + 'px'">+Y</text>
-						<line class="axis x" x1="-10" y1="0" x2="10" y2="0" marker-start="url(#round-corner)"></line>
-						<line class="axis y" x1="0" y1="-10" x2="0" y2="10"></line>
-						<Drag v-if="state.bboxRotateActive" @drag="onDragRotate">
-							<g>
-								<use href="#rotate-handle" :transform="transformBBoxCorner(0, 0)"></use>
-								<use href="#rotate-handle" :transform="transformBBoxCorner(1, 0)"></use>
-								<use href="#rotate-handle" :transform="transformBBoxCorner(1, 1)"></use>
-								<use href="#rotate-handle" :transform="transformBBoxCorner(0, 1)"></use>
-							</g>
-						</Drag>
-						<g :transform="state.svgTransform">
-							<Drag measure="normalized" @drag="onDragTranslate" box=".preview__canvas">
-								<image class="image" xlink:href="../../assets/Mochi.jpg" x="0" y="0" width="1" height="1"></image>
+				</header>
+				<VueDraggable
+					tag="ul"
+					:value="state.transform"
+					@input="state.setTransform({transform: $event})"
+					:options="{handle: '.handle'}"
+				>
+					<Param
+						v-for="(stack, index) in state.transform"
+						:key="index"
+						:icon="toIcon(stack)"
+						@remove="state.removeStack({index})"
+						@icon-clicked="state.toggleActive({index})"
+					>
+						<template slot="label">{{toLabel(stack.type)}}</template>
+						<component
+							:is="toComponentName(stack.type)"
+							:value="toFieldValue(stack)"
+							:unit="stack.type.includes('scale') ? '%' : (stack.type === 'skew' ? '°' : null)"
+							@input="state.setValue({index, value: toDataValue(stack.type, $event)})"
+						/>
+					</Param>
+				</VueDraggable>
+			</aside>
+			<main class="preview">
+				<div class="preview__frame">
+					<svg class="preview__canvas" ref="canvas" viewBox="0 0 20 20" :style="{'--px': pixelSize}">
+						<defs>
+							<symbol id="corner-circle" overflow="visible">
+								<circle class="bbox-corner" :r="pixelSize * 4"></circle>
+							</symbol>
+							<symbol id="corner-square" overflow="visible">
+								<rect
+									class="bbox-corner"
+									:x="-pixelSize * 3"
+									:y="-pixelSize * 3"
+									:width="pixelSize * 6"
+									:height="pixelSize * 6"
+								></rect>
+							</symbol>
+							<symbol id="rotate-handle" overflow="visible">
+								<rect class="bbox-rotate-handle" :x="-0.3" :y="-0.3" :width="0.6" :height="0.6"></rect>
+							</symbol>
+						</defs>
+						<g transform="translate(10 10)">
+							<text class="axis-label x" x="9.7" y=".5" :font-size="pixelSize * 15 + 'px'">+X</text>
+							<text class="axis-label y" x=".5" y="9.7" :font-size="pixelSize * 15 + 'px'">+Y</text>
+							<line class="axis x" x1="-10" y1="0" x2="10" y2="0" marker-start="url(#round-corner)"></line>
+							<line class="axis y" x1="0" y1="-10" x2="0" y2="10"></line>
+							<Drag v-if="state.bboxRotateActive" @drag="onDragRotate">
+								<g>
+									<use href="#rotate-handle" :transform="transformBBoxCorner(0, 0)"></use>
+									<use href="#rotate-handle" :transform="transformBBoxCorner(1, 0)"></use>
+									<use href="#rotate-handle" :transform="transformBBoxCorner(1, 1)"></use>
+									<use href="#rotate-handle" :transform="transformBBoxCorner(0, 1)"></use>
+								</g>
 							</Drag>
-						</g>
-						<g :transform="state.svgTransformActiveScale">
+							<g :transform="state.svgTransform">
+								<Drag measure="normalized" @drag="onDragTranslate" box=".preview__canvas">
+									<image class="image" xlink:href="../../assets/Mochi.jpg" x="0" y="0" width="1" height="1"></image>
+								</Drag>
+							</g>
+							<g :transform="state.svgTransformActiveScale">
+								<Drag
+									v-if="state.bboxScaleActive"
+									measure="normalized"
+									@dragstart="onDragstartScale"
+									@drag="onDragScale"
+									@keytoggle="onDragScale"
+									box=".preview__canvas"
+								>
+									<rect class="bbox-scale-handle" x="0" y="0" width="1" height="1"></rect>
+								</Drag>
+								<rect class="bbox-edge" x="0" y="0" width="1" height="1"></rect>
+							</g>
 							<Drag
-								v-if="state.bboxScaleActive"
 								measure="normalized"
 								@dragstart="onDragstartScale"
 								@drag="onDragScale"
-								@keytoggle="onDragScale"
 								box=".preview__canvas"
 							>
-								<rect class="bbox-scale-handle" x="0" y="0" width="1" height="1"></rect>
+								<g>
+									<use
+										:href="this.state.bboxRotateActive ? '#corner-circle' : '#corner-square'"
+										:transform="transformBBoxCorner(0, 0)"
+									></use>
+									<use
+										:href="this.state.bboxRotateActive ? '#corner-circle' : '#corner-square'"
+										:transform="transformBBoxCorner(1, 0)"
+									></use>
+									<use
+										:href="this.state.bboxRotateActive ? '#corner-circle' : '#corner-square'"
+										:transform="transformBBoxCorner(1, 1)"
+									></use>
+									<use
+										:href="this.state.bboxRotateActive ? '#corner-circle' : '#corner-square'"
+										:transform="transformBBoxCorner(0, 1)"
+									></use>
+								</g>
 							</Drag>
-							<rect class="bbox-edge" x="0" y="0" width="1" height="1"></rect>
 						</g>
-						<Drag
-							measure="normalized"
-							@dragstart="onDragstartScale"
-							@drag="onDragScale"
-							box=".preview__canvas"
-						>
-							<g>
-								<use
-									:href="this.state.bboxRotateActive ? '#corner-circle' : '#corner-square'"
-									:transform="transformBBoxCorner(0, 0)"
-								></use>
-								<use
-									:href="this.state.bboxRotateActive ? '#corner-circle' : '#corner-square'"
-									:transform="transformBBoxCorner(1, 0)"
-								></use>
-								<use
-									:href="this.state.bboxRotateActive ? '#corner-circle' : '#corner-square'"
-									:transform="transformBBoxCorner(1, 1)"
-								></use>
-								<use
-									:href="this.state.bboxRotateActive ? '#corner-circle' : '#corner-square'"
-									:transform="transformBBoxCorner(0, 1)"
-								></use>
-							</g>
-						</Drag>
-					</g>
-				</svg>
-			</div>
-		</main>
-	</div>
+					</svg>
+				</div>
+			</main>
+		</div>
+	</SelectionManager>
 </template>
 
 <script lang="ts">
@@ -412,11 +414,11 @@ export default class TransformationMatrix extends Vue {
 		switch (type) {
 			case 'translateX':
 			case 'translateY':
-			case 'scaleX':
-			case 'scaleY':
 				return 'ParamFieldNumber'
 			case 'translate':
 				return 'ParamFieldPoint'
+			case 'scaleX':
+			case 'scaleY':
 			case 'scale':
 				return 'ParamFieldScale'
 			case 'skew':
@@ -437,11 +439,7 @@ export default class TransformationMatrix extends Vue {
 	}
 
 	private toFieldValue(stack: DataTransformStack) {
-		if (stack.type.includes('scale')) {
-			return stack.value instanceof Array
-				? stack.value.map((v: number) => v * 100)
-				: stack.value * 100
-		} else if (stack.type.includes('translate')) {
+		if (stack.type.includes('translate')) {
 			return stack.value instanceof Array
 				? stack.value.map((v: number) => v * 10)
 				: stack.value * 10
@@ -451,9 +449,7 @@ export default class TransformationMatrix extends Vue {
 	}
 
 	private toDataValue(type: DataTransformType, value: DataTransformValue) {
-		if (type.includes('scale')) {
-			return value instanceof Array ? value.map(v => v / 100) : value / 100
-		} else if (type.includes('translate')) {
+		if (type.includes('translate')) {
 			return value instanceof Array ? value.map(v => v / 10) : value / 10
 		} else {
 			return value

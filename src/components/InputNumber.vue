@@ -166,7 +166,7 @@ export default class InputNumber extends Vue {
 
 	private onFocus(e: Event) {
 		this.isEditing = true
-		this.SelectionManager.add(this)
+		this.SelectionManager!.add(this)
 	}
 
 	private onBlur() {

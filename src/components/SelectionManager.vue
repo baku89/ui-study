@@ -5,9 +5,8 @@
 			<Drag
 				@dragstart="onDragstart"
 				@drag="onDrag"
-				@dragend="onDragend"
-				detectDirection="horizontal"
-				:dragging="dragOperator !== null"
+				@dragend="isDragging = false"
+				:dragging="isDragging"
 			>
 				<ul class="SelectionManager__menu" :selectable="true">
 					<li v-if="controls.add" class="SelectionManager__control">
@@ -31,9 +30,14 @@
 				</ul>
 			</Drag>
 		</Popover>
-		<Portal v-if="dragOperator !== null">
+		<Portal v-if="isDragging">
 			<svg class="svg-overlay">
-				<text :x="dragPosition[0]" :y="dragPosition[1]" class="text">{{dragText}}</text>
+				<SvgOverlayHorizontalDrag
+					:position="drag.position"
+					:direction="drag.inc > 0 ? 'right' : 'left'"
+					:speed="drag.speed"
+					:text="drag.text"
+				></SvgOverlayHorizontalDrag>
 			</svg>
 		</Portal>
 	</div>
@@ -41,7 +45,7 @@
 
 
 <script lang="ts">
-import {Component, Prop, Vue, Provide} from 'vue-property-decorator'
+import {Component, Prop, Vue, Provide, Inject} from 'vue-property-decorator'
 
 import keypressed from '../util/keypressed'
 import {vec2} from 'gl-matrix'
@@ -49,11 +53,14 @@ import {vec2} from 'gl-matrix'
 import Drag from './common/Drag'
 import Popover from './common/Popover.vue'
 import Portal from './common/Portal'
+import SvgOverlayHorizontalDrag from './common/SvgOverlayHorizontalDrag.vue'
 import InputIconButton from './InputIconButton.vue'
+
 import {MouseDragEvent, adjustHSB} from '../util'
 import {allSettled} from 'q'
 import {DataColor} from '../data'
-import {clamp} from '../math'
+import {clamp, toFixed} from '../math'
+import {DefaultConfig, DataConfig} from '../core'
 
 interface SelectableNode<T> {
 	isSelected: boolean
@@ -73,23 +80,40 @@ interface Selection {
 
 type DragOperatorFunc = (
 	value: number | DataColor,
-	e: MouseDragEvent
-) => {value: number | DataColor; text: string}
+	inc: number
+) => number | DataColor
 
 function getValue(node: SelectableNode<any>) {
 	return node.value !== undefined ? node.value : node._props.value
 }
 
-@Component({components: {Drag, Popover, Portal, InputIconButton}})
+@Component({
+	components: {Drag, Popover, Portal, SvgOverlayHorizontalDrag, InputIconButton}
+})
 export default class SelectionManager extends Vue {
 	@Provide() public SelectionManager = this
 
+	@Inject({from: 'Config', default: DefaultConfig})
+	private readonly Config!: DataConfig
+
 	private items: Selection[] = []
 
-	private dragStartValues: Array<number | DataColor> = []
-	private dragText: string = ''
-	private dragPosition: vec2 = vec2.create()
-	private dragOperator: DragOperatorFunc | null = null
+	private isDragging: boolean = false
+	private drag: {
+		startValues: Array<number | DataColor>
+		inc: number
+		speed: 'normal' | 'fast' | 'slow'
+		text: string
+		position: vec2
+		operator?: DragOperatorFunc
+		stringify?: (inc: number) => string
+	} = {
+		startValues: [],
+		inc: 0,
+		speed: 'normal',
+		text: '',
+		position: vec2.create()
+	}
 
 	private controls: {[key: string]: boolean} = {
 		add: false,
@@ -175,6 +199,7 @@ export default class SelectionManager extends Vue {
 
 	private onDragstart(e: MouseDragEvent) {
 		const path = e.originalEvent.composedPath() as HTMLElement[]
+		const {drag} = this
 
 		let mode: string | null = null
 		for (const el of path) {
@@ -187,65 +212,83 @@ export default class SelectionManager extends Vue {
 			}
 		}
 
-		if (mode !== null) {
+		this.isDragging = mode !== null
+
+		if (this.isDragging) {
 			if (mode === 'add') {
-				this.dragOperator = (startValue, _e) => {
-					const inc = _e.offset[0]
-					const value = (startValue as number) + inc
-					const text = (inc > 0 ? '+' : '') + inc.toFixed(0)
-					return {value, text}
+				drag.operator = (startValue, inc) => {
+					return (startValue as number) + inc
+				}
+				drag.stringify = inc => {
+					return (inc > 0 ? '+' : '') + inc.toFixed(1)
 				}
 			} else if (mode === 'multiply') {
-				this.dragOperator = (startValue, _e) => {
-					const inc = 1 + _e.offset[0] / 200
-					const value = (startValue as number) * inc
-					const text = '×' + (inc * 100).toFixed(0) + '%'
-					return {value, text}
+				drag.operator = (startValue, inc) => {
+					return (startValue as number) * (1 + inc / 100)
+				}
+				drag.stringify = inc => {
+					return '×' + (100 + inc).toFixed(0) + '%'
 				}
 			} else if (mode === 'hue-rotate') {
-				this.dragOperator = (startColor, _e) => {
-					const inc = _e.offset[0]
-					const value = adjustHSB(startColor as DataColor, inc, 0, 0)
-					const text = (inc > 0 ? '+' : '') + inc.toFixed(0) + '°'
-					return {value, text}
+				drag.operator = (startColor, inc) => {
+					return adjustHSB(startColor as DataColor, inc, 0, 0)
+				}
+				drag.stringify = inc => {
+					return (inc > 0 ? '+' : '') + inc.toFixed(0) + '°'
 				}
 			} else if (mode === 'saturate' || mode === 'brightness') {
-				this.dragOperator = (startColor, _e) => {
-					const inc = clamp(_e.offset[0] / 2, -100, 100)
+				drag.operator = (startColor, inc) => {
+					inc = clamp(inc / 2, -100, 100)
 
 					const sat = mode === 'saturate' ? inc : 0
 					const bri = mode === 'brightness' ? inc : 0
 
-					const value = adjustHSB(startColor as DataColor, 0, sat, bri)
-					const text = (inc > 0 ? '+' : '') + inc.toFixed(0) + '%'
-					return {value, text}
+					return adjustHSB(startColor as DataColor, 0, sat, bri)
+				}
+				drag.stringify = inc => {
+					return (inc > 0 ? '+' : '') + inc.toFixed(0) + '%'
 				}
 			}
 
-			this.dragStartValues = this.items.map(({node}) => getValue(node))
+			drag.startValues = this.items.map(({node}) => getValue(node))
+			drag.inc = 0
 
-			this.$set(this.dragPosition, 0, e.current[0])
-			this.$set(this.dragPosition, 1, e.current[1])
+			this.$set(drag.position, 0, e.current[0])
+			this.$set(drag.position, 1, e.current[1])
 		} else {
-			this.dragOperator = null
 			e.abort()
 		}
 	}
 
 	private async onDrag(e: MouseDragEvent) {
+		const {drag} = this
+
+		return false
+
+		const multiplier = keypressed(this.Config.keyFaster)
+			? 10
+			: keypressed(this.Config.keySlower)
+			? 0.1
+			: 1
+
+		drag.speed = keypressed(this.Config.keyFaster)
+			? 'fast'
+			: keypressed(this.Config.keySlower)
+			? 'slow'
+			: 'normal'
+		drag.inc += e.delta[0] * this.Config.dragSpeed * multiplier
+		drag.text = drag.stringify!(drag.inc)
+
+		console.log('aaaa', e)
+
 		for (const [i, item] of this.items.entries()) {
-			const {value, text} = this.dragOperator!(this.dragStartValues[i], e)
-			this.dragText = text
+			const value = drag.operator!(drag.startValues[i], drag.inc)
 			item.node.updateValue(value)
 			await this.$nextTick()
 		}
 
-		this.$set(this.dragPosition, 0, e.current[0])
-		this.$set(this.dragPosition, 1, e.current[1])
-	}
-
-	private onDragend() {
-		this.dragOperator = null
+		this.$set(drag.position, 0, e.current[0])
+		this.$set(drag.position, 1, e.current[1])
 	}
 
 	private async swapValues() {
@@ -304,14 +347,15 @@ export default class SelectionManager extends Vue {
 		border solid 1px var(--color-bg)
 		border-radius $border-radius
 		background var(--color-bg)
+		font-size 0.8em
 		line-height var(--layout-input-height)
 		opacity 0.3
 		transition all 0.1s ease
-		// transform scale(0.5)
+		transform scale(0.8)
 		transform-origin 50% 0
 		user-select none
 
 		&:hover, &[dragging]
 			opacity 1
-			// transform none
+			transform none
 </style>

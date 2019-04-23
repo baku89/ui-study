@@ -18,7 +18,7 @@ export default class Drag extends Vue {
 		| 'vertical'
 	@Prop({type: Number, default: 0}) private minDragDistance!: number
 	@Prop({type: Boolean, default: false}) private clamp!: boolean
-	@Prop({type: String}) private box!: string
+	@Prop(String) private box!: string
 
 	@Inject({from: 'Config', default: DefaultConfig})
 	private readonly Config!: DataConfig
@@ -90,6 +90,8 @@ export default class Drag extends Vue {
 				abort: this.quitDrag,
 				originalEvent: e
 			}
+			window.addEventListener('keydown', this.onKeyToggle)
+			window.addEventListener('keyup', this.onKeyToggle)
 			this.$emit('dragstart', event)
 			vec2.copy(this.prev, this.current)
 		} else {
@@ -99,26 +101,23 @@ export default class Drag extends Vue {
 
 		window.addEventListener('mousemove', this.onMousemove)
 		window.addEventListener('mouseup', this.onMouseup)
-		window.addEventListener('keydown', this.onKeyToggle)
-		window.addEventListener('keyup', this.onKeyToggle)
 	}
 
 	private onKeyToggle(e: KeyboardEvent) {
-		if (this.dragStarted) {
-			const key = keycode(e)
-			const {keyFaster, keySlower, keySymmetry} = this.Config
+		const key = keycode(e)
+		const {keyFaster, keySlower, keySymmetry} = this.Config
 
-			if ([keyFaster, keySlower, keySymmetry].includes(key)) {
-				const event: MouseDragEvent = {
-					current: this.current,
-					delta: this.delta,
-					offset: this.offset,
-					abort: this.quitDrag,
-					originalEvent: e
-				}
-
-				this.$emit('drag', event)
+		if ([keyFaster, keySlower, keySymmetry].includes(key)) {
+			vec2.set(this.delta, 0, 0)
+			const event: MouseDragEvent = {
+				current: this.current,
+				delta: this.delta,
+				offset: this.offset,
+				abort: this.quitDrag,
+				originalEvent: e
 			}
+
+			this.$emit('drag', event)
 		}
 	}
 
@@ -139,6 +138,7 @@ export default class Drag extends Vue {
 			if (!this.dragStarted) {
 				const dragDistance = vec2.distance(this.absOrigin, this.absCurrent)
 				if (dragDistance >= this.minDragDistance) {
+					this.dragStarted = true
 					// Re-assign origin and emit
 					this.toSpecifiedCoord(this.origin, this.absCurrent)
 					vec2.copy(this.current, this.origin)
@@ -153,7 +153,8 @@ export default class Drag extends Vue {
 						originalEvent: e
 					}
 
-					this.dragStarted = true
+					window.addEventListener('keydown', this.onKeyToggle)
+					window.addEventListener('keyup', this.onKeyToggle)
 					this.$emit('dragstart', event)
 					vec2.copy(this.prev, this.origin)
 				}

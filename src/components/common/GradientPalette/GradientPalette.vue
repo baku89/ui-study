@@ -1,5 +1,5 @@
 <template>
-	<canvas ref="canvas"/>
+	<canvas/>
 </template>
 
 <script lang="ts">
@@ -8,53 +8,12 @@ import * as twgl from 'twgl.js'
 
 import {DataColor, DataColorMode} from '../../../data'
 
-let renderCanvas: HTMLCanvasElement
-let gl: WebGLRenderingContext
-let programInfo: twgl.ProgramInfo
-let bufferInfo: twgl.BufferInfo
-
-function getModeIndex(mode: DataColorMode, varyings: number[]): number {
-	const varyingHash = varyings.join('-')
-
-	let index = 0
-	switch (varyingHash) {
-		case '0':
-			index = 0
-			break
-		case '1':
-			index = 1
-			break
-		case '2':
-			index = 2
-			break
-		case '0-1':
-			index = 3
-			break
-		case '1-2':
-			index = 4
-			break
-		case '0-2':
-			index = 5
-			break
-	}
-
-	switch (mode) {
-		case 'hsl':
-			index += 10
-			break
-		case 'rgb':
-			index += 20
-			break
-		case 'hsv':
-			index += 30
-			break
-	}
-
-	return index
-}
-
 @Component
 export default class GradientPalette extends Vue {
+	private static gl: WebGLRenderingContext
+	private static programInfo: twgl.ProgramInfo
+	private static bufferInfo: twgl.BufferInfo
+
 	@Prop(Array) private color!: DataColor
 	@Prop(Array) private varyings!: number[]
 
@@ -62,11 +21,11 @@ export default class GradientPalette extends Vue {
 	private canvas!: HTMLCanvasElement
 
 	private mounted() {
-		if (!renderCanvas) {
-			renderCanvas = document.createElement('canvas')
-			gl = renderCanvas.getContext('webgl') as WebGLRenderingContext
+		if (!GradientPalette.gl) {
+			const canvas = document.createElement('canvas')
+			GradientPalette.gl = canvas.getContext('webgl') as WebGLRenderingContext
 
-			programInfo = twgl.createProgramInfo(gl, [
+			GradientPalette.programInfo = twgl.createProgramInfo(GradientPalette.gl, [
 				require('./gradient-palette.vert'),
 				require('./gradient-palette.frag')
 			])
@@ -74,10 +33,13 @@ export default class GradientPalette extends Vue {
 			const arrays = {
 				position: [-1, -1, 0, 1, -1, 0, -1, 1, 0, -1, 1, 0, 1, -1, 0, 1, 1, 0]
 			}
-			bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays)
+			GradientPalette.bufferInfo = twgl.createBufferInfoFromArrays(
+				GradientPalette.gl,
+				arrays
+			)
 		}
 
-		this.canvas = this.$refs.canvas as HTMLCanvasElement
+		this.canvas = this.$el as HTMLCanvasElement
 		this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D
 
 		this.renderPad()
@@ -96,13 +58,19 @@ export default class GradientPalette extends Vue {
 	private renderPad() {
 		twgl.resizeCanvasToDisplaySize(this.canvas)
 
+		if (this.canvas.width === 0 || this.canvas.height === 0) {
+			return
+		}
+
+		const {gl, programInfo, bufferInfo} = GradientPalette
+
 		gl.canvas.width = this.canvas.width
 		gl.canvas.height = this.canvas.height
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
 
 		const uniforms = {
 			resolution: [gl.canvas.width, gl.canvas.height],
-			mode: getModeIndex(this.color[0], this.varyings),
+			mode: this.getModeIndex(this.color[0], this.varyings),
 			elements: this.color[1]
 		}
 
@@ -111,13 +79,47 @@ export default class GradientPalette extends Vue {
 		twgl.setUniforms(programInfo, uniforms)
 		twgl.drawBufferInfo(gl, bufferInfo)
 
-		this.ctx.drawImage(
-			renderCanvas,
-			0,
-			0,
-			this.canvas.width,
-			this.canvas.height
-		)
+		this.ctx.drawImage(gl.canvas, 0, 0, this.canvas.width, this.canvas.height)
+	}
+
+	private getModeIndex(mode: DataColorMode, varyings: number[]): number {
+		const varyingHash = varyings.join('-')
+
+		let index = 0
+		switch (varyingHash) {
+			case '0':
+				index = 0
+				break
+			case '1':
+				index = 1
+				break
+			case '2':
+				index = 2
+				break
+			case '0-1':
+				index = 3
+				break
+			case '1-2':
+				index = 4
+				break
+			case '0-2':
+				index = 5
+				break
+		}
+
+		switch (mode) {
+			case 'hsl':
+				index += 10
+				break
+			case 'rgb':
+				index += 20
+				break
+			case 'hsv':
+				index += 30
+				break
+		}
+
+		return index
 	}
 }
 </script>

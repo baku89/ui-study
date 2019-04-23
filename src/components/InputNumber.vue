@@ -142,7 +142,9 @@ export default class InputNumber extends Vue {
 		if (this.hasStep) {
 			newValue = quantize(newValue, this.step)
 		}
-		this.$emit('input', newValue)
+		if (this.value !== newValue) {
+			this.$emit('input', newValue)
+		}
 	}
 
 	private onClick() {

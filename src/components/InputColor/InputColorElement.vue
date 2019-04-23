@@ -158,7 +158,9 @@ export default class InputColorElement extends Vue {
 
 	private updateValue(newValue: number) {
 		newValue = clamp(newValue, 0, this.info.max[this.varying])
-		this.$emit('update:element', newValue)
+		if (this.value !== newValue) {
+			this.$emit('input', newValue)
+		}
 	}
 
 	private onKeydown(e: KeyboardEvent) {

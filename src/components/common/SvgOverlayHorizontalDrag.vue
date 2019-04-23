@@ -1,4 +1,4 @@
-<template functional>
+<template>
 	<g>
 		<symbol id="normal" style="overflow: visible">
 			<polyline class="stroke" points="-10,-7, 0,0, -10,7"></polyline>

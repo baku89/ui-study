@@ -11,7 +11,7 @@
 			detectDirection="vertical"
 			@dragstart="onDragstart"
 			@drag="onDrag"
-			@dragend="onDragend"
+			@dragend="isDragging = false"
 			@click="onClick"
 		>
 			<div class="InputColorElement__display">
@@ -26,7 +26,7 @@
 		<input
 			class="InputColorElement__input"
 			type="text"
-			:value="value"
+			v-model="inputValue"
 			@focus="onFocus"
 			@change="onChange"
 			@blur="isEditing = false"
@@ -86,6 +86,8 @@ export default class InputColorElement extends Vue {
 	@Prop(Array) private color!: DataColor
 	@Prop(Number) private varying!: number
 
+	private inputValue: string = ''
+
 	private isEditing: boolean = false
 	private isDragging: boolean = false
 	private slitMaxY: number = 0
@@ -134,6 +136,15 @@ export default class InputColorElement extends Vue {
 		return DataColorInfo.get(this.mode)!
 	}
 
+	@Watch('value')
+	private setInputValue() {
+		this.inputValue = this.value.toString()
+	}
+
+	private created() {
+		this.inputValue = this.value.toString()
+	}
+
 	private onFocus(e: Event) {
 		this.isEditing = true
 		if (this.SelectionManager) {
@@ -142,18 +153,13 @@ export default class InputColorElement extends Vue {
 	}
 
 	private onChange() {
-		const input = this.$refs.input as HTMLInputElement
-		const newValue: number = parseNumber(input.value)
+		const newValue: number = parseNumber(this.inputValue)
 
-		// If the new value is valid, fire input event.
-		// Otherwise, reset the field with original value
 		if (!isNaN(newValue)) {
 			this.updateValue(newValue)
 		} else {
-			input.value = this.value.toFixed(0)
+			this.setInputValue()
 		}
-
-		this.isEditing = false
 	}
 
 	private updateValue(newValue: number) {
@@ -205,11 +211,7 @@ export default class InputColorElement extends Vue {
 		this.previewY = clamp(e.current[1], this.slitMaxY, this.slitMinY)
 		const t = ratio(this.previewY, this.slitMinY, this.slitMaxY)
 		const newValue = lerp(0, this.info.max[this.varying], t)
-		this.$emit('update:element', newValue)
-	}
-
-	private onDragend() {
-		this.isDragging = false
+		this.$emit('input', newValue)
 	}
 
 	@Watch('color')

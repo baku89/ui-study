@@ -11,7 +11,7 @@
 			detectDirection="horizontal"
 			@dragstart="onDragstart"
 			@drag="onDrag"
-			@dragend="onDragend"
+			@dragend="isDragging = false"
 			@click="onClick"
 		>
 			<div class="InputNumber__display">
@@ -23,10 +23,10 @@
 		<input
 			class="InputNumber__input"
 			type="text"
-			:value="value.toString()"
+			v-model="inputValue"
 			@focus="onFocus"
 			@change="onChange"
-			@blur="onBlur"
+			@blur="isEditing = false"
 			@keydown="onKeydown"
 			ref="input"
 		>
@@ -85,6 +85,8 @@ export default class InputNumber extends Vue {
 	@Prop(Number) private max!: number
 	@Prop(Number) private step!: number
 
+	private inputValue: string = this.value.toString()
+
 	private isEditing: boolean = false
 	private isDragging: boolean = false
 	private dragFrom: number[] = [0, 0]
@@ -118,18 +120,19 @@ export default class InputNumber extends Vue {
 		return this.step !== undefined
 	}
 
+	@Watch('value')
+	private setInputValue() {
+		this.inputValue = this.value.toString()
+	}
+
 	private onChange() {
-		const input = this.$refs.input as HTMLInputElement
-		const strValue: string = input.value
-		const newValue: number = parseNumber(strValue)
+		const newValue: number = parseNumber(this.inputValue)
 
 		if (isNaN(newValue)) {
-			input.value = this.value.toString()
+			this.setInputValue()
 		} else {
 			this.updateValue(newValue)
 		}
-
-		this.isEditing = false
 	}
 
 	private updateValue(newValue: number) {
@@ -152,28 +155,13 @@ export default class InputNumber extends Vue {
 		input.focus()
 		input.select()
 		this.isEditing = true
-		// window.addEventListener('mousedown', this.forceChangeOnClickOutside)
 	}
-
-	// private forceChangeOnClickOutside(e: Event) {
-	// 	console.log('asdfsf')
-	// 	if (e.target !== this.$refs.input) {
-	// 		console.log('thau')
-	// 		this.onChange()
-	// 		window.removeEventListener('mousedown', this.forceChangeOnClickOutside)
-	// 	}
-	// }
 
 	private onFocus(e: Event) {
 		this.isEditing = true
 		if (this.SelectionManager) {
 			this.SelectionManager.add(this)
 		}
-	}
-
-	private onBlur() {
-		this.isEditing = false
-		this.onChange()
 	}
 
 	private onKeydown(e: KeyboardEvent) {
@@ -247,10 +235,6 @@ export default class InputNumber extends Vue {
 
 		this.$set(this.dragTo, 0, x)
 		this.$emit('input', newValue)
-	}
-
-	private onDragend() {
-		this.isDragging = false
 	}
 
 	@Watch('value')

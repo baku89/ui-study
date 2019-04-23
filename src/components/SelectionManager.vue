@@ -258,17 +258,14 @@ export default class SelectionManager extends Vue {
 	private async onDrag(e: MouseDragEvent) {
 		const {drag} = this
 
-		const multiplier = keypressed(this.Config.keyFaster)
-			? 10
-			: keypressed(this.Config.keySlower)
-			? 0.1
-			: 1
-
 		drag.speed = keypressed(this.Config.keyFaster)
 			? 'fast'
-			: keypressed(this.Config.keySlower)
-			? 'slow'
-			: 'normal'
+			: !keypressed(this.Config.keySlower)
+			? 'normal'
+			: 'slow'
+
+		const multiplier =
+			drag.speed === 'fast' ? 10 : drag.speed === 'normal' ? 1 : 0.1
 
 		drag.inc += e.delta[0] * this.Config.dragSpeed * multiplier
 		drag.text = drag.stringify!(drag.inc)
@@ -276,8 +273,8 @@ export default class SelectionManager extends Vue {
 		this.$set(drag.position, 1, e.current[1])
 
 		for (const [i, item] of this.items.entries()) {
-			const value = drag.operator!(drag.startValues[i], drag.inc)
-			item.node.updateValue(value)
+			const newValue = drag.operator!(drag.startValues[i], drag.inc)
+			item.node.updateValue(newValue)
 			await this.$nextTick()
 		}
 

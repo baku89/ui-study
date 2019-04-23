@@ -58,7 +58,13 @@
 		>
 		<Portal v-if="isDragging">
 			<svg class="svg-overlay">
-				<SvgArrow :from="dragFrom" :to="dragTo"></SvgArrow>
+				<SvgOverlayHorizontalDrag
+					:position="drag.position"
+					:to-right="drag.inc > 0"
+					:speed="drag.speed"
+					:text="drag.text"
+				></SvgOverlayHorizontalDrag>
+				<!-- <SvgArrow :from="dragFrom" :to="dragTo"></SvgArrow>
 				<line
 					v-if="min !== undefined"
 					class="narrow-stroke"
@@ -74,7 +80,7 @@
 					:y1="dragFrom[1] - 16"
 					:x2="dragMaxX"
 					:y2="dragFrom[1] + 16"
-				></line>
+				></line>-->
 			</svg>
 		</Portal>
 	</div>
@@ -87,14 +93,15 @@ import keycode from 'keycode'
 
 import {getDOMCenter, keypressed, MouseDragEvent} from '../../util'
 import Timecode from '../../util/Timecode'
+import {DefaultConfig, DataConfig} from '../../core'
 
 import Drag from '../common/Drag'
 import Portal from '../common/Portal'
-import SvgArrow from '../common/SvgArrow.vue'
-import {DefaultConfig, DataConfig} from '../../core'
+// import SvgArrow from '../common/SvgArrow.vue'
+import SvgOverlayHorizontalDrag from '../common/SvgOverlayHorizontalDrag.vue'
 
 @Component({
-	components: {Drag, Portal, SvgArrow}
+	components: {Drag, Portal, /*SvgArrow,*/ SvgOverlayHorizontalDrag}
 })
 export default class InputTime extends Vue {
 	@Prop({type: Number, required: true}) private value!: number
@@ -113,12 +120,21 @@ export default class InputTime extends Vue {
 	private hours: string = '00'
 
 	private isEditing: boolean = false
-	private isDragging: boolean = false
 	private activePartIndex: number | null = null
-	private dragFrom: number[] = [0, 0]
-	private dragTo: number[] = [0, 0]
-	private dragMinX: number = 0
-	private dragMaxX: number = 0
+
+	private isDragging: boolean = false
+	private drag = {
+		position: [0, 0],
+		startValue: 0,
+		inc: 0,
+		speed: 'normal',
+		text: ''
+	}
+
+	// private dragFrom: number[] = [0, 0]
+	// private dragTo: number[] = [0, 0]
+	// private dragMinX: number = 0
+	// private dragMaxX: number = 0
 
 	private timecode!: Timecode
 
@@ -241,6 +257,17 @@ export default class InputTime extends Vue {
 	}
 
 	private onDragstart({current}: MouseDragEvent) {
+		const {drag} = this
+
+		drag.startValue = this.value
+		drag.inc = 0
+		this.$set(drag.position, 0, current[0])
+		this.$set(drag.position, 1, current[1])
+
+		this.activePartIndex = 3
+		this.isDragging = true
+
+		/*
 		this.$set(this.dragFrom, 0, current[0])
 		this.$set(this.dragTo, 0, current[0])
 		this.$set(
@@ -261,9 +288,43 @@ export default class InputTime extends Vue {
 
 		this.activePartIndex = 3
 		this.isDragging = true
+		*/
 	}
 
-	private onDrag(e: MouseDragEvent) {
+	private onDrag({delta, current}: MouseDragEvent) {
+		const {drag} = this
+
+		// drag.speed = keypressed(this.Config.keyFaster)
+		// 	? 'fast'
+		// 	: !keypressed(this.Config.keySlower)
+		// 	? 'normal'
+		// 	: 'slow'
+
+		// const multiplier =
+		// 	drag.speed === 'fast' ? 10 : drag.speed === 'normal' ? 1 : 0.1
+
+		drag.inc += delta[0] * this.Config.dragSpeed
+
+		this.$set(drag.position, 0, current[0])
+		this.$set(drag.position, 1, current[1])
+
+		let newValue = Math.round(drag.startValue + drag.inc)
+
+		if (this.hasMin) {
+			newValue = Math.max(newValue, this.min)
+		}
+
+		if (this.hasMax) {
+			newValue = Math.min(newValue, this.max)
+		}
+
+		const actualInc = newValue - drag.startValue
+		drag.text = Timecode.formatIncrementalValue(actualInc, this.fps)
+
+		this.$emit('input', newValue)
+		// this.updateValue(newValue)
+
+		/*
 		let newValue
 		let x = e.current[0]
 
@@ -282,6 +343,7 @@ export default class InputTime extends Vue {
 
 		this.$set(this.dragTo, 0, x)
 		this.$emit('input', newValue)
+		*/
 	}
 
 	private onDragend() {

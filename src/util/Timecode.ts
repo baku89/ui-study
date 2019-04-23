@@ -42,6 +42,47 @@ export default class Timecode {
 		return text
 	}
 
+	public static formatIncrementalValue(
+		frameCount: number,
+		frameRate: number
+	): string {
+		let fc = Math.abs(frameCount)
+
+		// Adjust for dropFrame
+		// https://github.com/CrystalComputerCorp/smpte-timecode/blob/master/smpte-timecode.js
+		if (DROPFRAME_FRAMERATE.has(frameRate)) {
+			const df = frameRate === 29.97 ? 2 : 4 // 59.94 skips 4 frames
+			const d = Math.floor(frameCount / ((17982 * df) / 2))
+			let m = frameCount % ((17982 * df) / 2)
+			if (m < df) {
+				m = m + df
+			}
+			fc += 9 * df * d + df * Math.floor((m - df) / ((1798 * df) / 2))
+		}
+
+		const fps = Math.round(frameRate)
+
+		const frames = fc % fps
+		const seconds = Math.floor(fc / fps) % 60
+		const minutes = Math.floor(fc / (fps * 60)) % 60
+		const hours = Math.floor(fc / (fps * 3600)) % 24
+
+		let text = frameCount < 0 ? '-' : '+'
+
+		if (hours) {
+			text += (hours < 10 ? '0' : '') + hours.toString() + 'h '
+		}
+		if (minutes) {
+			text += (minutes < 10 ? '0' : '') + minutes.toString() + 'm '
+		}
+		if (seconds) {
+			text += (seconds < 10 ? '0' : '') + seconds.toString() + 's '
+		}
+		text += (frames < 10 ? '0' : '') + frames.toString() + 'f'
+
+		return text
+	}
+
 	get frameRate(): number {
 		return this._frameRate
 	}

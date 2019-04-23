@@ -32,7 +32,13 @@
 		>
 		<Portal v-if="isDragging">
 			<svg class="svg-overlay">
-				<SvgArrow :from="dragFrom" :to="dragTo"></SvgArrow>
+				<SvgOverlayHorizontalDrag
+					:position="drag.position"
+					:to-right="drag.inc > 0"
+					:speed="drag.speed"
+					:text="drag.text"
+				></SvgOverlayHorizontalDrag>
+				<!-- <SvgArrow :from="dragFrom" :to="dragTo"></SvgArrow>
 				<line
 					v-if="min !== undefined"
 					class="narrow-stroke"
@@ -42,13 +48,13 @@
 					:y2="dragFrom[1] + 16"
 				></line>
 				<line
-					v-if="max !== undefined"
+					v-if="max !== undefined"	
 					class="narrow-stroke"
 					:x1="dragMaxX"
 					:y1="dragFrom[1] - 16"
 					:x2="dragMaxX"
 					:y2="dragFrom[1] + 16"
-				></line>
+				></line>-->
 			</svg>
 		</Portal>
 	</div>
@@ -56,22 +62,25 @@
 
 <script lang="ts">
 import {Component, Prop, Vue, Inject, Watch} from 'vue-property-decorator'
-import {parseNumber, toFixed, quantize} from '../math'
+import {parseNumber, toFixed, quantize, clamp} from '../math'
 import {getDOMCenter, keypressed, MouseDragEvent} from '../util'
 import {vec2} from 'gl-matrix'
 import keycode from 'keycode'
 
+import {DataConfig, DefaultConfig} from '../core'
+
 import Drag from './common/Drag'
 import Portal from './common/Portal'
-import SvgArrow from './common/SvgArrow.vue'
+// import SvgArrow from './common/SvgArrow.vue'
 import SelectionManager from './SelectionManager.vue'
-import {DataConfig, DefaultConfig} from '../core'
+import SvgOverlayHorizontalDrag from './common/SvgOverlayHorizontalDrag.vue'
 
 @Component({
 	components: {
 		Drag,
 		Portal,
-		SvgArrow
+		// SvgArrow,
+		SvgOverlayHorizontalDrag
 	}
 })
 export default class InputNumber extends Vue {
@@ -89,10 +98,21 @@ export default class InputNumber extends Vue {
 
 	private isEditing: boolean = false
 	private isDragging: boolean = false
+
+	private drag = {
+		position: [0, 0],
+		startValue: 0,
+		inc: 0,
+		speed: 'normal',
+		text: ''
+	}
+
+	/*
 	private dragFrom: number[] = [0, 0]
 	private dragTo: number[] = [0, 0]
 	private dragMinX: number = 0
 	private dragMaxX: number = 0
+	*/
 
 	private shouldOmitZero: boolean = true
 	private updatedRecently: boolean = false
@@ -179,18 +199,19 @@ export default class InputNumber extends Vue {
 			}
 
 			let newValue = this.value + inc
-
-			if (this.hasMin) {
-				newValue = Math.max(this.min, newValue)
-			}
-			if (this.hasMax) {
-				newValue = Math.min(this.max, newValue)
-			}
-			this.$emit('input', newValue)
+			this.updateValue(newValue)
 		}
 	}
 
 	private onDragstart({current}: MouseDragEvent) {
+		const {drag} = this
+
+		drag.startValue = this.value
+		drag.inc = 0
+		this.$set(drag.position, 0, current[0])
+		this.$set(drag.position, 1, current[1])
+
+		/*
 		this.$set(this.dragFrom, 0, current[0])
 		this.$set(this.dragTo, 0, current[0])
 		this.$set(
@@ -208,11 +229,32 @@ export default class InputNumber extends Vue {
 			this.dragMaxX =
 				current[0] + (this.max - this.value) / this.Config.dragSpeed
 		}
+		*/
 
 		this.isDragging = true
 	}
 
-	private onDrag(e: MouseDragEvent) {
+	private onDrag({delta, current}: MouseDragEvent) {
+		const {drag} = this
+
+		drag.speed = keypressed(this.Config.keyFaster)
+			? 'fast'
+			: !keypressed(this.Config.keySlower)
+			? 'normal'
+			: 'slow'
+
+		const multiplier =
+			drag.speed === 'fast' ? 10 : drag.speed === 'normal' ? 1 : 0.1
+
+		drag.inc += delta[0] * this.Config.dragSpeed * multiplier
+
+		this.$set(drag.position, 0, current[0])
+		this.$set(drag.position, 1, current[1])
+
+		const newValue = drag.startValue + drag.inc
+		this.updateValue(newValue)
+
+		/*
 		let newValue
 		let x = e.current[0]
 
@@ -235,6 +277,7 @@ export default class InputNumber extends Vue {
 
 		this.$set(this.dragTo, 0, x)
 		this.$emit('input', newValue)
+		*/
 	}
 
 	@Watch('value')
@@ -250,6 +293,11 @@ export default class InputNumber extends Vue {
 			this.updatedRecently = false
 			this.shouldOmitZero = true
 		}, 100)
+
+		if (this.isDragging) {
+			const inc = this.value - this.drag.startValue
+			this.drag.text = (inc > 0 ? '+' : '') + inc.toFixed(this.precision)
+		}
 	}
 }
 </script>

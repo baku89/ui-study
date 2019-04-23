@@ -2,13 +2,8 @@
 	<div class="SelectionManager">
 		<slot/>
 		<Popover class="SelectionManager__popover" :active="showControl" ref="popover">
-			<Drag
-				@dragstart="onDragstart"
-				@drag="onDrag"
-				@dragend="isDragging = false"
-				:dragging="isDragging"
-			>
-				<ul class="SelectionManager__menu" :selectable="true">
+			<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="isDragging = false">
+				<ul class="SelectionManager__menu" :selectable="true" :dragging="isDragging">
 					<li v-if="controls.add" class="SelectionManager__control">
 						<InputIconButton src="./assets/icon_plus.svg" mode="add"/>
 					</li>
@@ -263,8 +258,6 @@ export default class SelectionManager extends Vue {
 	private async onDrag(e: MouseDragEvent) {
 		const {drag} = this
 
-		return false
-
 		const multiplier = keypressed(this.Config.keyFaster)
 			? 10
 			: keypressed(this.Config.keySlower)
@@ -276,10 +269,11 @@ export default class SelectionManager extends Vue {
 			: keypressed(this.Config.keySlower)
 			? 'slow'
 			: 'normal'
+
 		drag.inc += e.delta[0] * this.Config.dragSpeed * multiplier
 		drag.text = drag.stringify!(drag.inc)
-
-		console.log('aaaa', e)
+		this.$set(drag.position, 0, e.current[0])
+		this.$set(drag.position, 1, e.current[1])
 
 		for (const [i, item] of this.items.entries()) {
 			const value = drag.operator!(drag.startValues[i], drag.inc)
@@ -287,8 +281,7 @@ export default class SelectionManager extends Vue {
 			await this.$nextTick()
 		}
 
-		this.$set(drag.position, 0, e.current[0])
-		this.$set(drag.position, 1, e.current[1])
+		return false
 	}
 
 	private async swapValues() {

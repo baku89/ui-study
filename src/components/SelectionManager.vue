@@ -29,7 +29,7 @@
 			<svg class="svg-overlay">
 				<SvgOverlayHorizontalDrag
 					:position="drag.position"
-					:direction="drag.inc > 0 ? 'right' : 'left'"
+					:to-right="drag.inc > 0"
 					:speed="drag.speed"
 					:text="drag.text"
 				></SvgOverlayHorizontalDrag>

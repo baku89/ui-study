@@ -64,7 +64,9 @@ const DefinitionConfig = {
 		values: ['en', 'ja']
 	},
 	dragSpeed: {
-		type: 'number'
+		type: 'number',
+		unit: '/px',
+		default: 0.5
 	},
 	quantizeAngles: {
 		type: 'string',

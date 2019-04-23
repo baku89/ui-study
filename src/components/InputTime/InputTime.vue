@@ -99,6 +99,7 @@ import Drag from '../common/Drag'
 import Portal from '../common/Portal'
 // import SvgArrow from '../common/SvgArrow.vue'
 import SvgOverlayHorizontalDrag from '../common/SvgOverlayHorizontalDrag.vue'
+import {quantize} from '../../math'
 
 @Component({
 	components: {Drag, Portal, /*SvgArrow,*/ SvgOverlayHorizontalDrag}
@@ -294,21 +295,23 @@ export default class InputTime extends Vue {
 	private onDrag({delta, current}: MouseDragEvent) {
 		const {drag} = this
 
-		// drag.speed = keypressed(this.Config.keyFaster)
-		// 	? 'fast'
-		// 	: !keypressed(this.Config.keySlower)
-		// 	? 'normal'
-		// 	: 'slow'
+		drag.speed = keypressed(this.Config.keyFaster) ? 'fast' : 'normal'
 
-		// const multiplier =
-		// 	drag.speed === 'fast' ? 10 : drag.speed === 'normal' ? 1 : 0.1
+		this.activePartIndex = drag.speed === 'fast' ? 2 : 3
 
-		drag.inc += delta[0] * this.Config.dragSpeed
+		// TODO: Fix drop-frame
+		const multiplier = drag.speed === 'fast' ? this.fps : 1
+
+		drag.inc += delta[0] * this.Config.dragSpeed * multiplier
 
 		this.$set(drag.position, 0, current[0])
 		this.$set(drag.position, 1, current[1])
 
-		let newValue = Math.round(drag.startValue + drag.inc)
+		let newValue =
+			drag.startValue +
+			(drag.speed === 'fast'
+				? quantize(drag.inc, this.fps)
+				: Math.round(drag.inc))
 
 		if (this.hasMin) {
 			newValue = Math.max(newValue, this.min)
@@ -319,7 +322,11 @@ export default class InputTime extends Vue {
 		}
 
 		const actualInc = newValue - drag.startValue
-		drag.text = Timecode.formatIncrementalValue(actualInc, this.fps)
+		drag.text = Timecode.formatIncrementalValue(
+			actualInc,
+			this.fps,
+			drag.speed !== 'fast'
+		)
 
 		this.$emit('input', newValue)
 		// this.updateValue(newValue)

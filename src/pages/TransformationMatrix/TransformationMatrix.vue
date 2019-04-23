@@ -78,7 +78,6 @@
 									measure="normalized"
 									@dragstart="onDragstartScale"
 									@drag="onDragScale"
-									@keytoggle="onDragScale"
 									box=".preview__canvas"
 								>
 									<rect class="bbox-scale-handle" x="0" y="0" width="1" height="1"></rect>

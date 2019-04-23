@@ -1,9 +1,11 @@
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Vue, Prop, Inject} from 'vue-property-decorator'
 import mouse from 'mouse-event'
 import {vec2} from 'gl-matrix'
+import keycode from 'keycode'
 
 import {clamp} from '../../math'
 import {MouseDragEvent} from '../../util'
+import {DataConfig, DefaultConfig} from '../../core'
 
 @Component
 export default class Drag extends Vue {
@@ -17,6 +19,9 @@ export default class Drag extends Vue {
 	@Prop({type: Number, default: 0}) private minDragDistance!: number
 	@Prop({type: Boolean, default: false}) private clamp!: boolean
 	@Prop({type: String}) private box!: string
+
+	@Inject({from: 'Config', default: DefaultConfig})
+	private readonly Config!: DataConfig
 
 	private dragStarted!: boolean
 
@@ -100,15 +105,20 @@ export default class Drag extends Vue {
 
 	private onKeyToggle(e: KeyboardEvent) {
 		if (this.dragStarted) {
-			const event: MouseDragEvent = {
-				current: this.current,
-				delta: this.delta,
-				offset: this.offset,
-				abort: this.quitDrag,
-				originalEvent: e
-			}
+			const key = keycode(e)
+			const {keyFaster, keySlower, keySymmetry} = this.Config
 
-			this.$emit('keytoggle', event)
+			if ([keyFaster, keySlower, keySymmetry].includes(key)) {
+				const event: MouseDragEvent = {
+					current: this.current,
+					delta: this.delta,
+					offset: this.offset,
+					abort: this.quitDrag,
+					originalEvent: e
+				}
+
+				this.$emit('drag', event)
+			}
 		}
 	}
 

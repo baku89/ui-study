@@ -5,41 +5,32 @@
 				class="left"
 				:value="hasAlpha ? value[1][0] : value[1]"
 				:validator="validateColorHex"
-				@input="hasAlpha ? onUpdateElement(0, $event) : onUpdateElement(null, $event)"
+				:style="{fontFamily: 'var(--font-monospace)'}"
+				@input="hasAlpha ? updateElement(0, $event) : updateElement(null, $event)"
 			/>
 			<InputColorElement
 				v-if="hasAlpha"
 				class="right"
 				:color="value"
 				:varying="1"
-				@update:element="onUpdateElement(1, $event)"
+				@input="updateElement(1, $event)"
 			/>
 		</template>
 		<template v-else>
-			<InputColorElement
-				class="left"
-				:color="value"
-				:varying="0"
-				@update:element="onUpdateElement(0, $event)"
-			/>
-			<InputColorElement
-				class="center"
-				:color="value"
-				:varying="1"
-				@update:element="onUpdateElement(1, $event)"
-			/>
+			<InputColorElement class="left" :color="value" :varying="0" @input="updateElement(0, $event)"/>
+			<InputColorElement class="center" :color="value" :varying="1" @input="updateElement(1, $event)"/>
 			<InputColorElement
 				:class="hasAlpha ? 'center' : 'right'"
 				:color="value"
 				:varying="2"
-				@update:element="onUpdateElement(2, $event)"
+				@input="updateElement(2, $event)"
 			/>
 			<InputColorElement
 				v-if="hasAlpha"
 				class="right"
 				:color="value"
 				:varying="3"
-				@update:element="onUpdateElement(3, $event)"
+				@input="updateElement(3, $event)"
 			/>
 		</template>
 	</div>
@@ -80,7 +71,7 @@ export default class InputColor extends Vue {
 		}
 	}
 
-	private onUpdateElement(index: number, element: number | string) {
+	private updateElement(index: number, element: number | string) {
 		const elements = Array.from(this.value[1])
 		elements[index] = element
 		const newValue = [this.value[0], elements]

@@ -1,5 +1,3 @@
-import Bind from '../data/Bind'
-
 import {DataColor} from '../data'
 
 const angleStep = 30
@@ -9,11 +7,11 @@ type UnitNumber = [string, number]
 interface DataConfig {
 	lang: string
 	dragSpeed: 0.5
-	keySlower: Bind
-	keyFaster: Bind
-	keySymmetry: Bind
-	keyQuantize: Bind
-	keyScale: Bind
+	keySlower: string
+	keyFaster: string
+	keySymmetry: string
+	keyQuantize: string
+	keyScale: string
 	quantizeAngles: number[]
 	theme: {[s: string]: number | string | DataColor | UnitNumber}
 }
@@ -21,11 +19,11 @@ interface DataConfig {
 const DefaultConfig: DataConfig = {
 	lang: 'en',
 	dragSpeed: 0.5,
-	keySlower: new Bind('key', 'alt'),
-	keyFaster: new Bind('key', 'shift'),
-	keySymmetry: new Bind('key', 's'),
-	keyQuantize: new Bind('key', 'q'),
-	keyScale: new Bind('key', 'alt'),
+	keySlower: '/key/alt',
+	keyFaster: '/key/shift',
+	keySymmetry: '/key/s',
+	keyQuantize: '/key/q',
+	keyScale: '/key/alt',
 	quantizeAngles: Array(360 / angleStep)
 		.fill(0)
 		.map((v, i) => i * angleStep),
@@ -56,7 +54,7 @@ const DefaultConfig: DataConfig = {
 	}
 }
 
-const DefinitionConfig = {
+const SchemaConfig = {
 	lang: {
 		type: 'dropdown',
 		label: 'Language',
@@ -74,12 +72,13 @@ const DefinitionConfig = {
 		toData: (s: string) => JSON.parse(`[${s}]`),
 		default: '0, 45, 90, 135, 180, 225, 270, 315'
 	},
-	_regex: {
+	__regex: {
 		'^key': {
 			type: 'bind'
 		}
 	},
-	'group:theme': {
+	theme: {
+		__type: 'group',
 		fontSize: {
 			type: 'number',
 			label: 'Font Size',
@@ -88,7 +87,7 @@ const DefinitionConfig = {
 			step: 1,
 			unit: 'px'
 		},
-		_regex: {
+		__regex: {
 			'^color': {
 				type: 'color'
 			},
@@ -102,9 +101,8 @@ const DefinitionConfig = {
 				max: 20,
 				step: 0.1
 			}
-		},
-		_expand: 'flat'
+		}
 	}
 }
 
-export {DataConfig, DefaultConfig, DefinitionConfig}
+export {DataConfig, DefaultConfig, SchemaConfig}

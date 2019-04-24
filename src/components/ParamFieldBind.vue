@@ -1,14 +1,14 @@
 <template>
 	<div class="ParamFieldBind param-field--2w">
 		<InputDropdown
-			class="ParamFieldBind__source left"
-			:values="['key', 'osc', 'midi']"
-			:labels="['Key', 'OSC', 'MIDI']"
+			class="ParamFieldBind__device left"
+			:values="['key', 'osc', 'midi', 'gamepad']"
+			:labels="['K️ey', 'OSC', 'MIDI', '🎮']"
 			theme="bind"
-			:value="value.source"
-			@input="updateSource"
+			:value="device"
+			@input="updateDevice"
 		/>
-		<InputString class="ParamFieldBind__address right" :value="address" @input="updateAddress"/>
+		<InputString class="right" :value="path" @input="updatePath"/>
 		<button
 			class="ParamFieldBind__detect-button"
 			:class="{detecting: isDetecting}"
@@ -21,37 +21,34 @@
 import {Component, Prop, Vue, Inject, Watch} from 'vue-property-decorator'
 import keycode from 'keycode'
 
-import Bind from '../data/Bind'
-
 import InputDropdown from './InputDropdown.vue'
 import InputString from './InputString.vue'
+import BindManager from '../core/BindManager'
 
 @Component({
 	components: {InputDropdown, InputString}
 })
 export default class ParamFieldBind extends Vue {
-	@Prop({type: Object, required: true}) private value!: Bind
-
-	private address: string | null = this.value.address
+	@Prop({type: String, required: true})
+	private value!: string
 
 	private isDetecting: boolean = false
 
-	@Watch('value', {deep: true})
-	private onValueChanged(newValue: any) {
-		this.address = this.value.address
+	private get device(): string {
+		return this.value.substr(1).split(/\/(.+)/)[0]
 	}
 
-	private updateSource(source: string) {
-		if (this.value.source !== source) {
-			this.address = ''
-
-			const newValue = new Bind(source, this.address)
-			this.$emit('input', newValue)
-		}
+	private get path(): string {
+		return this.value.substr(1).split(/\/(.+)/)[1]
 	}
 
-	private updateAddress(address: string) {
-		const newValue = new Bind(this.value.source, address)
+	private updateDevice(device: string) {
+		const newValue = `/${device}/${this.path}`
+		this.$emit('input', newValue)
+	}
+
+	private updatePath(path: string) {
+		const newValue = `/${this.device}/${path}`
 		this.$emit('input', newValue)
 	}
 
@@ -59,8 +56,8 @@ export default class ParamFieldBind extends Vue {
 		this.isDetecting = !this.isDetecting
 
 		if (this.isDetecting) {
-			const address = await this.value.detect()
-			this.updateAddress(address)
+			const newValue = await BindManager.detect()
+			this.$emit('input', newValue)
 			this.isDetecting = false
 		}
 	}
@@ -71,11 +68,13 @@ export default class ParamFieldBind extends Vue {
 <style lang='stylus' scoped>
 @import '../style/config.styl'
 
+$rec-color = #ff254e
+
 .ParamFieldBind
 	position relative
 	display flex
 
-	&__source
+	&__device
 		width 6em
 
 	&__detect-button
@@ -84,21 +83,34 @@ export default class ParamFieldBind extends Vue {
 		right 0
 		z-index 5
 		visibility hidden
-		margin calc(var(--layout-input-height) * 0.2)
-		width calc(var(--layout-input-height) * 0.6)
-		height calc(var(--layout-input-height) * 0.6)
-		border 3px double var(--color-control)
+		margin calc(var(--layout-input-height) * 0.25)
+		width calc(var(--layout-input-height) * 0.5)
+		height calc(var(--layout-input-height) * 0.5)
+		border 1px dashed $rec-color
 		border-radius 50%
 
 		&:hover
 			border-style solid
-			border-color var(--color-active)
+			border-color $rec-color
+			background $rec-color
 
 		*:hover + &, &:hover
 			visibility visible
 
+		&:active
+			box-shadow 0 0 0 1px $rec-color
+
 		&.detecting
 			visibility visible
 			border none
-			background red
+			background $rec-color
+			box-shadow 0 0 0 1px $rec-color
+			animation recording 0.5s ease 0s infinite alternate
+
+@keyframes recording
+	0%
+		opacity 1
+
+	100%
+		opacity 0.1
 </style>

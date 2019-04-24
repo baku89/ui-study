@@ -5,5 +5,5 @@ export default interface MouseDragEvent {
 	delta: vec2
 	offset: vec2
 	abort: () => void
-	originalEvent: Event
+	originalEvent: any
 }

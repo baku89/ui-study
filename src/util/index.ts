@@ -6,7 +6,6 @@ import MouseDragEvent from './MouseDragEvent'
 
 import {DataColor, DataColorMode, DataColorElements} from '../data'
 import {mod, lerp, clamp} from '../math'
-import Bind from '../data/Bind'
 
 function getDOMCenter(el: HTMLElement): number[] {
 	const {top, right, bottom, left} = el.getBoundingClientRect()

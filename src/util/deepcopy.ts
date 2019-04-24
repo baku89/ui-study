@@ -1,5 +1,3 @@
-import Bind from '../data/Bind'
-
 export default function deepcopy(src: any) {
 	let dest: any
 	if (Array.isArray(src)) {

@@ -12,7 +12,7 @@
 				:is="'ParamField' + def.type[0].toUpperCase() + def.type.substr(1, def.type.length - 1)"
 				:value="getValue(def)"
 				@input="setValue(def, $event)"
-				v-bind="{...def, label: undefined}"
+				v-bind="{...def, label: undefined, type: undefined}"
 			/>
 		</Parameter>
 	</div>
@@ -22,17 +22,20 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import Case from 'case'
 
+import deepcopy from '../util/deepcopy'
+
 import Parameter from './Parameter.vue'
+import ParamFieldBind from './ParamFieldBind.vue'
 import ParamFieldDropdown from './ParamFieldDropdown.vue'
 import ParamFieldNumber from './ParamFieldNumber.vue'
 import ParamFieldString from './ParamFieldString.vue'
 import ParamFieldSlider from './ParamFieldSlider.vue'
 import ParamFieldColor from './ParamFieldColor.vue'
-import deepcopy from 'deepcopy'
 
 @Component({
 	components: {
 		Parameter,
+		ParamFieldBind,
 		ParamFieldDropdown,
 		ParamFieldNumber,
 		ParamFieldString,
@@ -62,7 +65,7 @@ export default class ParameterList extends Vue {
 		pathParent.pop()
 
 		const dataParent = pathParent.reduce(
-			(v: any, key: string) => v[key],
+			(v: any, k: string) => v[k],
 			this.value
 		)
 

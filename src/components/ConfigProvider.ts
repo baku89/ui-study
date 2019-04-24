@@ -1,9 +1,9 @@
 import {Component, Vue, Watch, Provide, Inject} from 'vue-property-decorator'
-import deepcopy from 'deepcopy'
 import Case from 'case'
 
 import {DefaultConfig, DataConfig} from '../core'
 import {convertColorElements, toCSSColor} from '../util'
+import deepcopy from '../util/deepcopy'
 
 @Component({
 	data() {

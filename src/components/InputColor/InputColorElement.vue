@@ -52,8 +52,9 @@ import {Component, Prop, Vue, Watch, Inject} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 import keycode from 'keycode'
 
-import {getDOMCenter, toCSSColor, keypressed} from '../../util'
+import {getDOMCenter, toCSSColor} from '../../util'
 import {parseNumber, ratio, clamp, lerp} from '../../math'
+import BindManager from '../../core/BindManager'
 import {
 	DataColorMode,
 	DataColorElements,
@@ -170,12 +171,12 @@ export default class InputColorElement extends Vue {
 	}
 
 	private onKeydown(e: KeyboardEvent) {
-		const key = keycode(e)
+		const key = BindManager.keycode(e)
 
 		if (key === 'up' || key === 'down') {
 			let inc = key === 'up' ? 1 : -1
 
-			if (keypressed(this.Config.keyFaster)) {
+			if (BindManager.pressed(this.Config.keyFaster)) {
 				inc *= 10
 			}
 			this.updateValue(this.value + inc)
@@ -235,6 +236,8 @@ export default class InputColorElement extends Vue {
 
 .InputColorElement
 	input-border-style()
+	input-placement-modifier-root()
+	input-placement-modifier-border()
 	position relative
 	background var(--color-field)
 

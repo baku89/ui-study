@@ -35,8 +35,9 @@ import {vec2} from 'gl-matrix'
 
 import Drag from './common/Drag'
 import SvgArrow from './common/SvgArrow.vue'
-import {getDOMCenter, keypressed} from '../util'
+import {getDOMCenter} from '../util'
 import {DataConfig, DefaultConfig} from '../core'
+import BindManager from '../core/BindManager'
 
 interface ArrowKeyInfo {
 	delta: number[]
@@ -82,9 +83,9 @@ export default class InputPoint extends Vue {
 		if (info !== undefined) {
 			e.preventDefault()
 
-			const multiplier = keypressed(this.Config.keyFaster)
+			const multiplier = BindManager.pressed(this.Config.keyFaster)
 				? 10
-				: keypressed(this.Config.keySlower)
+				: BindManager.pressed(this.Config.keySlower)
 				? 0.1
 				: 1
 			const newValue = [

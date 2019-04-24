@@ -20,9 +20,9 @@ import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 
 import {lerp, clamp, ratio, quantize} from '../math'
+import BindManager from '../core/BindManager'
 
 import Drag from './common/Drag'
-import {keypressed} from '../util'
 import {DefaultConfig, DataConfig} from '../core'
 
 @Component({
@@ -85,7 +85,7 @@ export default class InputSlider extends Vue {
 		const originX = ratio(this.dragStartValue, this.min, this.max)
 		let inc = (e.current[0] - originX) * (this.max - this.min)
 
-		if (keypressed(this.Config.keySlower)) {
+		if (BindManager.pressed(this.Config.keySlower)) {
 			inc *= 0.1
 		}
 

@@ -63,11 +63,12 @@
 <script lang="ts">
 import {Component, Prop, Vue, Inject, Watch} from 'vue-property-decorator'
 import {parseNumber, toFixed, quantize, clamp} from '../math'
-import {getDOMCenter, keypressed, MouseDragEvent} from '../util'
+import {getDOMCenter, MouseDragEvent} from '../util'
 import {vec2} from 'gl-matrix'
 import keycode from 'keycode'
 
 import {DataConfig, DefaultConfig} from '../core'
+import BindManager from '../core/BindManager'
 
 import Drag from './common/Drag'
 import Portal from './common/Portal'
@@ -192,13 +193,13 @@ export default class InputNumber extends Vue {
 
 			if (this.hasStep) {
 				inc *= this.step
-			} else if (keypressed(this.Config.keyFaster)) {
+			} else if (BindManager.pressed(this.Config.keyFaster)) {
 				inc *= 10
-			} else if (keypressed(this.Config.keySlower)) {
+			} else if (BindManager.pressed(this.Config.keySlower)) {
 				inc /= 10
 			}
 
-			let newValue = this.value + inc
+			const newValue = this.value + inc
 			this.updateValue(newValue)
 		}
 	}
@@ -237,9 +238,9 @@ export default class InputNumber extends Vue {
 	private onDrag({delta, current}: MouseDragEvent) {
 		const {drag} = this
 
-		drag.speed = keypressed(this.Config.keyFaster)
+		drag.speed = BindManager.pressed(this.Config.keyFaster)
 			? 'fast'
-			: !keypressed(this.Config.keySlower)
+			: !BindManager.pressed(this.Config.keySlower)
 			? 'normal'
 			: 'slow'
 
@@ -308,6 +309,8 @@ export default class InputNumber extends Vue {
 
 .InputNumber
 	input-border-style()
+	input-placement-modifier-root()
+	input-placement-modifier-border()
 	position relative
 	background var(--color-field)
 
@@ -316,7 +319,7 @@ export default class InputNumber extends Vue {
 		input-border-hover-style()
 
 	&[editing], &[selected], &[updating]
-		z-index 2
+		z-index 3
 		input-border-focus-style()
 
 	&__display, &__input

@@ -41,8 +41,6 @@
 
 <script lang="ts">
 import {Component, Prop, Vue, Provide, Inject} from 'vue-property-decorator'
-
-import keypressed from '../util/keypressed'
 import {vec2} from 'gl-matrix'
 
 import Drag from './common/Drag'
@@ -52,10 +50,11 @@ import SvgOverlayHorizontalDrag from './common/SvgOverlayHorizontalDrag.vue'
 import InputIconButton from './InputIconButton.vue'
 
 import {MouseDragEvent, adjustHSB} from '../util'
-import {allSettled} from 'q'
 import {DataColor} from '../data'
 import {clamp, toFixed} from '../math'
 import {DefaultConfig, DataConfig} from '../core'
+import BindManager from '../core/BindManager'
+import Bind from '../data/Bind'
 
 interface SelectableNode<T> {
 	isSelected: boolean
@@ -120,7 +119,10 @@ export default class SelectionManager extends Vue {
 	}
 
 	public add(node: any, context: SelectionContext = 'scalar') {
-		if (!keypressed('cmd') || keypressed('tab')) {
+		if (
+			!BindManager.pressed(new Bind('key', 'cmd')) ||
+			BindManager.pressed(new Bind('key', 'tab'))
+		) {
 			this.deselectAll()
 		}
 
@@ -258,9 +260,9 @@ export default class SelectionManager extends Vue {
 	private async onDrag(e: MouseDragEvent) {
 		const {drag} = this
 
-		drag.speed = keypressed(this.Config.keyFaster)
+		drag.speed = BindManager.pressed(this.Config.keyFaster)
 			? 'fast'
-			: !keypressed(this.Config.keySlower)
+			: !BindManager.pressed(this.Config.keySlower)
 			? 'normal'
 			: 'slow'
 

@@ -40,9 +40,9 @@ import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import Drag from './common/Drag'
 import {vec2} from 'gl-matrix'
 import {lerp, clamp, ratio, quantize} from '../math'
-import keypressed from '../util/keypressed'
 import {MouseDragEvent} from '../util'
 import {DefaultConfig, DataConfig} from '../core'
+import BindManager from '../core/BindManager'
 
 @Component({
 	components: {
@@ -116,12 +116,12 @@ export default class InputRange extends Vue {
 	}
 
 	private onDrag(e: MouseDragEvent) {
-		const isSymmetrical = keypressed(this.Config.keySymmetry)
+		const isSymmetrical = BindManager.pressed(this.Config.keySymmetry)
 		const middle = lerp(this.dragStartValue[0], this.dragStartValue[1], 0.5)
 
 		let inc = e.offset[0] * (this.max - this.min)
 
-		if (keypressed(this.Config.keySlower)) {
+		if (BindManager.pressed(this.Config.keySlower)) {
 			inc *= 0.1
 		}
 

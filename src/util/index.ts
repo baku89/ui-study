@@ -2,11 +2,11 @@ import colorConvert from 'color-convert'
 import mouse from 'mouse-event'
 
 import RoteryDrag from './RoteryDrag'
-import keypressed from './keypressed'
 import MouseDragEvent from './MouseDragEvent'
 
 import {DataColor, DataColorMode, DataColorElements} from '../data'
 import {mod, lerp, clamp} from '../math'
+import Bind from '../data/Bind'
 
 function getDOMCenter(el: HTMLElement): number[] {
 	const {top, right, bottom, left} = el.getBoundingClientRect()
@@ -132,7 +132,6 @@ export {
 	toCSSColor,
 	convertColorElements,
 	RoteryDrag,
-	keypressed,
 	MouseDragEvent,
 	adjustHSB
 }

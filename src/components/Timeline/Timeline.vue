@@ -28,11 +28,12 @@ import {vec2} from 'gl-matrix'
 
 import Drag from '../common/Drag'
 import {ratio, quantize, clamp, lerp} from '../../math'
-import {keypressed, MouseDragEvent} from '../../util'
+import {MouseDragEvent} from '../../util'
 
 import InputRange from '../InputRange.vue'
 import TimelineSeekbarScale from './TimelineSeekbarScale.vue'
 import {DataConfig, DefaultConfig} from '../../core'
+import BindManager from '../../core/BindManager'
 
 @Component({
 	components: {Drag, InputRange, TimelineSeekbarScale},
@@ -104,7 +105,7 @@ export default class Timeline extends Vue {
 		const originX = ratio(this.dragStartTime, start, end)
 		let inc = (e.current[0] - originX) * (end - start)
 
-		if (keypressed(this.Config.keySlower)) {
+		if (BindManager.pressed(this.Config.keySlower)) {
 			inc *= 0.1
 		}
 
@@ -165,7 +166,7 @@ export default class Timeline extends Vue {
 		const framesPerPixel = (end - start) / this.$el.clientWidth
 		let incStart, incEnd
 
-		if (keypressed(this.Config.keyScale) || e.ctrlKey) {
+		if (BindManager.pressed(this.Config.keyScale) || e.ctrlKey) {
 			// Zoom in-out
 			const {left, width} = this.$el.getBoundingClientRect()
 			const scaleCenter = (e.clientX - left) / width

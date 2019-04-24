@@ -20,7 +20,8 @@
 <script lang="ts">
 import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
-import {getDOMCenter, RoteryDrag, keypressed, MouseDragEvent} from '../util'
+import {getDOMCenter, RoteryDrag, MouseDragEvent} from '../util'
+import BindManager from '../core/BindManager'
 
 import Drag from './common/Drag'
 import Portal from './common/Portal'
@@ -79,7 +80,7 @@ export default class InputAngle extends Vue {
 		let newValue = this.roteryDrag.getAngle(this.dragTo)
 
 		// Quantize the angle
-		if (keypressed(this.Config.keyQuantize)) {
+		if (BindManager.pressed(this.Config.keyQuantize)) {
 			// Find the closest angle out of quantizeAngles
 			// https://stackoverflow.com/questions/8584902/get-closest-number-out-of-array
 			let angle = mod(newValue, 360)

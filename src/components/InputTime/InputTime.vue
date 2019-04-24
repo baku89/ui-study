@@ -91,7 +91,7 @@ import {Component, Prop, Vue, Inject, Watch} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 import keycode from 'keycode'
 
-import {getDOMCenter, keypressed, MouseDragEvent} from '../../util'
+import {getDOMCenter, MouseDragEvent} from '../../util'
 import Timecode from '../../util/Timecode'
 import {DefaultConfig, DataConfig} from '../../core'
 
@@ -100,6 +100,7 @@ import Portal from '../common/Portal'
 // import SvgArrow from '../common/SvgArrow.vue'
 import SvgOverlayHorizontalDrag from '../common/SvgOverlayHorizontalDrag.vue'
 import {quantize} from '../../math'
+import BindManager from '../../core/BindManager'
 
 @Component({
 	components: {Drag, Portal, /*SvgArrow,*/ SvgOverlayHorizontalDrag}
@@ -202,13 +203,13 @@ export default class InputTime extends Vue {
 			let partIndex = originalPartIndex
 
 			if (partIndex === 3) {
-				if (keypressed(this.Config.keyFaster)) {
+				if (BindManager.pressed(this.Config.keyFaster)) {
 					partIndex = 2
 				}
 			} else {
-				if (keypressed(this.Config.keyFaster)) {
+				if (BindManager.pressed(this.Config.keyFaster)) {
 					inc *= 10
-				} else if (keypressed(this.Config.keySlower)) {
+				} else if (BindManager.pressed(this.Config.keySlower)) {
 					inc /= 10
 				}
 			}
@@ -295,7 +296,7 @@ export default class InputTime extends Vue {
 	private onDrag({delta, current}: MouseDragEvent) {
 		const {drag} = this
 
-		drag.speed = keypressed(this.Config.keyFaster) ? 'fast' : 'normal'
+		drag.speed = BindManager.pressed(this.Config.keyFaster) ? 'fast' : 'normal'
 
 		this.activePartIndex = drag.speed === 'fast' ? 2 : 3
 

@@ -24,7 +24,7 @@ import {Component, Vue, Prop} from 'vue-property-decorator'
 type LinkType = 'internal' | 'external' | null
 
 @Component
-export default class Home extends Vue {
+export default class PageLink extends Vue {
 	@Prop({type: String, required: true}) private numbering!: string
 	@Prop({type: String, required: true}) private title!: string
 	@Prop(String) private to!: string

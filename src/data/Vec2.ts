@@ -1,4 +1,9 @@
 import {EPSILON} from './common'
+import Mat2d from './Mat2d'
+import Mat2 from './Mat2'
+import Mat3 from './Mat3'
+import Mat4 from './Mat4'
+import Vec3 from './Vec3'
 
 export default class Vec2 {
 	public static add(a: Vec2, b: Vec2): Vec2 {
@@ -89,7 +94,7 @@ export default class Vec2 {
 	}
 
 	public vlength(): number {
-		return Math.hypot(...this)
+		return Math.hypot(this.x, this.y)
 	}
 
 	public squaredLength(): number {
@@ -141,7 +146,7 @@ export default class Vec2 {
 	 */
 	public cross(b: Vec2): Vec3 {
 		const out = new Vec3()
-		out.z = a.x * b.y - a.y * b.x
+		out.z = this.x * b.y - this.y * b.x
 		return out
 	}
 

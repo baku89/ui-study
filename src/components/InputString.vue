@@ -47,6 +47,8 @@ export default class InputString extends Vue {
 	width 100%
 	input-border-style()
 	input-field-style()
+	input-placement-modifier-root()
+	input-placement-modifier-border()
 	font-family var(--font-normal)
 
 	&:hover

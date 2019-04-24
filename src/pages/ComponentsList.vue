@@ -8,7 +8,7 @@
 			<p>Slider, Scale, Position, and Color.</p>
 			<div class="ui">
 				<div class="param">
-					<Parameter label="Radius">
+					<Parameter label="Radius" v-model="ex1.radius">
 						<ParamFieldSlider class="input" v-model="ex1.radius" :min="0" :max="50"/>
 					</Parameter>
 					<Parameter label="Scale">
@@ -23,7 +23,7 @@
 					<Parameter label="Stroke">
 						<ParamFieldColor class="input" v-model="ex1.stroke"/>
 					</Parameter>
-					<Parameter label="Stroke Width">
+					<Parameter label="Stroke Width" v-model="ex1.strokeWidth">
 						<ParamFieldSlider
 							class="input"
 							v-model="ex1.strokeWidth"
@@ -59,7 +59,7 @@
 			<div class="ui">
 				<div class="param">
 					<Parameter label="Text">
-						<InputString class="input long" v-model="ex2.text"/>
+						<ParamFieldString class="input long" v-model="ex2.text"/>
 					</Parameter>
 					<Parameter label="Angle">
 						<ParamFieldAngle class="input" v-model="ex2.rotation"/>
@@ -150,7 +150,7 @@
 			<p>Play Controls</p>
 			<div class="ui no-preview">
 				<div class="param" style="margin-bottom: 0.5em;">
-					<Parameter label="Timecode">
+					<Parameter label="Timecode" v-model="ex6.time">
 						<InputTime
 							class="param-field--1w"
 							v-model="ex6.time"
@@ -184,9 +184,7 @@
 					:autoScroll="ex6.playing"
 					@scrubstart="ex6.playing = false"
 				>
-					<template v-slot="{displayRange}">
-						<TimelineDraw :drawFunc="draw" :displayRange="displayRange" ref="timelineColor"/>
-					</template>
+					<TimelineDraw :drawFunc="draw" ref="timelineDraw"/>
 				</Timeline>
 			</div>
 		</div>
@@ -272,6 +270,7 @@ export default class ComponentsList extends Vue {
 
 		if (playing) {
 			let prevTime = performance.now()
+			const timelineDraw = this.$refs.timelineDraw as TimelineColor
 
 			const update = (time: number) => {
 				if (!ex6.playing) {
@@ -289,6 +288,7 @@ export default class ComponentsList extends Vue {
 
 					// ex6.currentValue = ex6.values[ex6.time]
 					ex6.values[ex6.time] = ex6.currentValue
+					timelineDraw.renderColors()
 
 					prevTime = time
 				}
@@ -315,8 +315,8 @@ export default class ComponentsList extends Vue {
 		this.$data.ex6.values[time] = newValue
 		this.$data.ex6.currentValue = newValue
 
-		const timelineColor = this.$refs.timelineColor as TimelineColor
-		timelineColor.renderColors()
+		const timelineDraw = this.$refs.timelineDraw as TimelineColor
+		timelineDraw.renderColors()
 	}
 
 	private draw(

@@ -1,3 +1,7 @@
+// Bind
+type DataBindType = 'key' | 'osc' | 'midi'
+type DataBind = [DataBindType, string]
+
 // Color
 type DataColorMode =
 	| 'hex'
@@ -107,6 +111,8 @@ interface DataTransformStack {
 type DataTransform = DataTransformStack[]
 
 export {
+	DataBindType,
+	DataBind,
 	DataColorMode,
 	DataColorElements,
 	DataColor,

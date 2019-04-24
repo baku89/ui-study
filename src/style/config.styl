@@ -2,41 +2,55 @@ $border-radius = 3px
 $border-radius-large = 6px
 $color-preview-size = 60px
 
+// TODO: Fix
 input-border-style()
 	height var(--layout-input-height)
 	border 1px solid var(--color-border)
 	border-radius $border-radius
 	background var(--color-field)
 
+input-placement-modifier-root()
 	&.left, &.center, &.right, &.top, &.middle, &.bottom
 		z-index 1
 
-		&:hover, &:active, &:focus
-			z-index 2
-
+	&:hover
+		z-index 2
+	
+	&:active, &:focus, &[editing]
+		z-index 3
+	
 	&.left
 		margin-right -1px
-		border-top-right-radius 0
-		border-bottom-right-radius 0
 
 	&.center
 		margin-right -1px
-		border-radius 0
-
-	&.right
-		border-top-left-radius 0
-		border-bottom-left-radius 0
 
 	&.top
 		margin-bottom -1px
-		border-bottom-right-radius 0
-		border-bottom-left-radius 0
 
 	&.middle
 		margin-bottom -1px
+
+input-placement-modifier-border(prefix = '&', suffix = '')
+	{prefix}.left{suffix}
+		border-top-right-radius 0
+		border-bottom-right-radius 0
+
+	{prefix}.center{suffix}
 		border-radius 0
 
-	&.bottom
+	{prefix}.right{suffix}
+		border-top-left-radius 0
+		border-bottom-left-radius 0
+
+	{prefix}.top{suffix}
+		border-bottom-right-radius 0
+		border-bottom-left-radius 0
+
+	{prefix}.middle{suffix}
+		border-radius 0
+
+	{prefix}.bottom{suffix}
 		border-top-left-radius 0
 		border-top-right-radius 0
 

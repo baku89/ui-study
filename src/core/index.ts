@@ -1,4 +1,4 @@
-import Case from 'case'
+import Bind from '../data/Bind'
 
 import {DataColor} from '../data'
 
@@ -9,11 +9,11 @@ type UnitNumber = [string, number]
 interface DataConfig {
 	lang: string
 	dragSpeed: 0.5
-	keySlower: string
-	keyFaster: string
-	keySymmetry: string
-	keyQuantize: string
-	keyScale: string
+	keySlower: Bind
+	keyFaster: Bind
+	keySymmetry: Bind
+	keyQuantize: Bind
+	keyScale: Bind
 	quantizeAngles: number[]
 	theme: {[s: string]: number | string | DataColor | UnitNumber}
 }
@@ -21,11 +21,11 @@ interface DataConfig {
 const DefaultConfig: DataConfig = {
 	lang: 'en',
 	dragSpeed: 0.5,
-	keySlower: 'alt',
-	keyFaster: 'shift',
-	keySymmetry: 's',
-	keyQuantize: 'q',
-	keyScale: 'alt',
+	keySlower: new Bind('key', 'alt'),
+	keyFaster: new Bind('key', 'shift'),
+	keySymmetry: new Bind('key', 's'),
+	keyQuantize: new Bind('key', 'q'),
+	keyScale: new Bind('key', 'alt'),
 	quantizeAngles: Array(360 / angleStep)
 		.fill(0)
 		.map((v, i) => i * angleStep),
@@ -76,7 +76,7 @@ const DefinitionConfig = {
 	},
 	_regex: {
 		'^key': {
-			type: 'string'
+			type: 'bind'
 		}
 	},
 	'group:theme': {

@@ -44,7 +44,8 @@ export default class Timecode {
 
 	public static formatIncrementalValue(
 		frameCount: number,
-		frameRate: number
+		frameRate: number,
+		includeFrames: boolean
 	): string {
 		let fc = Math.abs(frameCount)
 
@@ -78,7 +79,9 @@ export default class Timecode {
 		if (seconds) {
 			text += (seconds < 10 ? '0' : '') + seconds.toString() + 's '
 		}
-		text += (frames < 10 ? '0' : '') + frames.toString() + 'f'
+		if (includeFrames) {
+			text += (frames < 10 ? '0' : '') + frames.toString() + 'f'
+		}
 
 		return text
 	}

@@ -1,9 +1,9 @@
 <template>
 	<div class="article">
-		<h1>Perceptive Design</h1>
+		<h1>Interface Design for Design</h1>
 		<section>
 			<p lang="en">
-				<em>Perceptive Design</em> is a UX language and a research project to explore ideal user interfaces for all designing processes that
+				This is a research project to explore ideal user interfaces for all designing processes that
 				<a
 					href="https://baku89.com"
 					target="_blank"
@@ -11,7 +11,7 @@
 				The several demos showing below explain the way of thinking behind Perceptive Design and how it actually works.
 			</p>
 			<p lang="ja">
-				<em>Perceptive Design</em>《知覚的デザイン》は、全てのデザインに理想的なユーザーインターフェースについて探求するプロジェクトであり、ツール開発において使用可能なUIコンポーネント群です。2019年より
+				このは、全てのデザインに理想的なユーザーインターフェースについて探求するプロジェクトであり、ツール開発において使用可能なUIコンポーネント群です。2019年より
 				<a
 					href="https://baku89.com"
 					target="_blank"

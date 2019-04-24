@@ -1,5 +1,5 @@
 <template>
-	<div class="ParamFieldString param-field--4w">
+	<div class="ParamFieldString param-field--2w">
 		<InputString v-bind="$props" v-on="$listeners"/>
 	</div>
 </template>

@@ -107,7 +107,9 @@ export default class Drag extends Vue {
 		const key = keycode(e)
 		const {keyFaster, keySlower, keySymmetry} = this.Config
 
-		if ([keyFaster, keySlower, keySymmetry].includes(key)) {
+		if (
+			[keyFaster, keySlower, keySymmetry].some(bind => bind.address === key)
+		) {
 			vec2.set(this.delta, 0, 0)
 			const event: MouseDragEvent = {
 				current: this.current,

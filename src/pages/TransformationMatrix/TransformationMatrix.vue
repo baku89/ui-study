@@ -134,8 +134,9 @@ import {
 	DataTransformStack,
 	DataTransformValue
 } from '../../data'
-import {convertColorElements, MouseDragEvent, keypressed} from '../../util'
+import {convertColorElements, MouseDragEvent} from '../../util'
 import {toRadians, ratio} from '../../math'
+import BindManager from '../../core/BindManager'
 
 import Components from '../../components'
 import Param from './Param.vue'
@@ -279,7 +280,7 @@ export default class TransformationMatrix extends Vue {
 				}
 			}
 
-			this.isSymmetrical = keypressed(this.Config.keySymmetry)
+			this.isSymmetrical = BindManager.pressed(this.Config.keySymmetry)
 		}
 	}
 
@@ -291,7 +292,7 @@ export default class TransformationMatrix extends Vue {
 		// Set the pivot and corner to scale
 		const pivot = vec2.create()
 		const corner = vec2.create()
-		const isSymmetrical = keypressed(this.Config.keySymmetry)
+		const isSymmetrical = BindManager.pressed(this.Config.keySymmetry)
 		let constraint: 'horizontal' | 'vertical' | null = null
 
 		switch (this.draggedPart) {

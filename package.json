@@ -67,7 +67,8 @@
 		"vue-property-decorator": "^8.1.0",
 		"vue-router": "^3.0.3",
 		"vue-template-compiler": "^2.6.10",
-		"vuedraggable": "^2.20.0"
+		"vuedraggable": "^2.20.0",
+		"webmidi": "^2.3.3"
 	},
 	"license": "MIT"
 }

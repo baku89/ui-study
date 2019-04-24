@@ -37,6 +37,8 @@ export default class InputButton extends Vue {
 	height var(--layout-input-height)
 	input-border-style()
 	input-field-style()
+	input-placement-modifier-root()
+	input-placement-modifier-border()
 	display flex
 	border-color var(--color-control)
 	background transparent
@@ -50,7 +52,7 @@ export default class InputButton extends Vue {
 		input-border-hover-style()
 
 	&:active
-		input-border-active-style()
+		input-border-focus-style()
 		background var(--color-active)
 		color var(--color-bg)
 

@@ -101,7 +101,7 @@ export default class ParameterControl extends Vue {
 		// Compile
 		const log = console.log
 		// @ts-ignore
-		console.log = () => {}
+		console.log = () => false
 		this.renderer.loadSource(`/*${this.codeMeta}*/\n${this.codeShader}`)
 		console.log = log
 

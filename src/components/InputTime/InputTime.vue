@@ -64,23 +64,6 @@
 					:speed="drag.speed"
 					:text="drag.text"
 				></SvgOverlayHorizontalDrag>
-				<!-- <SvgArrow :from="dragFrom" :to="dragTo"></SvgArrow>
-				<line
-					v-if="min !== undefined"
-					class="narrow-stroke"
-					:x1="dragMinX"
-					:y1="dragFrom[1] - 16"
-					:x2="dragMinX"
-					:y2="dragFrom[1] + 16"
-				></line>
-				<line
-					v-if="max !== undefined"
-					class="narrow-stroke"
-					:x1="dragMaxX"
-					:y1="dragFrom[1] - 16"
-					:x2="dragMaxX"
-					:y2="dragFrom[1] + 16"
-				></line>-->
 			</svg>
 		</Portal>
 	</div>
@@ -103,7 +86,7 @@ import {quantize} from '../../math'
 import BindManager from '../../core/BindManager'
 
 @Component({
-	components: {Drag, Portal, /*SvgArrow,*/ SvgOverlayHorizontalDrag}
+	components: {Drag, Portal, SvgOverlayHorizontalDrag}
 })
 export default class InputTime extends Vue {
 	@Prop({type: Number, required: true}) private value!: number
@@ -132,11 +115,6 @@ export default class InputTime extends Vue {
 		speed: 'normal',
 		text: ''
 	}
-
-	// private dragFrom: number[] = [0, 0]
-	// private dragTo: number[] = [0, 0]
-	// private dragMinX: number = 0
-	// private dragMaxX: number = 0
 
 	private timecode!: Timecode
 

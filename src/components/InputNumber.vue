@@ -38,23 +38,6 @@
 					:speed="drag.speed"
 					:text="drag.text"
 				></SvgOverlayHorizontalDrag>
-				<!-- <SvgArrow :from="dragFrom" :to="dragTo"></SvgArrow>
-				<line
-					v-if="min !== undefined"
-					class="narrow-stroke"
-					:x1="dragMinX"
-					:y1="dragFrom[1] - 16"
-					:x2="dragMinX"
-					:y2="dragFrom[1] + 16"
-				></line>
-				<line
-					v-if="max !== undefined"	
-					class="narrow-stroke"
-					:x1="dragMaxX"
-					:y1="dragFrom[1] - 16"
-					:x2="dragMaxX"
-					:y2="dragFrom[1] + 16"
-				></line>-->
 			</svg>
 		</Portal>
 	</div>
@@ -80,7 +63,6 @@ import SvgOverlayHorizontalDrag from './common/SvgOverlayHorizontalDrag.vue'
 	components: {
 		Drag,
 		Portal,
-		// SvgArrow,
 		SvgOverlayHorizontalDrag
 	}
 })
@@ -107,13 +89,6 @@ export default class InputNumber extends Vue {
 		speed: 'normal',
 		text: ''
 	}
-
-	/*
-	private dragFrom: number[] = [0, 0]
-	private dragTo: number[] = [0, 0]
-	private dragMinX: number = 0
-	private dragMaxX: number = 0
-	*/
 
 	private shouldOmitZero: boolean = true
 	private updatedRecently: boolean = false
@@ -156,7 +131,7 @@ export default class InputNumber extends Vue {
 		}
 	}
 
-	private updateValue(newValue: number) {
+	private getConstrainedValue(newValue: number) {
 		if (this.hasMin) {
 			newValue = Math.max(this.min, newValue)
 		}
@@ -166,6 +141,11 @@ export default class InputNumber extends Vue {
 		if (this.hasStep) {
 			newValue = quantize(newValue, this.step)
 		}
+		return newValue
+	}
+
+	private updateValue(newValue: number) {
+		newValue = this.getConstrainedValue(newValue)
 		if (this.value !== newValue) {
 			this.$emit('input', newValue)
 		}
@@ -212,26 +192,6 @@ export default class InputNumber extends Vue {
 		this.$set(drag.position, 0, current[0])
 		this.$set(drag.position, 1, current[1])
 
-		/*
-		this.$set(this.dragFrom, 0, current[0])
-		this.$set(this.dragTo, 0, current[0])
-		this.$set(
-			this.dragFrom,
-			1,
-			getDOMCenter(this.$refs.input as HTMLElement)[1]
-		)
-		this.$set(this.dragTo, 1, this.dragFrom[1])
-
-		if (this.hasMin) {
-			this.dragMinX =
-				current[0] + (this.min - this.value) / this.Config.dragSpeed
-		}
-		if (this.hasMax) {
-			this.dragMaxX =
-				current[0] + (this.max - this.value) / this.Config.dragSpeed
-		}
-		*/
-
 		this.isDragging = true
 	}
 
@@ -248,37 +208,16 @@ export default class InputNumber extends Vue {
 			drag.speed === 'fast' ? 10 : drag.speed === 'normal' ? 1 : 0.1
 
 		drag.inc += delta[0] * this.Config.dragSpeed * multiplier
-
 		this.$set(drag.position, 0, current[0])
 		this.$set(drag.position, 1, current[1])
 
-		const newValue = drag.startValue + drag.inc
-		this.updateValue(newValue)
+		const newValue = this.getConstrainedValue(drag.startValue + drag.inc)
 
-		/*
-		let newValue
-		let x = e.current[0]
+		const actualInc = newValue - this.drag.startValue
+		this.drag.text =
+			(actualInc > 0 ? '+' : '') + actualInc.toFixed(this.precision)
 
-		if (this.hasMin || this.hasMax) {
-			if (this.hasMin) {
-				x = Math.max(this.dragMinX, x)
-				newValue = this.min + (x - this.dragMinX) * this.Config.dragSpeed
-			}
-			if (this.hasMax) {
-				x = Math.min(this.dragMaxX, x)
-				newValue = this.max + (x - this.dragMaxX) * this.Config.dragSpeed
-			}
-		} else {
-			newValue = this.value + e.delta[0] * this.Config.dragSpeed
-		}
-
-		if (this.hasStep) {
-			newValue = quantize(newValue as number, this.step)
-		}
-
-		this.$set(this.dragTo, 0, x)
 		this.$emit('input', newValue)
-		*/
 	}
 
 	@Watch('value')
@@ -294,11 +233,6 @@ export default class InputNumber extends Vue {
 			this.updatedRecently = false
 			this.shouldOmitZero = true
 		}, 100)
-
-		if (this.isDragging) {
-			const inc = this.value - this.drag.startValue
-			this.drag.text = (inc > 0 ? '+' : '') + inc.toFixed(this.precision)
-		}
 	}
 }
 </script>

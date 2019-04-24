@@ -54,7 +54,6 @@ import {DataColor} from '../data'
 import {clamp, toFixed} from '../math'
 import {DefaultConfig, DataConfig} from '../core'
 import BindManager from '../core/BindManager'
-import Bind from '../data/Bind'
 
 interface SelectableNode<T> {
 	isSelected: boolean
@@ -119,10 +118,7 @@ export default class SelectionManager extends Vue {
 	}
 
 	public add(node: any, context: SelectionContext = 'scalar') {
-		if (
-			!BindManager.pressed(new Bind('key', 'cmd')) ||
-			BindManager.pressed(new Bind('key', 'tab'))
-		) {
+		if (!BindManager.pressed('/key/cmd') || BindManager.pressed('/key/tab')) {
 			this.deselectAll()
 		}
 

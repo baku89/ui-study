@@ -25,6 +25,7 @@ import Parameter from './Parameter.vue'
 import ParameterList from './ParameterList.vue'
 import ParamFieldAffine from './ParamFieldAffine.vue'
 import ParamFieldAngle from './ParamFieldAngle.vue'
+import ParamFieldCheckbox from './ParamFieldCheckbox.vue'
 import ParamFieldColor from './ParamFieldColor.vue'
 import ParamFieldDropdown from './ParamFieldDropdown.vue'
 import ParamFieldNumber from './ParamFieldNumber.vue'
@@ -68,6 +69,7 @@ export default {
 	ParameterList,
 	ParamFieldAffine,
 	ParamFieldAngle,
+	ParamFieldCheckbox,
 	ParamFieldColor,
 	ParamFieldDropdown,
 	ParamFieldNumber,

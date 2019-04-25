@@ -39,12 +39,14 @@ export default class ParamFieldBind extends Vue {
 	}
 
 	private get path(): string {
-		return this.value.substr(1).split(/\/(.+)/)[1]
+		return this.value.substr(1).split(/\/(.+)/)[1] || ''
 	}
 
 	private updateDevice(device: string) {
-		const newValue = `/${device}/${this.path}`
-		this.$emit('input', newValue)
+		if (this.path !== '') {
+			const newValue = `/${device}/${this.path}`
+			this.$emit('input', newValue)
+		}
 	}
 
 	private updatePath(path: string) {

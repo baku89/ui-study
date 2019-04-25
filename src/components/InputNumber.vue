@@ -2,9 +2,7 @@
 	<div
 		class="InputNumber"
 		:selectable="true"
-		:editing="editing"
-		:selected="selected"
-		:updating="dragging || updatedRecently"
+		:class="{editing, selected, updating: dragging || updatedRecently}"
 	>
 		<Drag
 			:minDragDistance="3"

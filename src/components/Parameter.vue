@@ -51,7 +51,7 @@ export default class Parameter extends Vue {
 	@Prop([Number, Array]) private min!: number | number[]
 	@Prop([Number, Array]) private max!: number | number[]
 	@Prop(Number) private step!: number
-	@Prop(Number) private unit!: number
+	@Prop(String) private unit!: number
 	@Prop() private default!: any
 	@Prop({
 		type: Array,

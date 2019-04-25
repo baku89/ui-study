@@ -7,7 +7,7 @@
 			@drag="onDrag"
 			@dragend="onDragend"
 		>
-			<div class="InputSlider__slit" ref="slit" :dragging="dragging">
+			<div class="InputSlider__slit" :class="{dragging}" ref="slit">
 				<div class="InputSlider__accum" :style="accumStyles"/>
 				<div class="InputSlider__knob" :exceeded="isExceeded" ref="knob" :style="knobStyles"/>
 			</div>

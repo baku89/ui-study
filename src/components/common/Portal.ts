@@ -1,10 +1,6 @@
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 
-import raf from 'raf'
-
-@Component({
-	// abstract: true
-})
+@Component({})
 export default class Portal extends Vue {
 	private originalParentEl!: (Node & ParentNode) | null
 
@@ -75,7 +71,7 @@ export default class Portal extends Vue {
 	}
 
 	private destroyElement(el: any) {
-		raf(() => {
+		requestAnimationFrame(() => {
 			this.$emit('destroy')
 			this.killGhostElement(el)
 		})

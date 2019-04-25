@@ -10,23 +10,29 @@
 			<div class="InputRange__slit" ref="slit" @mousemove="onMousemove" @mouseleave="onMouseleave">
 				<div
 					class="InputRange__bar"
-					:inverted="this.value[0] > this.value[1]"
-					:dragging="dragMode === 'bar'"
-					:hover="hoverTarget === 'bar'"
+					:class="{
+						inverted: this.value[0] > this.value[1],
+						dragging: dragMode === 'bar',
+						hover: hoverTarget === 'bar'
+					}"
 					:style="barStyles"
 					ref="bar"
 				/>
 				<div
 					class="InputRange__edge first"
-					:dragging="dragMode === 'first'"
-					:hover="hoverTarget === 'first'"
+					:class="{
+						dragging: dragMode === 'first',
+						hover: hoverTarget === 'first'
+					}"
 					:style="firstStyles"
 					ref="first"
 				/>
 				<div
 					class="InputRange__edge second"
-					:dragging="dragMode === 'second'"
-					:hover="hoverTarget === 'second'"
+					:class="{
+						dragging: dragMode === 'second',
+						hover: hoverTarget === 'second'
+					}"
 					:style="secondStyles"
 					ref="second"
 				/>
@@ -223,11 +229,11 @@ export default class InputRange extends Vue {
 		background var(--color-control)
 		box-shadow 0 0 0 1px var(--color-bg)
 
-		&[inverted]
+		&.inverted
 			border 1px solid var(--color-control)
 			background var(--color-bg)
 
-		&[hover], &.dragging
+		&.hover, &.dragging
 			border none
 			background var(--color-active)
 
@@ -253,7 +259,7 @@ export default class InputRange extends Vue {
 			height var(--layout-input-height)
 			content ' '
 
-		&[hover], &.dragging
+		&.hover, &.dragging
 			border-color var(--color-active)
 			background var(--color-active)
 			box-shadow 0 0 0 1px var(--color-bg)

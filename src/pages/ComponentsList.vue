@@ -162,7 +162,6 @@ import {Component, Vue, Watch} from 'vue-property-decorator'
 import {toCSSColor} from '../util'
 import {DataColor} from '../data'
 
-import raf from 'raf'
 import TimelineColor from '../components/TimelineColor.vue'
 
 import Components from '../components'
@@ -321,10 +320,10 @@ export default class ComponentsList extends Vue {
 					prevTime = time
 				}
 
-				raf(update)
+				requestAnimationFrame(update)
 			}
 
-			raf(update)
+			requestAnimationFrame(update)
 		}
 	}
 

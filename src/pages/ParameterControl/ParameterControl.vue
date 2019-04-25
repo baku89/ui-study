@@ -48,7 +48,6 @@
 <script lang="ts">
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import * as twgl from 'twgl.js'
-import raf from 'raf'
 // @ts-ignore
 import {Renderer as ISFRenderer} from 'interactive-shader-format'
 
@@ -216,7 +215,7 @@ export default class ParameterControl extends Vue {
 			// canvas.height = canvas.width
 			this.renderer.draw(canvas)
 
-			raf(draw)
+			requestAnimationFrame(draw)
 		}
 		draw(performance.now())
 	}

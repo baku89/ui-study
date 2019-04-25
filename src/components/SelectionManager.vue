@@ -3,7 +3,7 @@
 		<slot/>
 		<Popover class="SelectionManager__popover" :active="showControl" ref="popover">
 			<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="dragging = false">
-				<ul class="SelectionManager__menu" :selectable="true" :dragging="dragging">
+				<ul class="SelectionManager__menu" :class="{dragging}" :selectable="true">
 					<li v-if="controls.add" class="SelectionManager__control">
 						<InputIconButton src="./assets/icon_plus.svg" mode="add"/>
 					</li>

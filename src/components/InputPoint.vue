@@ -3,7 +3,7 @@
 		<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="onDragend">
 			<button
 				class="InputPoint__knob"
-				:dragging="dragging"
+				:class="{dragging}"
 				ref="knob"
 				@keydown="onKeydown"
 				@keyup="onKeyup"

@@ -3,7 +3,7 @@
 		<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="onDragend">
 			<button
 				class="InputAngle__knob"
-				:dragging="dragging"
+				:class="{dragging}"
 				ref="knob"
 				:style="{transform: `rotate(${this.value}deg)`}"
 			/>

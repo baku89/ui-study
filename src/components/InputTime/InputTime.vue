@@ -1,5 +1,5 @@
 <template>
-	<div class="InputTime" :editing="editing" :updating="dragging">
+	<div class="InputTime" :class="{editing, updating: dragging}">
 		<Drag
 			:minDragDistance="3"
 			detectDirection="horizontal"

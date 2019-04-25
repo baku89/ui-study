@@ -7,7 +7,7 @@
 			@drag="onDragSV('drag', $event)"
 			@dragend="onDragSV('dragend', $event)"
 		>
-			<div class="InputColorPicker__sv" :dragging="draggingSV">
+			<div class="InputColorPicker__sv" :class="{dragging: draggingSV}">
 				<div class="InputColorPicker__sv-inner">
 					<GradientPalette
 						class="InputColorPicker__palette"
@@ -26,7 +26,7 @@
 			@drag="onDragHue('drag', $event)"
 			@dragend="onDragHue('dragend', $event)"
 		>
-			<div class="InputColorPicker__hue" :dragging="draggingHue">
+			<div class="InputColorPicker__hue" :class="{dragging: draggingHue}">
 				<GradientPalette
 					class="InputColorPicker__palette"
 					:color="gradientPaletteColor"

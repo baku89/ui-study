@@ -1,10 +1,8 @@
 <template>
 	<div
 		class="InputColorElement"
+		:class="{editing, selected, updating: dragging || updatedRecently}"
 		:selectable="true"
-		:editing="editing"
-		:selected="selected"
-		:updating="dragging || updatedRecently"
 	>
 		<Drag
 			:minDragDistance="3"

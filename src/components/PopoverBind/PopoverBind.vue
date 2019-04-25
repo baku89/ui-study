@@ -25,8 +25,8 @@
 						:is="'ParamField' + ui[0].toUpperCase() + ui.substr(1)"
 						:compact="true"
 						:precision="precision"
-						:min="min"
-						:max="max"
+						:min="bind.method === 'set' ? min : undefined"
+						:max="bind.method === 'set' ? max : undefined"
 						:step="step"
 						:unit="unit"
 						class="PopoverBind__option-value"
@@ -161,9 +161,9 @@ export default class PopoverBind extends Vue {
 		left 50%
 		padding var(--layout-popover-padding)
 		width 16em
-		border 1px solid var(--color-border-text)
+		// border 1px solid var(--color-border-text)
 		border-radius $border-radius
-		box-shadow 0 0 1em 0 rgba(black, 0.1)
+		box-shadow 0 0 1.5em 0 rgba(black, 0.2)
 		enable-menu-color()
 
 	&__header

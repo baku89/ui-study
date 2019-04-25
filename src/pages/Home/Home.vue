@@ -1,22 +1,28 @@
 <template>
 	<div class="article">
-		<h1>Interface Design for Design</h1>
+		<h1>The UI Design for Design</h1>
 		<section>
 			<p lang="en">
-				This is a research project to explore ideal user interfaces for all designing processes that
+				This is a research project to explore ideal interfaces for design that I,
 				<a
 					href="https://baku89.com"
 					target="_blank"
-				>Baku Hashimoto</a> has been developing since 2019.
-				The several demos showing below explain the way of thinking behind Perceptive Design and how it actually works.
+				>Baku Hashimoto</a>, have been developing since the end of 2017. The final purpose is to establish whole new UX language of creative tools—which I call
+				<em>Perceptive Design</em> for now—and create a practical component library to develop next-generation design tool that I am planning.
 			</p>
+			<p
+				lang="en"
+			>The several demos showing below explain the way of thinking behind Perceptive Design and how it actually works.</p>
 			<p lang="ja">
-				このは、全てのデザインに理想的なユーザーインターフェースについて探求するプロジェクトであり、ツール開発において使用可能なUIコンポーネント群です。2019年より
+				このページはデザインツールのためのユーザーインターフェース・デザインについて、考察とプロトタイプをまとめたページです。僕、
 				<a
 					href="https://baku89.com"
 					target="_blank"
-				>橋本麦</a>が開発しています。以下のデモやテキストの中で、Perceptive Designが指向する設計思想や、それらが実際にどのように機能するか説明します。
+				>橋本麦</a>が2017年の終わりごろから少しずつ習作を重ねています。
+				このプロジェクトの目的は、デザインツールのためのUXデザイン体系（僕は仮に
+				<em>Perceptive Design</em>《知覚的・デザイン》と呼ぶことにしています）を構築することです。そして最終的には、今構想しているデザインツールに使用するUIコンポーネント群を完成させます。
 			</p>
+			<p lang="ja">以下のデモやテキストの中で、Perceptive Designの考え方や、実際にどういう風に機能するか説明します。</p>
 			<!-- <p class="highlight">
 				<em>Dear Adobe Creative Residency Team,</em>
 				<br>Though I am planning to develop functional software for vector graphics/motion design,
@@ -29,11 +35,11 @@
 			</p>-->
 		</section>
 
-		<PageLink numbering="0. " title="Abstract" to="/abstract">
+		<PageLink numbering="0. " title="Abstract">
 			<span
 				lang="en"
-			>This section explains what Perceptive Design is aiming and how it changes the way of designing.</span>
-			<span lang="ja">Perceptive Designは何を指向しているか。デザインツールのあり方をどのようにを変えようとしているかについて。</span>
+			>This section explains what Perceptive Design is aiming and how it makes the way of designing much cooler.</span>
+			<span lang="ja">Perceptive Designは何を指向しているか。どんな調子で便利なのかについて。</span>
 		</PageLink>
 
 		<PageLink
@@ -57,7 +63,7 @@
 			<span
 				lang="en"
 			>A simple example to control parameters of an image filter written in Interactive Shader Format.</span>
-			<span lang="ja">イメージエフェクト用パラメータ調整画面のサンプル。Interactive Shader Format形式で。</span>
+			<span lang="ja">パラメーター調整画面のサンプル。Interactive Shader Formatというイメージエフェクト用拡張言語のサンドボックスとしても機能します。</span>
 		</PageLink>
 
 		<PageLink
@@ -65,13 +71,20 @@
 			title="Transformation Matrix"
 			to="/transformation-matrix"
 			thumb="./assets/page-link_transformation-matrix.png"
-		>A new paradigm to transform objects by stacking transform functions in any order, instead of fixed fields of position/scale/rotation.</PageLink>
+		>
+			<span
+				lang="en"
+			>A new paradigm to place objects by stacking transform functions (translate, rotate, skew, for instances) in any order, just like CSS transform. It will take place of the conventional position/scale/rotation model.</span>
+			<span
+				lang="ja"
+			>従来の「位置・スケール・回転」モデルに代わる、より柔軟なオブジェクトの配置方法について。CSSトランスフォームの考え方を応用し、平行移動、回転、スキューなどの変形操作を自由な順番で適用していく。</span>
+		</PageLink>
 
 		<PageLink
 			numbering="4. "
 			title="Binding Parameters with Hardware Controller"
 			thumb="./assets/page-link_hardware-assign.png"
-		>The UI enables to assign each parameter any hardwares not only mice and keyboards but also MIDI controllers, 3D mice, and even LeapMotion. Artists can interact to their graphics using full of their body as if musicians play intruments.</PageLink>
+		>The UI enables to assign each parameter any hardwares not only mice and keyboards but also MIDI controllers, 3D mice, and even gamepads. Artists can interact to their graphics with using full of their body as if musicians play intruments.</PageLink>
 
 		<PageLink
 			numbering="5. "

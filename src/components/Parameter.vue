@@ -1,5 +1,9 @@
 <template>
-	<div class="Parameter" @click.right="openContextMenu">
+	<div
+		class="Parameter"
+		:class="{popovering: isBindOpen || isContextMenuOpen}"
+		@click.right="openContextMenu"
+	>
 		<label class="Parameter__label" v-if="label" :style="{width}">{{label}}</label>
 		<div class="Parameter__field">
 			<slot/>
@@ -7,11 +11,20 @@
 		<Popover class="Parameter__context-menu" :active.sync="isContextMenuOpen">
 			<Menu :items="contextMenuItems" @click="onClickContextMenu"/>
 		</Popover>
-		<Popover :active.sync="isBindOpen" position="mouse">
-			<div class="Parameter__bind">
-				<InputString :value="shortcut" @change="setShortcut"/>
-			</div>
-		</Popover>
+		<PopoverBind
+			v-if="value !== undefined"
+			:value="value"
+			:precision="precision"
+			:max="max"
+			:min="min"
+			:step="step"
+			:unit="unit"
+			:ui="bindUI"
+			:active.sync="isBindOpen"
+			:bindList="bindList"
+			@update:bindList="onBindListUpdated"
+			position="mouse"
+		/>
 	</div>
 </template>
 
@@ -19,23 +32,57 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import Mousetrap from 'mousetrap'
 
-import Popover from './common/Popover.vue'
 import Portal from './common/Portal'
 import Menu from './common/Menu'
+import Popover from './common/Popover.vue'
+import PopoverBind from './PopoverBind'
 
-import InputString from './InputString.vue'
+import BindManager from '../core/BindManager'
+import deepcopy from '../util/deepcopy'
 
 @Component({
-	components: {Popover, Portal, Menu, InputString}
+	components: {Portal, Menu, Popover, PopoverBind}
 })
 export default class Parameter extends Vue {
 	@Prop(String) private label!: string
 	@Prop(String) private width!: string
 	@Prop() private value!: any
+	@Prop(Number) private precision!: number
+	@Prop([Number, Array]) private min!: number | number[]
+	@Prop([Number, Array]) private max!: number | number[]
+	@Prop(Number) private step!: number
+	@Prop(Number) private unit!: number
 	@Prop() private default!: any
+	@Prop({
+		type: Array,
+		default() {
+			return []
+		}
+	})
+	private bindList!: any
 
 	private isContextMenuOpen: boolean = false
 	private isBindOpen: boolean = false
+
+	private get bindUI(): 'number' | 'color' | 'string' | 'vector' | 'checkbox' {
+		const valueType = typeof this.value
+
+		if (valueType === 'number' || valueType === 'string') {
+			return valueType
+		} else if (valueType === 'boolean') {
+			return 'checkbox'
+		} else {
+			if (Array.isArray(this.value)) {
+				if (this.value.every(val => typeof val === 'number')) {
+					return 'vector'
+				} else {
+					return 'color'
+				}
+			}
+		}
+
+		return 'number'
+	}
 
 	private get contextMenuItems(): any[] {
 		const items = []
@@ -48,17 +95,15 @@ export default class Parameter extends Vue {
 		if (this.default !== undefined) {
 			items.push({
 				value: 'reset',
-				label: 'Reset'
+				label: 'Reset to Default'
 			})
 		}
 
 		return items
 	}
 
-	private shortcut: string = ''
-
-	private openContextMenu(e: Event) {
-		if (this.contextMenuItems.length > 0) {
+	private openContextMenu(e: MouseEvent) {
+		if (this.contextMenuItems.length > 0 && !e.altKey) {
 			e.preventDefault()
 			this.isContextMenuOpen = true
 		}
@@ -75,12 +120,8 @@ export default class Parameter extends Vue {
 		}
 	}
 
-	private setShortcut(shortcut: string) {
-		this.shortcut = shortcut
-
-		Mousetrap.bind(shortcut, () => {
-			this.$emit('input', this.value + 1)
-		})
+	private onBindListUpdated(bindList: any) {
+		this.$emit('update:bindList', this.bindList)
 	}
 }
 </script>
@@ -94,9 +135,9 @@ export default class Parameter extends Vue {
 	padding-top calc(0.5 * (var(--layout-param-height) - var(--layout-input-height)))
 	padding-bottom calc(0.5 * (var(--layout-param-height) - var(--layout-input-height)))
 
-	&:hover
-		background var(--color-border)
-		--color-bg var(--color-border)
+	&:hover, &.popovering
+		background var(--color-parameter-hover)
+		--color-bg var(--color-parameter-hover)
 
 	&__label
 		overflow hidden
@@ -111,16 +152,6 @@ export default class Parameter extends Vue {
 
 		& > .grow
 			flex-grow 1
-
-	&__bind
-		position fixed
-		top 50%
-		left 50%
-		border-radius $border-radius
-		background var(--color-menu-bg)
-		enable-menu-color()
-		padding var(--layout-popover-padding)
-		background var(--color-bg)
 </style>
 
 

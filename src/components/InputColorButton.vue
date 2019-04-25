@@ -1,14 +1,18 @@
 <template>
-	<div class="InputColorButton" :selectable="true" :editing="isEditing" :selected="isSelected">
-		<button class="InputColorButton__button" @focus="onFocus" :style="previewStyles"/>
-		<Popover class="InputColorButton__popover" :active.sync="isEditing" placement="right-start">
+	<div class="InputColorButton" :selectable="true" :editing="editing" :selected="selected">
+		<button
+			class="InputColorButton__button"
+			@focus="onFocus"
+			:style="previewStyles"
+			@mousedown.right="onMousedownRight"
+		/>
+		<Popover class="InputColorButton__popover" :active.sync="editing" placement="right-start">
 			<div class="popper__arrow"/>
 			<div class="InputColorButton__popover-content">
 				<InputColorPicker class="InputColorButton__color-picker" :value="value" @input="onInput"/>
 				<div class="InputColorButton__parameters">
 					<InputDropdown
-						class="InputColorButton__mode"
-						theme="simple"
+						class="InputColorButton__mode simple"
 						:value="value[0]"
 						:values="['hsv', 'hsl', 'rgb', 'hex']"
 						:labels="['HSV', 'HSL', 'RGB', 'HEX']"
@@ -38,6 +42,7 @@ import InputColorPicker from './InputColorPicker.vue'
 import InputDropdown from './InputDropdown.vue'
 import Popover from '../components/common/Popover.vue'
 import SelectionManager from './SelectionManager.vue'
+import {buttons} from 'mouse-event'
 
 @Component({
 	components: {
@@ -48,14 +53,14 @@ import SelectionManager from './SelectionManager.vue'
 	}
 })
 export default class InputColorButton extends Vue {
-	public isSelected: boolean = false
+	public selected: boolean = false
 
 	@Prop([Array]) private value!: DataColor
 
 	@Inject({from: 'SelectionManager', default: null})
 	private readonly SelectionManager!: SelectionManager
 
-	private isEditing: boolean = false
+	private editing: boolean = false
 
 	get mode(): DataColorMode {
 		return this.value[0]
@@ -81,8 +86,13 @@ export default class InputColorButton extends Vue {
 		}
 	}
 
-	private onFocus() {
-		this.isEditing = true
+	private onMousedownRight(e: Event) {
+		// console.log(e)
+		e.preventDefault()
+	}
+
+	private onFocus(e: Event) {
+		this.editing = true
 		if (this.SelectionManager) {
 			this.SelectionManager.add(this, 'color')
 		}
@@ -124,7 +134,7 @@ export default class InputColorButton extends Vue {
 		&:hover
 			input-border-hover-style()
 
-		^[0][editing] &, ^[0][selected] &, &:active
+		^[0].editing &, ^[0].selected &, &:active
 			input-border-focus-style()
 
 	&__popover

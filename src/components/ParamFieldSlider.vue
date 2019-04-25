@@ -2,6 +2,7 @@
 	<div class="ParamFieldSlider grow">
 		<InputNumber class="param-field--1w" v-bind="$props" @input="onInput"/>
 		<InputSlider
+			v-if="!compact"
 			class="ParamFieldSlider__slider"
 			:value="value"
 			:min="min"
@@ -29,6 +30,7 @@ export default class ParamFieldSlider extends Vue {
 	@Prop(Number) private precision!: number
 	@Prop(String) private label!: string
 	@Prop(String) private unit!: string
+	@Prop({type: Boolean, default: false}) private compact!: boolean
 
 	private onInput(newValue: number) {
 		this.$emit('input', newValue)

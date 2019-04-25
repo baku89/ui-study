@@ -4,6 +4,9 @@
 			class="param-field--2w"
 			:value="value"
 			:precision="precision"
+			:max="max"
+			:min="min"
+			:step="step"
 			:unit="unit"
 			@input="onInput"
 		/>
@@ -23,6 +26,9 @@ import InputPoint from './InputPoint.vue'
 export default class ParamFieldPoint extends Vue {
 	@Prop(Array) private value!: number[]
 	@Prop(Number) private precision!: number
+	@Prop([Number, Array]) private min!: number | number[]
+	@Prop([Number, Array]) private max!: number | number[]
+	@Prop(Number) private step!: number
 	@Prop(String) private label!: string
 	@Prop(String) private unit!: string
 	@Prop({type: Boolean, default: true}) private keepProportion!: boolean

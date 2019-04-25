@@ -2,6 +2,17 @@ function lerp(a: number, b: number, t: number) {
 	return a + (b - a) * t
 }
 
+function fit(
+	value: number,
+	srcmin: number,
+	srcmax: number,
+	destmin: number,
+	destmax: number
+) {
+	const t = (value - srcmin) / (srcmax - srcmin)
+	return destmin + (destmax - destmin) * t
+}
+
 function clamp(value: number, min: number, max: number) {
 	return min < max
 		? value < min
@@ -77,6 +88,7 @@ function isInteger(value: number): boolean {
 
 export {
 	lerp,
+	fit,
 	clamp,
 	parseNumber,
 	toFixed,

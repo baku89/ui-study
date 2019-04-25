@@ -1,7 +1,7 @@
 <template>
 	<SelectionManager>
 		<div class="Settings ui">
-			<ParameterList :value="Config" :definition="DefinitionConfig" width="14em"/>
+			<ParameterList v-model="Config" :schema="SchemaConfig" width="14em"/>
 		</div>
 	</SelectionManager>
 </template>
@@ -9,7 +9,7 @@
 <script lang="ts">
 import {Component, Prop, Vue, Inject, Watch} from 'vue-property-decorator'
 
-import {DataConfig, DefinitionConfig} from '../core'
+import {DataConfig, SchemaConfig} from '../core'
 import components from '../components'
 import {DataColor} from '../data'
 import {convertColorElements} from '../util'
@@ -18,7 +18,7 @@ import {convertColorElements} from '../util'
 export default class Settings extends Vue {
 	@Inject({from: 'Config'}) private Config!: DataConfig
 
-	private DefinitionConfig = DefinitionConfig
+	private SchemaConfig = SchemaConfig
 }
 </script>
 

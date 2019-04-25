@@ -3,12 +3,12 @@
 		<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="onDragend">
 			<button
 				class="InputAngle__knob"
-				:dragging="isDragging"
+				:dragging="dragging"
 				ref="knob"
 				:style="{transform: `rotate(${this.value}deg)`}"
 			/>
 		</Drag>
-		<Portal v-if="isDragging">
+		<Portal v-if="dragging">
 			<svg class="svg-overlay">
 				<line class="guide" :x1="dragFrom[0]" :y1="dragFrom[1]" :x2="dragTo[0]" :y2="dragTo[1]"></line>
 				<SvgArcArrow :center="dragFrom" :radius="100" :start="0" :end="this.value"></SvgArcArrow>
@@ -39,7 +39,7 @@ import {DataConfig, DefaultConfig} from '../core'
 export default class InputAngle extends Vue {
 	@Prop(Number) private value!: number // in Degree
 
-	private isDragging: boolean = false
+	private dragging: boolean = false
 	private dragFrom: number[] = [0, 0]
 	private dragTo: number[] = [0, 0]
 
@@ -60,7 +60,7 @@ export default class InputAngle extends Vue {
 	}
 
 	private onDragstart({current}: MouseDragEvent) {
-		this.isDragging = true
+		this.dragging = true
 
 		const $knob = this.$refs.knob as HTMLElement
 		this.dragFrom = getDOMCenter($knob)
@@ -97,7 +97,7 @@ export default class InputAngle extends Vue {
 	}
 
 	private onDragend() {
-		this.isDragging = false
+		this.dragging = false
 	}
 }
 </script>
@@ -126,7 +126,7 @@ export default class InputAngle extends Vue {
 	&:focus
 		background var(--color-active)
 
-	&[dragging]
+	&.dragging
 		top calc(10% - 1px)
 		left calc(10% - 1px)
 		z-index 200

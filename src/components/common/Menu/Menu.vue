@@ -132,17 +132,19 @@ export default class Menu extends Vue {
 @import '../../../style/config.styl'
 
 .Menu
+	enable-menu-color()
 	overflow hidden
 	border-radius $border-radius
-	background var(--color-menu-bg)
-	color var(--color-menu-text)
+	background var(--color-bg)
+	box-shadow 0 0 0 1px var(--color-border) inset
+	color var(--color-text)
 	user-select none
 
 	&__filter
 		display block
 		margin 0.5em
 		padding 0 0.3em
-		border 1px solid var(--color-menu-border)
+		border 1px solid var(--color-border)
 		border-radius $border-radius
 		font-family var(--font-normal)
 		line-height var(--layout-input-height)

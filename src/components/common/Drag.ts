@@ -1,11 +1,11 @@
 import {Component, Vue, Prop, Inject} from 'vue-property-decorator'
 import mouse from 'mouse-event'
 import {vec2} from 'gl-matrix'
-import keycode from 'keycode'
 
 import {clamp} from '../../math'
 import {MouseDragEvent} from '../../util'
 import {DataConfig, DefaultConfig} from '../../core'
+import BindManager, {BindEvent} from '../../core/BindManager'
 
 @Component
 export default class Drag extends Vue {
@@ -48,7 +48,7 @@ export default class Drag extends Vue {
 		this.absPrev = vec2.create()
 
 		this.onMousedown = this.onMousedown.bind(this)
-		this.onKeyToggle = this.onKeyToggle.bind(this)
+		this.onBindToggle = this.onBindToggle.bind(this)
 		this.onMousemove = this.onMousemove.bind(this)
 		this.onMouseup = this.onMouseup.bind(this)
 	}
@@ -90,8 +90,8 @@ export default class Drag extends Vue {
 				abort: this.quitDrag,
 				originalEvent: e
 			}
-			window.addEventListener('keydown', this.onKeyToggle)
-			window.addEventListener('keyup', this.onKeyToggle)
+			BindManager.on('press', this.onBindToggle)
+			BindManager.on('release', this.onBindToggle)
 			this.$emit('dragstart', event)
 			vec2.copy(this.prev, this.current)
 		} else {
@@ -103,13 +103,11 @@ export default class Drag extends Vue {
 		window.addEventListener('mouseup', this.onMouseup)
 	}
 
-	private onKeyToggle(e: KeyboardEvent) {
-		const key = keycode(e)
+	private onBindToggle(e: BindEvent) {
+		const {address} = e
 		const {keyFaster, keySlower, keySymmetry} = this.Config
 
-		if (
-			[keyFaster, keySlower, keySymmetry].some(bind => bind.address === key)
-		) {
+		if ([keyFaster, keySlower, keySymmetry].includes(address)) {
 			vec2.set(this.delta, 0, 0)
 			const event: MouseDragEvent = {
 				current: this.current,
@@ -155,8 +153,8 @@ export default class Drag extends Vue {
 						originalEvent: e
 					}
 
-					window.addEventListener('keydown', this.onKeyToggle)
-					window.addEventListener('keyup', this.onKeyToggle)
+					BindManager.on('press', this.onBindToggle)
+					BindManager.on('release', this.onBindToggle)
 					this.$emit('dragstart', event)
 					vec2.copy(this.prev, this.origin)
 				}
@@ -195,8 +193,8 @@ export default class Drag extends Vue {
 		this.dragStarted = false
 		window.removeEventListener('mousemove', this.onMousemove)
 		window.removeEventListener('mouseup', this.onMouseup)
-		window.removeEventListener('keydown', this.onKeyToggle)
-		window.removeEventListener('keyup', this.onKeyToggle)
+		BindManager.off('press', this.onBindToggle)
+		BindManager.off('release', this.onBindToggle)
 	}
 
 	private setAbsCoordByMouseEvent(coord: vec2, e: MouseEvent) {

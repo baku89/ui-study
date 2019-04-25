@@ -48,10 +48,10 @@ export default class ParamFieldScale extends Vue {
 	@Prop({type: [Number, Array], required: true}) private value!:
 		| number
 		| number[]
+	@Prop(Number) private precision!: number
 	@Prop([Number, Array]) private min!: number | number[]
 	@Prop([Number, Array]) private max!: number | number[]
 	@Prop(Number) private step!: number
-	@Prop(Number) private precision!: number
 	@Prop(String) private label!: string[]
 	@Prop(Array) private labels!: string[]
 	@Prop({type: Boolean, default: null}) private keepProportion!: boolean | null

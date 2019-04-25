@@ -1,10 +1,9 @@
 <template>
 	<div class="ParamFieldBind param-field--2w">
 		<InputDropdown
-			class="ParamFieldBind__device left"
+			class="ParamFieldBind__device left bind"
 			:values="['key', 'osc', 'midi', 'gamepad']"
 			:labels="['K️ey', 'OSC', 'MIDI', '🎮']"
-			theme="bind"
 			:value="device"
 			@input="updateDevice"
 		/>

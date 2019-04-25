@@ -2,16 +2,16 @@
 	<div
 		class="InputNumber"
 		:selectable="true"
-		:editing="isEditing"
-		:selected="isSelected"
-		:updating="isDragging || updatedRecently"
+		:editing="editing"
+		:selected="selected"
+		:updating="dragging || updatedRecently"
 	>
 		<Drag
 			:minDragDistance="3"
 			detectDirection="horizontal"
 			@dragstart="onDragstart"
 			@drag="onDrag"
-			@dragend="isDragging = false"
+			@dragend="dragging = false"
 			@click="onClick"
 		>
 			<div class="InputNumber__display">
@@ -26,11 +26,11 @@
 			v-model="inputValue"
 			@focus="onFocus"
 			@change="onChange"
-			@blur="isEditing = false"
+			@blur="editing = false"
 			@keydown="onKeydown"
 			ref="input"
 		>
-		<Portal v-if="isDragging">
+		<Portal v-if="dragging">
 			<svg class="svg-overlay">
 				<SvgOverlayHorizontalDrag
 					:position="drag.position"
@@ -67,7 +67,7 @@ import SvgOverlayHorizontalDrag from './common/SvgOverlayHorizontalDrag.vue'
 	}
 })
 export default class InputNumber extends Vue {
-	public isSelected: boolean = false
+	public selected: boolean = false
 
 	@Prop({type: Number, required: true}) private value!: number
 	@Prop({type: Number, default: 1}) private precision!: number
@@ -79,8 +79,8 @@ export default class InputNumber extends Vue {
 
 	private inputValue: string = this.value.toString()
 
-	private isEditing: boolean = false
-	private isDragging: boolean = false
+	private editing: boolean = false
+	private dragging: boolean = false
 
 	private drag = {
 		position: [0, 0],
@@ -155,11 +155,11 @@ export default class InputNumber extends Vue {
 		const input = this.$refs.input as HTMLInputElement
 		input.focus()
 		input.select()
-		this.isEditing = true
+		this.editing = true
 	}
 
 	private onFocus(e: Event) {
-		this.isEditing = true
+		this.editing = true
 		if (this.SelectionManager) {
 			this.SelectionManager.add(this)
 		}
@@ -192,7 +192,7 @@ export default class InputNumber extends Vue {
 		this.$set(drag.position, 0, current[0])
 		this.$set(drag.position, 1, current[1])
 
-		this.isDragging = true
+		this.dragging = true
 	}
 
 	private onDrag({delta, current}: MouseDragEvent) {
@@ -249,11 +249,9 @@ export default class InputNumber extends Vue {
 	background var(--color-field)
 
 	&:hover
-		z-index 1
 		input-border-hover-style()
 
-	&[editing], &[selected], &[updating]
-		z-index 3
+	&.editing, &.selected, &.updating
 		input-border-focus-style()
 
 	&__display, &__input
@@ -270,7 +268,7 @@ export default class InputNumber extends Vue {
 		z-index 5
 		overflow hidden
 
-		^[0][editing] > &
+		^[0].editing > &
 			visibility hidden
 
 	&__label
@@ -290,7 +288,7 @@ export default class InputNumber extends Vue {
 	&__input
 		opacity 0
 
-		^[0][editing] > &
+		^[0].editing > &
 			opacity 1
 </style>
 

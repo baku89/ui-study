@@ -3,7 +3,7 @@
 		<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="onDragend">
 			<button
 				class="InputPoint__knob"
-				:dragging="isDragging"
+				:dragging="dragging"
 				ref="knob"
 				@keydown="onKeydown"
 				@keyup="onKeyup"
@@ -19,7 +19,7 @@
 				</svg>
 			</button>
 		</Drag>
-		<svg class="InputPoint__svg svg-overlay" v-if="isDragging">
+		<svg class="InputPoint__svg svg-overlay" v-if="dragging">
 			<line class="guide" :x1="dragFrom[0]" :y1="dragTo[1]" :x2="dragTo[0]" :y2="dragTo[1]"></line>
 			<line class="guide" :x1="dragTo[0]" :y1="dragFrom[1]" :x2="dragTo[0]" :y2="dragTo[1]"></line>
 			<SvgArrow :from="dragFrom" :to="[dragFrom[0], dragTo[1]]"></SvgArrow>
@@ -62,7 +62,7 @@ export default class InputPoint extends Vue {
 
 	private knobOffset: number[] = [0, 0]
 
-	private isDragging: boolean = false
+	private dragging: boolean = false
 	private dragFrom: number[] = [0, 0]
 	private dragTo: number[] = [0, 0]
 
@@ -104,7 +104,7 @@ export default class InputPoint extends Vue {
 	}
 
 	private onDragstart(e: {current: vec2}) {
-		this.isDragging = true
+		this.dragging = true
 
 		const $knob = this.$refs.knob as HTMLElement
 		this.dragFrom = getDOMCenter($knob)
@@ -127,7 +127,7 @@ export default class InputPoint extends Vue {
 	}
 
 	private onDragend() {
-		this.isDragging = false
+		this.dragging = false
 	}
 }
 </script>
@@ -155,7 +155,7 @@ export default class InputPoint extends Vue {
 	&:focus
 		background var(--color-active)
 
-	&[dragging]
+	&.dragging
 		z-index 200
 		background var(--color-active)
 		box-shadow 0 0 0 1px var(--color-active)

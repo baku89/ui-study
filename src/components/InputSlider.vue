@@ -7,7 +7,7 @@
 			@drag="onDrag"
 			@dragend="onDragend"
 		>
-			<div class="InputSlider__slit" ref="slit" :dragging="isDragging">
+			<div class="InputSlider__slit" ref="slit" :dragging="dragging">
 				<div class="InputSlider__accum" :style="accumStyles"/>
 				<div class="InputSlider__knob" :exceeded="isExceeded" ref="knob" :style="knobStyles"/>
 			</div>
@@ -41,7 +41,7 @@ export default class InputSlider extends Vue {
 
 	private dragStartValue!: number
 
-	private isDragging: boolean = false
+	private dragging: boolean = false
 
 	private get percent(): number {
 		return ratio(this.value, this.min, this.max, true) * 100
@@ -70,7 +70,7 @@ export default class InputSlider extends Vue {
 	}
 
 	private onDragstart(e: {current: vec2; originalEvent: MouseEvent}) {
-		this.isDragging = true
+		this.dragging = true
 
 		if (e.originalEvent.target === this.$refs.knob) {
 			this.dragStartValue = this.value
@@ -103,7 +103,7 @@ export default class InputSlider extends Vue {
 	}
 
 	private onDragend() {
-		this.isDragging = false
+		this.dragging = false
 	}
 }
 </script>
@@ -140,7 +140,7 @@ export default class InputSlider extends Vue {
 		border-radius 1.5px
 		background var(--color-control)
 
-		:hover > &, [dragging] > &
+		:hover > &, .dragging > &
 			background var(--color-active)
 
 	&__knob
@@ -158,12 +158,12 @@ export default class InputSlider extends Vue {
 			border 1px solid var(--color-control)
 			background var(--color-bg) !important
 
-		^[0]__slit:hover &, ^[0]__slit[dragging] > &
+		^[0]__slit:hover &, ^[0]__slit.dragging > &
 			background var(--color-active)
 
 			&[exceeded]
 				border-color var(--color-active)
 
-		^[0]__slit[dragging] > &
+		^[0]__slit.dragging > &
 			box-shadow 0 0 0 1px var(--color-active), 0 0 0 2px var(--color-bg)
 </style>

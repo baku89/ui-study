@@ -1,7 +1,7 @@
 <template>
-	<div class="ParamFieldColor">
-		<InputColorButton class="param-field--color-button" :value="value" @input="onInput"/>
-		<InputColor class="param-field--3n" :value="value" @input="onInput"/>
+	<div class="ParamFieldColor" :class="{compact}">
+		<InputColorButton class="ParamFieldColor__color-button" :value="value" @input="onInput"/>
+		<InputColor v-if="!compact" class="param-field--3n" :value="value" @input="onInput"/>
 	</div>
 </template>
 
@@ -18,6 +18,7 @@ import InputColorButton from './InputColorButton.vue'
 })
 export default class ParamFieldColor extends Vue {
 	@Prop(Array) private value!: DataColor
+	@Prop({type: Boolean, default: false}) private compact!: boolean
 
 	private onInput(newValue: number[]) {
 		this.$emit('input', newValue)
@@ -31,4 +32,11 @@ export default class ParamFieldColor extends Vue {
 
 .ParamFieldColor
 	display flex
+
+	&__color-button
+		margin-right var(--layout-param-field-gap-box)
+		width 'calc(%s / 1.5 - %s)' % (var(--layout-param-field-1w) var(--layout-param-field-gap-box)) !important
+
+		^[0].compact &
+			margin-right 0
 </style>

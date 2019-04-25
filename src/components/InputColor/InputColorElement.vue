@@ -2,16 +2,16 @@
 	<div
 		class="InputColorElement"
 		:selectable="true"
-		:editing="isEditing"
-		:selected="isSelected"
-		:updating="isDragging || updatedRecently"
+		:editing="editing"
+		:selected="selected"
+		:updating="dragging || updatedRecently"
 	>
 		<Drag
 			:minDragDistance="3"
 			detectDirection="vertical"
 			@dragstart="onDragstart"
 			@drag="onDrag"
-			@dragend="isDragging = false"
+			@dragend="dragging = false"
 			@click="onClick"
 		>
 			<div class="InputColorElement__display">
@@ -29,11 +29,11 @@
 			v-model="inputValue"
 			@focus="onFocus"
 			@change="onChange"
-			@blur="isEditing = false"
+			@blur="editing = false"
 			@keydown="onKeydown"
 			ref="input"
 		>
-		<Portal v-if="isDragging">
+		<Portal v-if="dragging">
 			<div class="svg-overlay">
 				<GradientPalette
 					class="InputColorElement__slit"
@@ -82,15 +82,15 @@ const SLIT_WIDTH = 6
 	}
 })
 export default class InputColorElement extends Vue {
-	public isSelected: boolean = false
+	public selected: boolean = false
 
 	@Prop(Array) private color!: DataColor
 	@Prop(Number) private varying!: number
 
 	private inputValue: string = ''
 
-	private isEditing: boolean = false
-	private isDragging: boolean = false
+	private editing: boolean = false
+	private dragging: boolean = false
 	private slitMaxY: number = 0
 	private slitMinY: number = 0
 	private slitLeft: number = 0
@@ -147,7 +147,7 @@ export default class InputColorElement extends Vue {
 	}
 
 	private onFocus(e: Event) {
-		this.isEditing = true
+		this.editing = true
 		if (this.SelectionManager) {
 			this.SelectionManager.add(this)
 		}
@@ -187,7 +187,7 @@ export default class InputColorElement extends Vue {
 		const input = this.$refs.input as HTMLInputElement
 		input.focus()
 		input.select()
-		this.isEditing = true
+		this.editing = true
 
 		const forceChange = (e: Event) => {
 			if (e.target !== input) {
@@ -205,7 +205,7 @@ export default class InputColorElement extends Vue {
 		this.slitMaxY = e.current[1] - (1 - position) * SLIT_HEIGHT
 		this.slitLeft = getDOMCenter(this.$refs.input as HTMLElement)[0]
 		this.previewY = e.current[1]
-		this.isDragging = true
+		this.dragging = true
 	}
 
 	private onDrag(e: {current: vec2; delta: vec2}) {
@@ -242,11 +242,9 @@ export default class InputColorElement extends Vue {
 	background var(--color-field)
 
 	&:hover
-		z-index 1
 		input-border-hover-style()
 
-	&[editing], &[selected], &[updating]
-		z-index 2
+	&.editing, &.selected, &.updating
 		input-border-focus-style()
 
 	&__display, &__input
@@ -263,7 +261,7 @@ export default class InputColorElement extends Vue {
 		z-index 5
 		overflow hidden
 
-		^[0][editing] > &
+		^[0].editing > &
 			visibility hidden
 
 	&__label
@@ -283,7 +281,7 @@ export default class InputColorElement extends Vue {
 	&__input
 		opacity 0
 
-		^[0][editing] > &
+		^[0].editing > &
 			opacity 1
 
 	&__slit

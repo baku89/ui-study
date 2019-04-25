@@ -7,7 +7,7 @@
 			@drag="onDragSV('drag', $event)"
 			@dragend="onDragSV('dragend', $event)"
 		>
-			<div class="InputColorPicker__sv" :dragging="isDraggingSV">
+			<div class="InputColorPicker__sv" :dragging="draggingSV">
 				<div class="InputColorPicker__sv-inner">
 					<GradientPalette
 						class="InputColorPicker__palette"
@@ -26,7 +26,7 @@
 			@drag="onDragHue('drag', $event)"
 			@dragend="onDragHue('dragend', $event)"
 		>
-			<div class="InputColorPicker__hue" :dragging="isDraggingHue">
+			<div class="InputColorPicker__hue" :dragging="draggingHue">
 				<GradientPalette
 					class="InputColorPicker__palette"
 					:color="gradientPaletteColor"
@@ -58,8 +58,8 @@ import Drag from './common/Drag'
 export default class InputColorPicker extends Vue {
 	@Prop([Array]) private value!: DataColor
 
-	private isDraggingSV: boolean = false
-	private isDraggingHue: boolean = false
+	private draggingSV: boolean = false
+	private draggingHue: boolean = false
 
 	private get mode(): DataColorMode {
 		return this.value[0]
@@ -106,9 +106,9 @@ export default class InputColorPicker extends Vue {
 
 	private onDragSV(type: 'dragstart' | 'drag' | 'dragend', e: MouseDragEvent) {
 		if (type === 'dragstart') {
-			this.isDraggingSV = true
+			this.draggingSV = true
 		} else if (type === 'dragend') {
-			this.isDraggingSV = false
+			this.draggingSV = false
 		}
 
 		if (type !== 'dragend') {
@@ -120,9 +120,9 @@ export default class InputColorPicker extends Vue {
 
 	private onDragHue(type: 'dragstart' | 'drag' | 'dragend', e: MouseDragEvent) {
 		if (type === 'dragstart') {
-			this.isDraggingHue = true
+			this.draggingHue = true
 		} else if (type === 'dragend') {
-			this.isDraggingHue = false
+			this.draggingHue = false
 		}
 
 		if (type !== 'dragend') {
@@ -158,7 +158,7 @@ export default class InputColorPicker extends Vue {
 		border 1px solid var(--color-border)
 		border-radius $border-radius
 
-		&[dragging]
+		&.dragging
 			overflow visible
 			cursor none
 
@@ -193,7 +193,7 @@ export default class InputColorPicker extends Vue {
 		border-radius 50%
 		box-shadow 0 0 0 0.5px var(--color-text)
 
-		[dragging] > * > &, [dragging] > &
+		.dragging > * > &, .dragging > &
 			z-index 1000
 			margin-top -0.5 * $color-preview-size
 			margin-left -0.5 * $color-preview-size

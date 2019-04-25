@@ -1,5 +1,5 @@
 <template>
-	<div class="InputTime" :editing="isEditing" :updating="isDragging">
+	<div class="InputTime" :editing="editing" :updating="dragging">
 		<Drag
 			:minDragDistance="3"
 			detectDirection="horizontal"
@@ -50,13 +50,13 @@
 			class="InputTime__input"
 			type="text"
 			:value="smpte"
-			@focus="isEditing = true"
+			@focus="editing = true"
 			@change="onChange"
-			@blur="isEditing = false"
+			@blur="editing = false"
 			@keydown="onKeydown"
 			ref="input"
 		>
-		<Portal v-if="isDragging">
+		<Portal v-if="dragging">
 			<svg class="svg-overlay">
 				<SvgOverlayHorizontalDrag
 					:position="drag.position"
@@ -104,10 +104,10 @@ export default class InputTime extends Vue {
 	private minutes: string = '00'
 	private hours: string = '00'
 
-	private isEditing: boolean = false
+	private editing: boolean = false
 	private activePartIndex: number | null = null
 
-	private isDragging: boolean = false
+	private dragging: boolean = false
 	private drag = {
 		position: [0, 0],
 		startValue: 0,
@@ -231,7 +231,7 @@ export default class InputTime extends Vue {
 	}
 
 	private onMouseleavePart() {
-		if (!this.isDragging) {
+		if (!this.dragging) {
 			this.activePartIndex = null
 		}
 	}
@@ -245,7 +245,7 @@ export default class InputTime extends Vue {
 		this.$set(drag.position, 1, current[1])
 
 		this.activePartIndex = 3
-		this.isDragging = true
+		this.dragging = true
 
 		/*
 		this.$set(this.dragFrom, 0, current[0])
@@ -267,7 +267,7 @@ export default class InputTime extends Vue {
 		}
 
 		this.activePartIndex = 3
-		this.isDragging = true
+		this.dragging = true
 		*/
 	}
 
@@ -333,7 +333,7 @@ export default class InputTime extends Vue {
 	}
 
 	private onDragend() {
-		this.isDragging = false
+		this.dragging = false
 		this.activePartIndex = null
 	}
 
@@ -350,7 +350,7 @@ export default class InputTime extends Vue {
 		}
 
 		input.focus()
-		this.isEditing = true
+		this.editing = true
 
 		const forceChange = (evt: Event) => {
 			if (evt.target !== input) {
@@ -383,11 +383,9 @@ export default class InputTime extends Vue {
 	background var(--color-field)
 
 	&:hover
-		z-index 1
 		input-border-hover-style()
 
-	&[editing], &[updating]
-		z-index 1
+	&.editing, &.updating
 		input-border-focus-style()
 
 	&__display, &__input
@@ -406,7 +404,7 @@ export default class InputTime extends Vue {
 		justify-content center
 		overflow hidden
 
-		^[0][editing] > &
+		^[0].editing > &
 			visibility hidden
 
 	&__parts
@@ -418,6 +416,6 @@ export default class InputTime extends Vue {
 	&__input
 		opacity 0
 
-		^[0][editing] > &
+		^[0].editing > &
 			opacity 1
 </style>

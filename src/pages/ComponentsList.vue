@@ -8,31 +8,12 @@
 			<p>Slider, Scale, Position, and Color.</p>
 			<div class="ui">
 				<div class="param">
-					<Parameter label="Radius" v-model="ex1.radius">
-						<ParamFieldSlider class="input" v-model="ex1.radius" :min="0" :max="50"/>
-					</Parameter>
-					<Parameter label="Scale">
-						<ParamFieldScale class="input" v-model="ex1.scale" unit="%"/>
-					</Parameter>
-					<Parameter label="Position">
-						<ParamFieldPoint class="input" v-model="ex1.position" :min="0" :max="100" unit="%"/>
-					</Parameter>
-					<Parameter label="Fill">
-						<ParamFieldColor class="input" v-model="ex1.fill"/>
-					</Parameter>
-					<Parameter label="Stroke">
-						<ParamFieldColor class="input" v-model="ex1.stroke"/>
-					</Parameter>
-					<Parameter label="Stroke Width" v-model="ex1.strokeWidth">
-						<ParamFieldSlider
-							class="input"
-							v-model="ex1.strokeWidth"
-							:min="0"
-							:max="10"
-							:step="1"
-							:precision="0"
-						/>
-					</Parameter>
+					<ParameterList
+						v-model="ex1"
+						:defaultSchema="ex1Schema"
+						:schema="ex1UserSchema"
+						@update:schema="onUserSchemaUpdated('ex1UserSchema', $event)"
+					/>
 				</div>
 				<div class="preview">
 					<div class="aspect">
@@ -58,15 +39,7 @@
 			<p>String, Angle, and Range (min/max).</p>
 			<div class="ui">
 				<div class="param">
-					<Parameter label="Text">
-						<ParamFieldString class="input long" v-model="ex2.text"/>
-					</Parameter>
-					<Parameter label="Angle">
-						<ParamFieldAngle class="input" v-model="ex2.rotation"/>
-					</Parameter>
-					<Parameter label="Trim">
-						<ParamFieldRange class="input" v-model="ex2.trim" :min="0" :max="100" unit="%"/>
-					</Parameter>
+					<ParameterList v-model="ex2" :defaultSchema="ex2Schema" :schema.sync="ex2UserSchema"/>
 				</div>
 				<div class="preview">
 					<div class="aspect">
@@ -90,19 +63,7 @@
 			<p>Dropdown, Checkbox, and Select.</p>
 			<div class="ui">
 				<div class="param">
-					<Parameter label="Image">
-						<InputDropdown
-							class="input long"
-							v-model="ex3.image"
-							:values="['Mochi', 'Dango', 'Beko-mochi']"
-						/>
-					</Parameter>
-					<Parameter label="Inverted">
-						<InputCheckbox class="input" v-model="ex3.inverted"/>
-					</Parameter>
-					<Parameter label="Edge">
-						<InputMode class="input no-grow" v-model="ex3.edge" :values="['Rounded', 'Circle', 'Glow']"/>
-					</Parameter>
+					<ParameterList v-model="ex3" :defaultSchema="ex3Schema" :schema.sync="ex3UserSchema"/>
 				</div>
 				<div class="preview">
 					<div class="aspect" :style="{filter: ex3.inverted ? 'invert(1)' : ''}">
@@ -159,13 +120,13 @@
 							:max="ex6.max"
 							style="margin-right: .5em;"
 						/>
-						<InputButton class="center" label="«-1" @click="ex6.playing = false; ex6.time--"/>
+						<InputButton class="left" label="«-1" @click="ex6.playing = false; ex6.time--"/>
 						<InputButton
 							class="center"
 							@click="togglePlay"
 							:icon="ex6.playing ? './assets/icon_pause.svg' : './assets/icon_play.svg'"
 						/>
-						<InputButton class="center" label="+1»" @click="ex6.playing = false; ex6.time++"/>
+						<InputButton class="right" label="+1»" @click="ex6.playing = false; ex6.time++"/>
 					</Parameter>
 					<Parameter label="Value">
 						<ParamFieldSlider
@@ -173,7 +134,7 @@
 							:value="ex6.currentValue"
 							@input="onUpdateCurrentValue"
 							:min="0"
-							:max="255"
+							:max="1"
 						/>
 					</Parameter>
 				</div>
@@ -184,7 +145,11 @@
 					:autoScroll="ex6.playing"
 					@scrubstart="ex6.playing = false"
 				>
-					<TimelineDraw :drawFunc="draw" ref="timelineDraw"/>
+					<TimelineDraw
+						:drawFunc="draw"
+						style="height: calc(var(--layout-input-height) * 2)"
+						ref="timelineDraw"
+					/>
 				</Timeline>
 			</div>
 		</div>
@@ -209,12 +174,12 @@ const PI_2 = Math.PI * 2
 	data() {
 		const time = 2
 		const min = 0
-		const max = 6000
+		const max = 240
 		// const colors = new Uint8ClampedArray(
 		// 	Array((max - min + 1) * 4)
 		// 		.fill(0)
 		// 		.map((v, i) => (i % 4 === 3 ? 255 : 0))
-		const values = new Uint8ClampedArray(Array(max - min + 1).fill(0))
+		const values = new Float32Array(Array(max - min + 1).fill(0.5))
 
 		return {
 			ex1: {
@@ -225,16 +190,75 @@ const PI_2 = Math.PI * 2
 				stroke: ['hsv', [331, 83, 89]],
 				strokeWidth: 3
 			},
+			ex1Schema: {
+				radius: {ui: 'slider', min: 0, max: 50, unit: '%'},
+				scale: {ui: 'scale', keepProportion: false},
+				position: {ui: 'point', unit: '%'},
+				fill: {ui: 'color'},
+				stroke: {ui: 'color'},
+				strokeWidth: {ui: 'slider', min: 0, max: 10, step: 1, precision: 0}
+			},
+			ex1UserSchema: {
+				radius: {
+					bindList: [
+						{
+							address: '/key/1',
+							method: 'set',
+							option: {
+								value: 0
+							}
+						},
+						{
+							address: '/key/u',
+							method: 'add',
+							option: {
+								value: 1
+							}
+						},
+						{
+							address: '/midi/ch0',
+							method: 'map',
+							option: {
+								from: [0, 127],
+								to: [0, 50]
+							}
+						}
+					]
+				},
+				scale: {
+					bindList: [
+						{
+							address: '/key/2',
+							method: 'set',
+							option: {
+								value: [2, 2]
+							}
+						}
+					]
+				}
+			},
 			ex2: {
 				text: 'Hello World',
 				rotation: 0,
 				trim: [0, 50]
 			},
+			ex2Schema: {
+				text: {ui: 'string'},
+				rotation: {ui: 'angle'},
+				trim: {ui: 'range', min: 0, max: 100, unit: '%'}
+			},
+			ex2UserSchema: {},
 			ex3: {
 				image: 'Mochi',
 				inverted: false,
 				edge: 'Rounded'
 			},
+			ex3Schema: {
+				image: {ui: 'dropdown', values: ['Mochi', 'Dango', 'Beko-mochi']},
+				inverted: {ui: 'checkbox'},
+				edge: {ui: 'mode', values: ['Rounded', 'Circle', 'Glow']}
+			},
+			ex3UserSchema: {},
 			ex4: {
 				seed: 1
 			},
@@ -261,6 +285,10 @@ export default class ComponentsList extends Vue {
 		const end = Math.floor((max / 100) * len)
 
 		return text.slice(start, end)
+	}
+
+	private onUserSchemaUpdated(name: string, schema: any[]) {
+		this.$set(this, name, schema)
 	}
 
 	private togglePlay() {
@@ -326,8 +354,8 @@ export default class ComponentsList extends Vue {
 		height: number
 	) {
 		const value = this.$data.ex6.values[frame]
-		ctx.fillStyle = `rgb(${value}, ${value}, ${value})`
-		ctx.fillRect(0, 0, width, height)
+		ctx.fillStyle = 'red' // 'var(--color-text)' //`rgb(${value}, ${value}, ${value})`
+		ctx.fillRect(0, height * (1 - value), width, height * value)
 	}
 }
 </script>

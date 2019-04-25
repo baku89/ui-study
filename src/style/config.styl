@@ -10,13 +10,12 @@ input-border-style()
 	background var(--color-field)
 
 input-placement-modifier-root()
-	&.left, &.center, &.right, &.top, &.middle, &.bottom
-		z-index 1
+	z-index 1
 
 	&:hover
 		z-index 2
 	
-	&:active, &:focus, &[editing]
+	&:active, &:focus, &.editing, &.selected, &.updating
 		z-index 3
 	
 	&.left
@@ -71,3 +70,6 @@ enable-menu-color()
 	--color-text var(--color-menu-text)
 	--color-border var(--color-menu-border)
 	--color-field var(--color-menu-field)
+
+	color var(--color-text)
+	background var(--color-bg)

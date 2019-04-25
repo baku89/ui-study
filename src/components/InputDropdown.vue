@@ -1,10 +1,10 @@
 <template>
-	<div class="InputDropdown" :class="[theme]" :editing="isEditing">
+	<div class="InputDropdown" :class="{editing}">
 		<select
 			class="InputDropdown__select"
 			:value="value"
-			@focus="isEditing = true"
-			@blur="isEditing = false"
+			@focus="editing = true"
+			@blur="editing = false"
 			@change="onChange"
 		>
 			<option
@@ -27,9 +27,8 @@ export default class InputDropdown extends Vue {
 	@Prop([String, Number]) private value!: ValueType
 	@Prop(Array) private values!: ValueType[]
 	@Prop(Array) private labels!: string[]
-	@Prop(String) private theme!: string
 
-	private isEditing: boolean = false
+	private editing: boolean = false
 
 	private onChange(e: Event) {
 		const {selectedIndex} = e.target as HTMLSelectElement
@@ -51,16 +50,6 @@ $right-arrow-width = 1em
 	height var(--layout-input-height)
 	input-placement-modifier-root()
 
-	&.left
-		z-index 1
-		margin-right -1px
-
-		&:hover
-			z-index 2
-
-		&:active, &:focus
-			z-index 3
-
 	&__select
 		width 100%
 		input-border-style()
@@ -70,12 +59,6 @@ $right-arrow-width = 1em
 		padding-left 0.4em
 		font-family var(--font-normal)
 		line-height 'calc(%s - 2px)' % var(--layout-input-height)
-
-		&:hover
-			z-index 2
-
-		&:active, &:focus
-			z-index 3
 
 		^[0].simple > &
 			border none

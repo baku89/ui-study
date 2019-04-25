@@ -227,11 +227,11 @@ export default class InputRange extends Vue {
 			border 1px solid var(--color-control)
 			background var(--color-bg)
 
-		&[hover], &[dragging]
+		&[hover], &.dragging
 			border none
 			background var(--color-active)
 
-		&[dragging]
+		&.dragging
 			box-shadow 0 0 0 1px var(--color-active), 0 0 0 2px var(--color-bg)
 
 	&__edge
@@ -253,12 +253,12 @@ export default class InputRange extends Vue {
 			height var(--layout-input-height)
 			content ' '
 
-		&[hover], &[dragging]
+		&[hover], &.dragging
 			border-color var(--color-active)
 			background var(--color-active)
 			box-shadow 0 0 0 1px var(--color-bg)
 
-		&[dragging]
+		&.dragging
 			margin 'calc(%s - 2px)' % ($bar-width / -2)
 			border-width 2px
 

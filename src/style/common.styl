@@ -17,7 +17,7 @@ global-reset()
 	--color-bg #f0f0f0
 	--color-field #f9f9f9
 	--color-text #444444
-	--color-parameter-hover #e8e8e8
+	--color-parameter-hover #e4e4e4
 	--color-seek #ff3854
 	--font-monospace 'Roboto Condensed', monospace, sans-serif
 	--font-code 'Fira Code', monospace, sans-serif
@@ -65,9 +65,6 @@ html
 
 // Parameter
 .param-field
-	&--color-button
-		margin-right var(--layout-param-field-gap-box)
-		width 'calc(%s / 1.5 - %s)' % (var(--layout-param-field-1w) var(--layout-param-field-gap-box)) !important
 
 	&--1w, &--2w, &--3n, &--4n
 		margin-right var(--layout-param-field-gap-widget)

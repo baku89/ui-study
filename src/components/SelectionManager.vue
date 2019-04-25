@@ -2,8 +2,8 @@
 	<div class="SelectionManager">
 		<slot/>
 		<Popover class="SelectionManager__popover" :active="showControl" ref="popover">
-			<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="isDragging = false">
-				<ul class="SelectionManager__menu" :selectable="true" :dragging="isDragging">
+			<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="dragging = false">
+				<ul class="SelectionManager__menu" :selectable="true" :dragging="dragging">
 					<li v-if="controls.add" class="SelectionManager__control">
 						<InputIconButton src="./assets/icon_plus.svg" mode="add"/>
 					</li>
@@ -25,7 +25,7 @@
 				</ul>
 			</Drag>
 		</Popover>
-		<Portal v-if="isDragging">
+		<Portal v-if="dragging">
 			<svg class="svg-overlay">
 				<SvgOverlayHorizontalDrag
 					:position="drag.position"
@@ -56,7 +56,7 @@ import {DefaultConfig, DataConfig} from '../core'
 import BindManager from '../core/BindManager'
 
 interface SelectableNode<T> {
-	isSelected: boolean
+	selected: boolean
 	updateValue: (newValue: T) => void
 	value?: T
 	_props: {
@@ -91,7 +91,7 @@ export default class SelectionManager extends Vue {
 
 	private items: Selection[] = []
 
-	private isDragging: boolean = false
+	private dragging: boolean = false
 	private drag: {
 		startValues: Array<number | DataColor>
 		inc: number
@@ -127,10 +127,10 @@ export default class SelectionManager extends Vue {
 			selection => node === selection.node
 		)
 		if (existingIndex === -1) {
-			node.isSelected = true
+			node.selected = true
 			this.items.push({node, context})
 		} else {
-			node.isSelected = false
+			node.selected = false
 			this.items.splice(existingIndex, 1)
 		}
 
@@ -185,7 +185,7 @@ export default class SelectionManager extends Vue {
 
 	private deselectAll() {
 		for (const item of this.items) {
-			item.node.isSelected = false
+			item.node.selected = false
 		}
 		this.items.splice(0, this.items.length)
 	}
@@ -205,9 +205,9 @@ export default class SelectionManager extends Vue {
 			}
 		}
 
-		this.isDragging = mode !== null
+		this.dragging = mode !== null
 
-		if (this.isDragging) {
+		if (this.dragging) {
 			if (mode === 'add') {
 				drag.operator = (startValue, inc) => {
 					return (startValue as number) + inc
@@ -324,10 +324,8 @@ export default class SelectionManager extends Vue {
 	width 100%
 	height 100%
 
-	&__popover
-		enable-menu-color()
-
 	&__menu
+		enable-menu-color()
 		display flex
 		box-sizing content-box
 		margin 0.2em
@@ -343,7 +341,7 @@ export default class SelectionManager extends Vue {
 		transform-origin 50% 0
 		user-select none
 
-		&:hover, &[dragging]
+		&:hover, &.dragging
 			opacity 1
 			transform none
 </style>

@@ -56,31 +56,31 @@ const DefaultConfig: DataConfig = {
 
 const SchemaConfig = {
 	lang: {
-		type: 'dropdown',
+		ui: 'dropdown',
 		label: 'Language',
 		labels: ['English', '日本語'],
 		values: ['en', 'ja']
 	},
 	dragSpeed: {
-		type: 'number',
+		ui: 'number',
 		unit: '/px',
 		default: 0.5
 	},
 	quantizeAngles: {
-		type: 'string',
+		ui: 'string',
 		toField: (v: number[]) => v.join(', '),
 		toData: (s: string) => JSON.parse(`[${s}]`),
 		default: '0, 45, 90, 135, 180, 225, 270, 315'
 	},
 	__regex: {
 		'^key': {
-			type: 'bind'
+			ui: 'bind'
 		}
 	},
 	theme: {
 		__type: 'group',
 		fontSize: {
-			type: 'number',
+			ui: 'number',
 			label: 'Font Size',
 			min: 7,
 			max: 20,
@@ -89,17 +89,17 @@ const SchemaConfig = {
 		},
 		__regex: {
 			'^color': {
-				type: 'color'
+				ui: 'color'
 			},
 			'^font': {
-				type: 'string'
+				ui: 'string'
 			},
 			'^layout': {
-				type: 'number',
+				ui: 'number',
 				unit: 'em',
 				min: 0,
 				max: 20,
-				step: 0.1
+				precision: 1
 			}
 		}
 	}

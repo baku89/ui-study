@@ -6,7 +6,7 @@
 
 		<div
 			class="LayoutSplitter__resizer"
-			:class="{[split]: true, dragging: isDragging}"
+			:class="{[split]: true, dragging: dragging}"
 			:style="{[resizerOffsetAttr]: percent}"
 			@mousedown="onMousedown"
 		/>
@@ -32,7 +32,7 @@ export default class LayoutSplitter extends Vue {
 		| 'vertical'
 		| 'horizontal'
 
-	private isDragging: boolean = false
+	private dragging: boolean = false
 	private hasMoved: boolean = false
 	private percent: string = this.default
 
@@ -48,8 +48,8 @@ export default class LayoutSplitter extends Vue {
 	private get elStyles(): object {
 		return {
 			flexDirection: this.split === 'vertical' ? 'row' : 'column',
-			userSelect: this.isDragging ? 'none' : '',
-			cursor: this.isDragging ? 'col-resize' : ''
+			userSelect: this.dragging ? 'none' : '',
+			cursor: this.dragging ? 'col-resize' : ''
 		}
 	}
 
@@ -64,16 +64,16 @@ export default class LayoutSplitter extends Vue {
 
 	// Methods
 	private onMousedown() {
-		this.isDragging = true
+		this.dragging = true
 		this.hasMoved = false
 	}
 
 	private onMouseup() {
-		this.isDragging = false
+		this.dragging = false
 	}
 
 	private onMousemove(e: MouseEvent) {
-		if (this.isDragging) {
+		if (this.dragging) {
 			let offset = 0
 			let target = e.currentTarget as HTMLElement
 

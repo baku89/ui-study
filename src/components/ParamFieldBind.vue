@@ -7,7 +7,7 @@
 			:value="device"
 			@input="updateDevice"
 		/>
-		<InputString class="right" :value="path" @input="updatePath"/>
+		<InputString class="ParamFieldBind__address right" :value="path" @input="updatePath"/>
 		<button
 			class="ParamFieldBind__detect-button"
 			:class="{detecting: isDetecting}"
@@ -77,6 +77,9 @@ $rec-color = #ff254e
 
 	&__device
 		width 6em
+
+	&__address
+		width 100%
 
 	&__detect-button
 		position absolute

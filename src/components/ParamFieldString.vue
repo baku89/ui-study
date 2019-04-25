@@ -1,19 +1,16 @@
-<template>
-	<div class="ParamFieldString param-field--2w">
-		<InputString v-bind="$props" v-on="$listeners"/>
-	</div>
-</template>
-
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator'
-
+import Vue from 'vue'
 import InputString from './InputString.vue'
 
-@Component({
-	components: {InputString}
+export default Vue.extend({
+	name: 'ParamFieldString',
+	// @ts-ignore
+	functional: true,
+	render(h: any, context: any) {
+		return h(InputString, {
+			...context.data,
+			class: 'ParamFieldString param-field--2w'
+		})
+	}
 })
-export default class ParamFieldString extends Vue {
-	@Prop({type: String, required: true}) private value!: string
-	@Prop(Function) private validator!: (value: string) => string | false
-}
 </script>

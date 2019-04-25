@@ -1,21 +1,18 @@
-<template>
-	<InputDropdown class="ParamFieldDropdown param-field--1w" v-bind="$props" v-on="$listeners"/>
-</template>
-
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator'
-
+import Vue from 'vue'
 import InputDropdown from './InputDropdown.vue'
 
-type ValueType = string | number
-
-@Component({
-	components: {InputDropdown}
+export default Vue.extend({
+	name: 'ParamFieldDropdown',
+	// @ts-ignore
+	functional: true,
+	render(h: any, context: any) {
+		return h(InputDropdown, {
+			...context.data,
+			class: 'ParamFieldDropdown param-field--1w'
+		})
+	}
 })
-export default class ParamFieldDropdown extends Vue {
-	@Prop([String, Number]) private value!: ValueType
-	@Prop(Array) private values!: ValueType[]
-	@Prop(Array) private labels!: string[]
-	@Prop(String) private theme!: string
-}
 </script>
+</script>
+

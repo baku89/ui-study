@@ -44,7 +44,6 @@ export default class InputString extends Vue {
 @import '../style/config.styl'
 
 .InputString
-	width 100%
 	input-border-style()
 	input-field-style()
 	input-placement-modifier-root()

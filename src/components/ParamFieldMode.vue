@@ -1,20 +1,16 @@
-<template>
-	<InputMode class="ParamFieldMode" v-bind="$props" v-on="$listeners"/>
-</template>
-
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator'
-
+import Vue from 'vue'
 import InputMode from './InputMode.vue'
 
-type ValueType = string | number
-
-@Component({
-	components: {InputMode}
+export default Vue.extend({
+	name: 'ParamFieldMode',
+	// @ts-ignore
+	functional: true,
+	render(h: any, context: any) {
+		return h(InputMode, {
+			...context.data,
+			class: 'ParamFieldMode'
+		})
+	}
 })
-export default class ParamFieldMode extends Vue {
-	@Prop([String, Number]) private value!: ValueType
-	@Prop(Array) private values!: ValueType[]
-	@Prop(Array) private labels!: string[]
-}
 </script>

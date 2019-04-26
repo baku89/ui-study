@@ -46,6 +46,10 @@ class BindManager extends EventEmitter {
 
 	private setupKeyboard() {
 		document.addEventListener('keydown', (e: KeyboardEvent) => {
+			const key = this.keycode(e)
+			const address = `/key/${key}`
+			this.toggleTable.set(address, true)
+
 			const activeElement = document.activeElement
 			if (
 				activeElement instanceof HTMLInputElement &&
@@ -54,11 +58,8 @@ class BindManager extends EventEmitter {
 				return
 			}
 
-			const key = this.keycode(e)
-			const address = `/key/${key}`
 			const payload = {address, value: false, originalEvent: e}
 
-			this.toggleTable.set(address, true)
 			this.emit('press', payload)
 			this.emit(`press:${address}`, payload)
 		})

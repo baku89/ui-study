@@ -134,7 +134,7 @@ import {
 	DataTransformStack,
 	DataTransformValue
 } from '../../data'
-import {convertColorElements, MouseDragEvent} from '../../util'
+import {MouseDragEvent} from '../../util'
 import {toRadians, ratio} from '../../math'
 import BindManager from '../../core/BindManager'
 

@@ -1,36 +1,31 @@
 <template>
 	<div class="InputColor">
-		<template v-if="isHex">
-			<InputString
+		<InputString
+			v-if="isHex"
+			class="left"
+			:value="value.elements"
+			:validator="validateColorHex"
+			:style="{fontFamily: 'var(--font-monospace)'}"
+			@input="hupdateHexElement"
+		/>
+		<template v-else>
+			<InputColorElement
 				class="left"
-				:value="hasAlpha ? value[1][0] : value[1]"
-				:validator="validateColorHex"
-				:style="{fontFamily: 'var(--font-monospace)'}"
-				@input="hasAlpha ? updateElement(0, $event) : updateElement(null, $event)"
+				:color="value"
+				:varying="0"
+				@update:element="updateElement(0, $event)"
 			/>
 			<InputColorElement
-				v-if="hasAlpha"
-				class="right"
+				class="center"
 				:color="value"
 				:varying="1"
-				@input="updateElement(1, $event)"
-			/>
-		</template>
-		<template v-else>
-			<InputColorElement class="left" :color="value" :varying="0" @input="updateElement(0, $event)"/>
-			<InputColorElement class="center" :color="value" :varying="1" @input="updateElement(1, $event)"/>
-			<InputColorElement
-				:class="hasAlpha ? 'center' : 'right'"
-				:color="value"
-				:varying="2"
-				@input="updateElement(2, $event)"
+				@update:element="updateElement(1, $event)"
 			/>
 			<InputColorElement
-				v-if="hasAlpha"
 				class="right"
 				:color="value"
-				:varying="3"
-				@input="updateElement(3, $event)"
+				:varying="2"
+				@update:element="updateElement(2, $event)"
 			/>
 		</template>
 	</div>
@@ -42,21 +37,17 @@ import {Component, Prop, Vue} from 'vue-property-decorator'
 import InputColorElement from './InputColorElement.vue'
 import InputString from '../InputString.vue'
 
-import {DataColor, DataColorMode, DataColorInfo} from '../../data'
+import Color from '../../data/Color'
 
 @Component({
 	components: {InputColorElement, InputString}
 })
 export default class InputColor extends Vue {
-	@Prop(Array) private value!: DataColor
+	@Prop({type: Object, required: true}) private value!: Color
 	@Prop({type: Boolean, default: true}) private showLabel!: boolean
 
-	private get hasAlpha(): boolean {
-		return this.value[0].indexOf('a') !== -1
-	}
-
 	private get isHex(): boolean {
-		return this.value[0].indexOf('hex') !== -1
+		return this.value.mode === 'hex'
 	}
 
 	private validateColorHex(value: string): string | false {
@@ -71,10 +62,16 @@ export default class InputColor extends Vue {
 		}
 	}
 
-	private updateElement(index: number, element: number | string) {
-		const elements = Array.from(this.value[1])
+	private updateHexElement(hex: string) {
+		const newValue = this.value.clone()
+		newValue.elements = hex
+		this.$emit('input', newValue)
+	}
+
+	private updateElement(index: number, element: number) {
+		const newValue = this.value.clone()
+		const elements = newValue.elements as number[]
 		elements[index] = element
-		const newValue = [this.value[0], elements]
 		this.$emit('input', newValue)
 	}
 }

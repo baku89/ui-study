@@ -6,7 +6,7 @@
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import * as twgl from 'twgl.js'
 
-import {DataColor, DataColorMode} from '../../../data'
+import Color, {ColorMode} from '../../../data/Color'
 
 @Component
 export default class GradientPalette extends Vue {
@@ -14,8 +14,8 @@ export default class GradientPalette extends Vue {
 	private static programInfo: twgl.ProgramInfo
 	private static bufferInfo: twgl.BufferInfo
 
-	@Prop(Array) private color!: DataColor
-	@Prop(Array) private varyings!: number[]
+	@Prop({type: Object, required: true}) private color!: Color
+	@Prop({type: Array, required: true}) private varyings!: number[]
 
 	private ctx!: CanvasRenderingContext2D
 	private canvas!: HTMLCanvasElement
@@ -70,8 +70,8 @@ export default class GradientPalette extends Vue {
 
 		const uniforms = {
 			resolution: [gl.canvas.width, gl.canvas.height],
-			mode: this.getModeIndex(this.color[0], this.varyings),
-			elements: this.color[1]
+			mode: this.getModeIndex(this.color.mode, this.varyings),
+			elements: this.color.elements
 		}
 
 		gl.useProgram(programInfo.program)
@@ -82,7 +82,7 @@ export default class GradientPalette extends Vue {
 		this.ctx.drawImage(gl.canvas, 0, 0, this.canvas.width, this.canvas.height)
 	}
 
-	private getModeIndex(mode: DataColorMode, varyings: number[]): number {
+	private getModeIndex(mode: ColorMode, varyings: number[]): number {
 		const varyingHash = varyings.join('-')
 
 		let index = 0

@@ -11,8 +11,6 @@ import {Component, Prop, Vue, Inject, Watch} from 'vue-property-decorator'
 
 import {DataConfig, SchemaConfig} from '../core'
 import components from '../components'
-import {DataColor} from '../data'
-import {convertColorElements} from '../util'
 
 @Component({components})
 export default class Settings extends Vue {

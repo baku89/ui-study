@@ -1,4 +1,4 @@
-import {DataColor} from '../data'
+import Color from '../data/Color'
 
 const angleStep = 30
 
@@ -13,7 +13,7 @@ interface DataConfig {
 	keyQuantize: string
 	keyScale: string
 	quantizeAngles: number[]
-	theme: {[s: string]: number | string | DataColor | UnitNumber}
+	theme: {[s: string]: number | string | Color | UnitNumber}
 }
 
 const DefaultConfig: DataConfig = {
@@ -32,19 +32,19 @@ const DefaultConfig: DataConfig = {
 		fontMonospace: '"Roboto Condensed", monospace, sans-serif',
 		fontCode: '"Fira Code", monospace, sans-serif',
 		fontNormal: '"Roboto", Helvetica, Arial, sans-serif',
-		colorActive: ['hex', '#63acf9'],
-		colorBorder: ['hex', '#e0e0e0'],
-		colorBorderText: ['hex', '#bbbbbb'],
-		colorControl: ['hex', '#bbbbbb'],
-		colorControlText: ['hex', '#999999'],
-		colorBg: ['hex', '#f0f0f0'],
-		colorField: ['hex', '#f9f9f9'],
-		colorText: ['hex', '#444444'],
-		colorSeek: ['hex', '#ff3854'],
-		colorMenuBg: ['hex', '#000000'],
-		colorMenuText: ['hex', '#ffffff'],
-		colorMenuField: ['hex', '#000000'],
-		colorMenuBorder: ['hex', '#333333'],
+		colorActive: new Color('hex', '#63acf9'),
+		colorBorder: new Color('hex', '#e0e0e0'),
+		colorBorderText: new Color('hex', '#bbbbbb'),
+		colorControl: new Color('hex', '#bbbbbb'),
+		colorControlText: new Color('hex', '#999999'),
+		colorBg: new Color('hex', '#f0f0f0'),
+		colorField: new Color('hex', '#f9f9f9'),
+		colorText: new Color('hex', '#444444'),
+		colorSeek: new Color('hex', '#ff3854'),
+		colorMenuBg: new Color('hex', '#000000'),
+		colorMenuText: new Color('hex', '#ffffff'),
+		colorMenuField: new Color('hex', '#000000'),
+		colorMenuBorder: new Color('hex', '#333333'),
 		layoutParamHeight: 2.8,
 		layoutParamField1w: 6,
 		layoutParamFieldGapWidget: 0.5,

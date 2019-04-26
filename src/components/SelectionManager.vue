@@ -49,8 +49,8 @@ import Portal from './common/Portal'
 import SvgOverlayHorizontalDrag from './common/SvgOverlayHorizontalDrag.vue'
 import InputIconButton from './InputIconButton.vue'
 
-import {MouseDragEvent, adjustHSB} from '../util'
-import {DataColor} from '../data'
+import {MouseDragEvent} from '../util'
+import Color from '../data/Color'
 import {clamp, toFixed} from '../math'
 import {DefaultConfig, DataConfig} from '../core'
 import BindManager from '../core/BindManager'
@@ -67,14 +67,11 @@ interface SelectableNode<T> {
 type SelectionContext = 'scalar' | 'color'
 
 interface Selection {
-	node: SelectableNode<number | DataColor>
+	node: SelectableNode<number | Color>
 	context: SelectionContext
 }
 
-type DragOperatorFunc = (
-	value: number | DataColor,
-	inc: number
-) => number | DataColor
+type DragOperatorFunc = (value: number | Color, inc: number) => number | Color
 
 function getValue(node: SelectableNode<any>) {
 	return node.value !== undefined ? node.value : node._props.value
@@ -93,7 +90,7 @@ export default class SelectionManager extends Vue {
 
 	private dragging: boolean = false
 	private drag: {
-		startValues: Array<number | DataColor>
+		startValues: number[] | Color[]
 		inc: number
 		speed: 'normal' | 'fast' | 'slow'
 		text: string
@@ -224,7 +221,7 @@ export default class SelectionManager extends Vue {
 				}
 			} else if (mode === 'hue-rotate') {
 				drag.operator = (startColor, inc) => {
-					return adjustHSB(startColor as DataColor, inc, 0, 0)
+					return Color.adjustHSB(startColor as Color, inc, 0, 0)
 				}
 				drag.stringify = inc => {
 					return (inc > 0 ? '+' : '') + inc.toFixed(0) + '°'
@@ -236,7 +233,7 @@ export default class SelectionManager extends Vue {
 					const sat = mode === 'saturate' ? inc : 0
 					const bri = mode === 'brightness' ? inc : 0
 
-					return adjustHSB(startColor as DataColor, 0, sat, bri)
+					return Color.adjustHSB(startColor as Color, 0, sat, bri)
 				}
 				drag.stringify = inc => {
 					return (inc > 0 ? '+' : '') + inc.toFixed(0) + '%'

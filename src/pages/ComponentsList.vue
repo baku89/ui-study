@@ -19,8 +19,8 @@
 					<div class="aspect">
 						<svg class="canvas" viewBox="0 0 100 100">
 							<circle
-								:fill="toCSSColor(ex1.fill)"
-								:stroke="toCSSColor(ex1.stroke)"
+								:fill="ex1.fill.cssColor"
+								:stroke="ex1.stroke.cssColor"
 								:stroke-width="ex1.strokeWidth"
 								cx="0"
 								cy="0"
@@ -159,8 +159,7 @@
 <script lang="ts">
 import {Component, Vue, Watch} from 'vue-property-decorator'
 
-import {toCSSColor} from '../util'
-import {DataColor} from '../data'
+import Color from '../data/Color'
 
 import TimelineColor from '../components/TimelineColor.vue'
 
@@ -185,8 +184,8 @@ const PI_2 = Math.PI * 2
 				radius: 25,
 				scale: [1, 1],
 				position: [50, 50],
-				fill: ['hsv', [339, 64, 100]],
-				stroke: ['hsv', [331, 83, 89]],
+				fill: new Color('hsv', [339, 64, 100]),
+				stroke: new Color('hsv', [331, 83, 89]),
 				strokeWidth: 3
 			},
 			ex1Schema: {
@@ -273,8 +272,7 @@ const PI_2 = Math.PI * 2
 				currentValue: values[time]
 			}
 		}
-	},
-	methods: {toCSSColor}
+	}
 })
 export default class ComponentsList extends Vue {
 	private trimText(text: string, min: number, max: number) {

@@ -50,16 +50,10 @@ import {Component, Prop, Vue, Watch, Inject} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 import keycode from 'keycode'
 
-import {getDOMCenter, toCSSColor} from '../../util'
+import {getDOMCenter} from '../../util'
 import {parseNumber, ratio, clamp, lerp} from '../../math'
 import BindManager from '../../core/BindManager'
-import {
-	DataColorMode,
-	DataColorElements,
-	DataColor,
-	DataColorInfo,
-	DataColorModeInfo
-} from '../../data'
+import Color, {ColorModeInfo} from '../../data/Color'
 
 import Drag from '../common/Drag'
 import Portal from '../common/Portal'
@@ -82,8 +76,8 @@ const SLIT_WIDTH = 6
 export default class InputColorElement extends Vue {
 	public selected: boolean = false
 
-	@Prop(Array) private color!: DataColor
-	@Prop(Number) private varying!: number
+	@Prop({type: Object, required: true}) private color!: Color
+	@Prop({type: Number, required: true}) private varying!: number
 
 	private inputValue: string = ''
 
@@ -103,19 +97,11 @@ export default class InputColorElement extends Vue {
 	@Inject({from: 'Config', default: DefaultConfig})
 	private readonly Config!: DataConfig
 
-	get mode(): DataColorMode {
-		return this.color[0]
+	private get value(): number {
+		return (this.color.elements as number[])[this.varying]
 	}
 
-	get value(): number {
-		return this.color[1][this.varying] as number
-	}
-
-	get cssColor(): string {
-		return toCSSColor(this.color)
-	}
-
-	get slitStyles() {
+	private get slitStyles() {
 		return {
 			left: this.slitLeft - SLIT_WIDTH * 0.5 + 'px',
 			top: this.slitMaxY - SLIT_WIDTH * 0.5 + 'px',
@@ -123,19 +109,18 @@ export default class InputColorElement extends Vue {
 		}
 	}
 
-	get previewStyles() {
+	private get previewStyles() {
 		return {
-			background: this.cssColor,
+			background: this.color.cssColor,
 			left: `${this.slitLeft}px`,
 			top: `${this.previewY}px`
 		}
 	}
 
-	get info(): DataColorModeInfo {
-		return DataColorInfo.get(this.mode)!
+	private get info(): any {
+		return ColorModeInfo[this.color.mode]
 	}
 
-	@Watch('value')
 	private setInputValue() {
 		this.inputValue = this.value.toString()
 	}
@@ -164,7 +149,7 @@ export default class InputColorElement extends Vue {
 	private updateValue(newValue: number) {
 		newValue = clamp(newValue, 0, this.info.max[this.varying])
 		if (this.value !== newValue) {
-			this.$emit('input', newValue)
+			this.$emit('update:element', newValue)
 		}
 	}
 
@@ -209,13 +194,16 @@ export default class InputColorElement extends Vue {
 	private onDrag(e: {current: vec2; delta: vec2}) {
 		this.previewY = clamp(e.current[1], this.slitMaxY, this.slitMinY)
 		const t = ratio(this.previewY, this.slitMinY, this.slitMaxY)
+
 		const newValue = lerp(0, this.info.max[this.varying], t)
-		this.$emit('input', newValue)
+		this.$emit('update:element', newValue)
 	}
 
 	@Watch('color')
-	private onColorChanged(newColor: DataColor, oldColor: DataColor) {
-		if (oldColor[1][this.varying] !== newColor[1][this.varying]) {
+	private onColorChanged(newColor: Color, oldColor: Color) {
+		const oldElements = oldColor.elements as number[]
+		const newElements = newColor.elements as number[]
+		if (oldElements[this.varying] !== newElements[this.varying]) {
 			this.updatedRecently = true
 			clearTimeout(this.updatedTimer)
 

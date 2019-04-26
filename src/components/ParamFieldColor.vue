@@ -8,7 +8,7 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import {DataColor} from '../data'
+import Color from '../data/Color'
 
 import InputColor from './InputColor'
 import InputColorButton from './InputColorButton.vue'
@@ -17,7 +17,7 @@ import InputColorButton from './InputColorButton.vue'
 	components: {InputColor, InputColorButton}
 })
 export default class ParamFieldColor extends Vue {
-	@Prop(Array) private value!: DataColor
+	@Prop({type: Object, required: true}) private value!: Color
 	@Prop({type: Boolean, default: false}) private compact!: boolean
 
 	private onInput(newValue: number[]) {

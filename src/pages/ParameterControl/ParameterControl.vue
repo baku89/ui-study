@@ -51,15 +51,14 @@ import * as twgl from 'twgl.js'
 // @ts-ignore
 import {Renderer as ISFRenderer} from 'interactive-shader-format'
 
-import {DataColor, DataColorMode} from '../../data'
-import {convertColorElements} from '../../util'
+import Color, {ColorMode} from '../../data/Color'
 
 import Components from '../../components'
 import {toRadians} from '../../math'
 
 interface ParamData {
 	name: string
-	value: number | number[] | DataColor
+	value: number | number[] | Color
 	type: string
 	label: string
 	min?: any
@@ -248,16 +247,16 @@ export default class ParameterControl extends Vue {
 			if (type === 'angle') {
 				value = toRadians(value as number)
 			} else if (type === 'color') {
-				const color = value as DataColor
-				let rgb = convertColorElements(color[0], 'rgb', color[1])
-				rgb = (rgb as number[]).map((x: number) => x / 255)
+				const color = value as Color
+				let rgb = Color.convertMode(color, 'rgb').elements as number[]
+				rgb = rgb.map((x: number) => x / 255)
 				rgb.push(1)
 				value = rgb
 			} else if (type !== 'scale' && unit === '%') {
 				if (value instanceof Array) {
 					value = (value as number[]).map(v => v / 100)
 				} else {
-					value = value / 100
+					value = (value as number) / 100
 				}
 			}
 

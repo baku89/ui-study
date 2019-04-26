@@ -2,8 +2,8 @@ import {Component, Vue, Watch, Provide, Inject} from 'vue-property-decorator'
 import Case from 'case'
 
 import {DefaultConfig, DataConfig} from '../core'
-import {convertColorElements, toCSSColor} from '../util'
 import deepcopy from '../util/deepcopy'
+import Color from 'src/data/Color'
 
 @Component({
 	data() {
@@ -51,17 +51,17 @@ export default class ConfigProvider extends Vue {
 		this.attrElement.classList.add(lang)
 	}
 
-	private updateThemeProperty(key: string, newValue: any) {
+	private updateThemeProperty(key: string, value: any) {
 		const variableName = `--${Case.kebab(key)}`
-		let value = newValue
+		let cssValue = value
 
 		if (/^color/.test(key)) {
-			value = toCSSColor(value)
+			cssValue = (value as Color).cssColor
 		} else if (/^layout/.test(key)) {
-			value += 'em'
+			cssValue += 'em'
 		} else if (key === 'fontSize') {
-			value += 'px'
+			cssValue += 'px'
 		}
-		this.attrElement.style.setProperty(variableName, value)
+		this.attrElement.style.setProperty(variableName, cssValue)
 	}
 }

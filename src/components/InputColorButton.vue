@@ -8,20 +8,24 @@
 		/>
 		<Popover class="InputColorButton__popover" :active.sync="editing" placement="right-start">
 			<div class="InputColorButton__popover-content">
-				<InputColorPicker class="InputColorButton__color-picker" :value="value" @input="onInput"/>
+				<InputColorPicker
+					class="InputColorButton__color-picker"
+					:value="value"
+					@input="$listeners.input"
+				/>
 				<div class="InputColorButton__parameters">
 					<InputDropdown
 						class="InputColorButton__mode simple"
-						:value="value[0]"
+						:value="value.mode"
 						:values="['hsv', 'hsl', 'rgb', 'hex']"
 						:labels="['HSV', 'HSL', 'RGB', 'HEX']"
-						@input="onChangeMode"
+						@input="convertMode"
 					/>
 					<InputColor
 						class="InputColorButton__elements"
 						:value="value"
 						:showLabel="false"
-						@input="onInput"
+						@input="$listeners.input"
 					/>
 				</div>
 			</div>
@@ -33,8 +37,7 @@
 import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import colorConvert from 'color-convert'
 
-import {toCSSColor, convertColorElements} from '../util'
-import {DataColor, DataColorMode, DataColorElements} from '../data'
+import Color, {ColorMode} from '../data/Color'
 
 import InputColor from './InputColor'
 import InputColorPicker from './InputColorPicker.vue'
@@ -54,39 +57,22 @@ import {buttons} from 'mouse-event'
 export default class InputColorButton extends Vue {
 	public selected: boolean = false
 
-	@Prop([Array]) private value!: DataColor
+	public updateValue(newValue: Color) {
+		this.$emit('input', newValue)
+	}
+
+	@Prop({type: Object, required: true}) private value!: Color
 
 	@Inject({from: 'SelectionManager', default: null})
 	private readonly SelectionManager!: SelectionManager
 
 	private editing: boolean = false
 
-	get mode(): DataColorMode {
-		return this.value[0]
-	}
-
-	get elements(): DataColorElements {
-		return this.value[1]
-	}
-
-	get cssColor(): string {
-		return toCSSColor(this.value)
-	}
-
 	get previewStyles(): object {
-		return {background: this.cssColor}
-	}
-
-	get hsl(): number[] {
-		if (this.mode === 'hsl') {
-			return this.elements as number[]
-		} else {
-			return convertColorElements(this.mode, 'hsl', this.elements) as number[]
-		}
+		return {background: this.value.cssColor}
 	}
 
 	private onMousedownRight(e: Event) {
-		// console.log(e)
 		e.preventDefault()
 	}
 
@@ -97,19 +83,9 @@ export default class InputColorButton extends Vue {
 		}
 	}
 
-	private onChangeMode(mode: DataColorMode) {
-		const newElements = convertColorElements(this.mode, mode, this.elements)
-		const newValue = [mode, newElements]
-
+	private convertMode(mode: ColorMode) {
+		const newValue = Color.convertMode(this.value, mode)
 		this.$emit('input', newValue)
-	}
-
-	private updateValue(newValue: DataColor) {
-		this.$emit('input', newValue)
-	}
-
-	private onInput(color: DataColor) {
-		this.$emit('input', color)
 	}
 }
 </script>

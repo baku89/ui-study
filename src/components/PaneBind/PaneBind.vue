@@ -1,66 +1,63 @@
 <template>
-	<Popover :active="active" @update:active="$emit('update:active', $event)">
-		<div class="PopoverBind__root">
-			<div class="PopoverBind__header">
-				<h3 class="PopoverBind__title">BIND</h3>
-				<InputIconAction
-					class="PopoverBind__add"
-					:items="addItems"
-					src="./assets/icon_plus.svg"
-					@click="addBind"
+	<div class="PaneBind">
+		<div class="PaneBind__header">
+			<h3 class="PaneBind__title">BIND</h3>
+			<InputIconAction
+				class="PaneBind__add"
+				:items="addItems"
+				src="./assets/icon_plus.svg"
+				@click="addBind"
+			/>
+		</div>
+		<div class="PaneBind__row" v-for="(bind, index) in bindList" :key="index">
+			<div class="PaneBind__row-header">
+				<label class="PaneBind__method">{{bind.method[0].toUpperCase() + bind.method.substr(1)}}</label>
+				<ParamFieldBind
+					class="PaneBind__address"
+					:value="bind.address"
+					@input="onAddressUpdate(index, bind, $event)"
 				/>
 			</div>
-			<div class="PopoverBind__row" v-for="(bind, index) in bindList" :key="index">
-				<div class="PopoverBind__row-header">
-					<label class="PopoverBind__method">{{bind.method[0].toUpperCase() + bind.method.substr(1)}}</label>
-					<ParamFieldBind
-						class="PopoverBind__address"
-						:value="bind.address"
-						@input="onAddressUpdate(index, bind, $event)"
-					/>
-				</div>
-				<div class="PopoverBind__option" v-if="/^(set|add)$/.test(bind.method)">
-					<label class="PopoverBind__option-label">Value</label>
-					<component
-						:is="'ParamField' + ui[0].toUpperCase() + ui.substr(1)"
-						:compact="true"
-						:precision="precision"
-						:min="bind.method === 'set' ? min : undefined"
-						:max="bind.method === 'set' ? max : undefined"
-						:step="step"
-						:unit="unit"
-						class="PopoverBind__option-value"
-						v-model="bind.option.value"
+			<div class="PaneBind__option" v-if="/^(set|add)$/.test(bind.method)">
+				<label class="PaneBind__option-label">Value</label>
+				<component
+					:is="'ParamField' + ui[0].toUpperCase() + ui.substr(1)"
+					:compact="true"
+					:precision="precision"
+					:min="bind.method === 'set' ? min : undefined"
+					:max="bind.method === 'set' ? max : undefined"
+					:step="step"
+					:unit="unit"
+					class="PaneBind__option-value"
+					v-model="bind.option.value"
+					@input="$emit('update:bindList')"
+				/>
+			</div>
+			<template v-else-if="bind.method === 'map'">
+				<div class="PaneBind__option">
+					<label class="PaneBind__option-label">From</label>
+					<ParamFieldVector
+						class="PaneBind__option-value"
+						v-model="bind.option.from"
 						@input="$emit('update:bindList')"
 					/>
 				</div>
-				<template v-else-if="bind.method === 'map'">
-					<div class="PopoverBind__option">
-						<label class="PopoverBind__option-label">From</label>
-						<ParamFieldVector
-							class="PopoverBind__option-value"
-							v-model="bind.option.from"
-							@input="$emit('update:bindList')"
-						/>
-					</div>
-					<div class="PopoverBind__option">
-						<label class="PopoverBind__option-label">To</label>
-						<ParamFieldVector
-							class="PopoverBind__option-value"
-							v-model="bind.option.to"
-							@input="$emit('update:bindList')"
-						/>
-					</div>
-				</template>
-			</div>
+				<div class="PaneBind__option">
+					<label class="PaneBind__option-label">To</label>
+					<ParamFieldVector
+						class="PaneBind__option-value"
+						v-model="bind.option.to"
+						@input="$emit('update:bindList')"
+					/>
+				</div>
+			</template>
 		</div>
-	</Popover>
+	</div>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import Popover from '../common/Popover.vue'
 import InputIconAction from '../InputIconAction'
 import ParamFieldBind from '../ParamFieldBind.vue'
 import ParamFieldCheckbox from '../ParamFieldCheckbox.vue'
@@ -77,12 +74,10 @@ import ParamFieldVector from '../ParamFieldVector.vue'
 		ParamFieldNumber,
 		ParamFieldString,
 		ParamFieldVector,
-		Popover,
 		InputIconAction
 	}
 })
-export default class PopoverBind extends Vue {
-	@Prop({type: Boolean, required: true}) private active!: boolean
+export default class PaneBind extends Vue {
 	@Prop({type: String, required: true}) private ui!:
 		| 'number'
 		| 'color'
@@ -152,19 +147,14 @@ export default class PopoverBind extends Vue {
 <style lang="stylus" scoped>
 @import '../../style/config.styl'
 
-.PopoverBind
+.PaneBind
+	padding var(--layout-popover-padding)
+	width 16em
+	// border 1px solid var(--color-border-text)
+	border-radius $border-radius
+	box-shadow 0 0 1.5em 0 rgba(black, 0.2)
 	user-select none
-
-	&__root
-		position fixed
-		top 50%
-		left 50%
-		padding var(--layout-popover-padding)
-		width 16em
-		// border 1px solid var(--color-border-text)
-		border-radius $border-radius
-		box-shadow 0 0 1.5em 0 rgba(black, 0.2)
-		enable-menu-color()
+	enable-menu-color()
 
 	&__header
 		display flex

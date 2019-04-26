@@ -1,5 +1,5 @@
 <template>
-	<div class="InputColorButton" :selectable="true" :editing="editing" :selected="selected">
+	<div class="InputColorButton" :class="{editing, selected}" :selectable="true">
 		<button
 			class="InputColorButton__button"
 			@focus="onFocus"

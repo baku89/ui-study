@@ -1,6 +1,6 @@
 <template>
 	<Portal v-if="active" @initial-parent="setOriginalParent" @destroy="killPopper">
-		<div class="Popover">
+		<div class="Popover" v-if="active">
 			<slot/>
 		</div>
 	</Portal>
@@ -17,7 +17,7 @@ import Portal from './Portal'
 	components: {Portal}
 })
 export default class Popover extends Vue {
-	@Prop(Boolean) private active!: boolean
+	@Prop({type: Boolean, default: true}) private active!: boolean
 	@Prop({type: String, default: 'bottom'}) private placement!: string
 
 	private popperInstance!: Popper | null

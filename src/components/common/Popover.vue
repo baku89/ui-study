@@ -1,8 +1,6 @@
 <template>
-	<Portal v-if="active" @initial-parent="setOriginalParent" @destroy="killPopper">
-		<div class="Popover" v-if="active">
-			<slot/>
-		</div>
+	<Portal class="Popover" v-if="active" @initial-parent="setOriginalParent" @destroy="killPopper">
+		<slot/>
 	</Portal>
 </template>
 
@@ -12,6 +10,7 @@ import Popper from 'popper.js'
 import keycode from 'keycode'
 
 import Portal from './Portal'
+import BindManager from '../../core/BindManager'
 
 @Component({
 	components: {Portal}
@@ -19,12 +18,13 @@ import Portal from './Portal'
 export default class Popover extends Vue {
 	@Prop({type: Boolean, default: true}) private active!: boolean
 	@Prop({type: String, default: 'bottom'}) private placement!: string
+	@Prop(String) private position!: undefined | 'cursor'
 
 	private popperInstance!: Popper | null
-	private originalParentEl!: Node & ParentNode
+	private referenceEl!: Node & ParentNode | object
 
-	public setReference(el: Element) {
-		this.originalParentEl = el
+	public setReference(el: any) {
+		this.referenceEl = el
 		if (this.popperInstance) {
 			this.killPopper()
 			this.bindPopper()
@@ -35,57 +35,45 @@ export default class Popover extends Vue {
 		this.resetPopper()
 	}
 
-	@Watch('active')
+	private beforeDestroy() {
+		window.removeEventListener('mousedown', this.onMousedown)
+		window.removeEventListener('keydown', this.onKeydown)
+	}
+
+	@Watch('active', {immediate: true})
 	private onActiveChanged(active: boolean) {
-		if (!active) {
-			return
-		}
-		// Automatically close the popover when user clicks outside of Popovers
-		const onMousedown = (e: Event) => {
-			// Search all $el of descendant "Popover"s
-			const popovers = [this.$el]
-			const searchPortals = (children: Vue[]) => {
-				children.forEach(node => {
-					if (
-						node.$el.nodeName !== '#comment' &&
-						node.$options.name === 'Popover'
-					) {
-						popovers.push(node.$el)
-					}
-					if (node.$children) {
-						searchPortals(node.$children)
-					}
-				})
+		if (active) {
+			// Automatically close the popover when user clicks outside of Popovers
+			window.addEventListener('mousedown', this.onMousedown)
+			window.addEventListener('keydown', this.onKeydown)
+
+			if (this.position === 'cursor') {
+				const x = BindManager.mousePosition[0]
+				const y = BindManager.mousePosition[1]
+				console.log(x, y)
+				this.referenceEl = {
+					getBoundingClientRect: () => ({
+						top: y,
+						right: x,
+						bottom: y,
+						left: x,
+						width: 0,
+						height: 0
+					}),
+					clientWidth: 0,
+					clientHeight: 0
+				}
 			}
-			searchPortals(this.$children)
-
-			const clickedOutside = popovers.every(popover => {
-				return !e.composedPath().includes(popover)
-			})
-
-			if (clickedOutside) {
-				window.removeEventListener('mousedown', onMousedown)
-				this.$emit('update:active', false)
-				this.$emit('close')
-			}
+			this.bindPopper()
+		} else {
+			window.removeEventListener('mousedown', this.onMousedown)
+			window.removeEventListener('keydown', this.onKeydown)
 		}
-		window.addEventListener('mousedown', onMousedown)
-
-		const onKeydown = (e: KeyboardEvent) => {
-			if (keycode.isEventKey(e, 'esc')) {
-				window.removeEventListener('keydown', onKeydown)
-				this.$emit('update:active', false)
-				this.$emit('close')
-			}
-		}
-		window.addEventListener('keydown', onKeydown)
-
-		this.bindPopper()
 	}
 
 	private setOriginalParent(el: Node & ParentNode) {
-		if (!this.originalParentEl) {
-			this.originalParentEl = el
+		if (!this.referenceEl) {
+			this.referenceEl = el
 		}
 	}
 
@@ -98,14 +86,14 @@ export default class Popover extends Vue {
 
 	private bindPopper() {
 		this.$nextTick().then(() => {
-			if (this.originalParentEl) {
+			if (this.referenceEl) {
 				this.createPopper()
 			}
 		})
 	}
 
 	private createPopper() {
-		const referenceEl = this.originalParentEl as Element
+		const referenceEl = this.referenceEl as Element
 		// @ts-ignore
 		this.popperInstance = new Popper(referenceEl, this.$el, {
 			placement: this.placement
@@ -116,6 +104,41 @@ export default class Popover extends Vue {
 		if (this.popperInstance) {
 			this.killPopper()
 			this.createPopper()
+		}
+	}
+
+	private onMousedown(e: Event) {
+		// Search all $el of descendant "Popover"s
+		const popovers = [this.$el]
+		const searchPortals = (children: Vue[]) => {
+			children.forEach(node => {
+				if (
+					node.$el.nodeName !== '#comment' &&
+					node.$options.name === 'Popover'
+				) {
+					popovers.push(node.$el)
+				}
+				if (node.$children) {
+					searchPortals(node.$children)
+				}
+			})
+		}
+		searchPortals(this.$children)
+
+		const clickedOutside = popovers.every(popover => {
+			return !e.composedPath().includes(popover)
+		})
+
+		if (clickedOutside) {
+			this.$emit('update:active', false)
+			this.$emit('close')
+		}
+	}
+
+	private onKeydown(e: KeyboardEvent) {
+		if (keycode.isEventKey(e, 'esc')) {
+			this.$emit('update:active', false)
+			this.$emit('close')
 		}
 	}
 }

@@ -8,23 +8,27 @@
 		<div class="Parameter__field">
 			<slot/>
 		</div>
-		<Popover class="Parameter__context-menu" :active.sync="isContextMenuOpen">
+		<Popover
+			class="Parameter__context-menu"
+			:active.sync="isContextMenuOpen"
+			position="cursor"
+			placement="right-start"
+		>
 			<Menu :items="contextMenuItems" @click="onClickContextMenu"/>
 		</Popover>
-		<PopoverBind
-			v-if="value !== undefined"
-			:value="value"
-			:precision="precision"
-			:max="max"
-			:min="min"
-			:step="step"
-			:unit="unit"
-			:ui="bindUI"
-			:active.sync="isBindOpen"
-			:bindList="bindList"
-			@update:bindList="onBindListUpdated"
-			position="mouse"
-		/>
+		<Popover :active.sync="isBindOpen">
+			<PaneBind
+				:value="value"
+				:precision="precision"
+				:max="max"
+				:min="min"
+				:step="step"
+				:unit="unit"
+				:ui="bindUI"
+				:bindList="bindList"
+				@update:bindList="onBindListUpdated"
+			/>
+		</Popover>
 	</div>
 </template>
 
@@ -35,13 +39,13 @@ import Mousetrap from 'mousetrap'
 import Portal from './common/Portal'
 import Menu from './common/Menu'
 import Popover from './common/Popover.vue'
-import PopoverBind from './PopoverBind'
+import PaneBind from './PaneBind'
 
 import BindManager from '../core/BindManager'
 import deepcopy from '../util/deepcopy'
 
 @Component({
-	components: {Portal, Menu, Popover, PopoverBind}
+	components: {Portal, Menu, Popover, PaneBind}
 })
 export default class Parameter extends Vue {
 	@Prop(String) private label!: string

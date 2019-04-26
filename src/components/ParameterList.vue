@@ -279,7 +279,7 @@ export default class ParameterList extends Vue {
 						type = `press:${address}`
 						callback = () => {
 							console.log('callback')
-							this.updateValue(def, option.vƒalue)
+							this.updateValue(def, option.value)
 						}
 					} else if (method === 'add') {
 						// Inc

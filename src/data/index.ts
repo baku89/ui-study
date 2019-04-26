@@ -1,9 +1,5 @@
 import Color from './Color'
 
-// Bind
-type DataBindType = 'key' | 'osc' | 'midi'
-type DataBind = [DataBindType, string]
-
 // Transform
 type DataTransformType1D =
 	| 'translateX'
@@ -57,8 +53,6 @@ type DataTransform = DataTransformStack[]
 
 export {
 	Color,
-	DataBindType,
-	DataBind,
 	DataTransform,
 	DataTransformType,
 	DataTransformValue,

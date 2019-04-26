@@ -19,8 +19,8 @@
 					href="https://baku89.com"
 					target="_blank"
 				>橋本麦</a>が2017年の終わりごろから少しずつ習作を重ねています。
-				このプロジェクトの目的は、デザインツールのためのUXデザイン体系（僕は仮に
-				<em>Perceptive Design</em>《知覚的・デザイン》と呼ぶことにしています）を構築することです。そして最終的には、今構想しているデザインツールに使用するUIコンポーネント群を完成させます。
+				このプロジェクトの目的は、デザインツールのためのUXデザイン体系（仮に
+				<em>Perceptive Design</em>《知覚的デザイン》と呼ぶことにしています）を構築することです。そして最終的には、今構想しているデザインツールに使用するUIコンポーネント群を完成させます。
 			</p>
 			<p lang="ja">以下のデモやテキストの中で、Perceptive Designの考え方や、実際にどういう風に機能するか説明します。</p>
 			<!-- <p class="highlight">
@@ -84,7 +84,14 @@
 			numbering="4. "
 			title="Binding Parameters with Hardware Controller"
 			thumb="./assets/page-link_hardware-assign.png"
-		>The UI enables to assign each parameter any hardwares not only mice and keyboards but also MIDI controllers, 3D mice, and even gamepads. Artists can interact to their graphics with using full of their body as if musicians play intruments.</PageLink>
+		>
+			<span
+				lang="en"
+			>Just like VJ software, The UI enables to assign each parameter with any hardwares not only mice and keyboards but also MIDI controllers, OSC, and even gamepads. Artists can interact to their graphics with using full of their body as if musicians play intruments.</span>
+			<span
+				lang="ja"
+			>このUIは、VJソフトウェアのように、MIDIコントローラ、OSC、ゲームパッドの入力をパラメータやコマンドに関連付けすることができます。マウスやキーボードの他に様々なハードウェアをつかうことで、楽器演奏のように複雑かつ細やかにソフトウェアとインタラクトすることが出来ます。</span>
+		</PageLink>
 
 		<PageLink
 			numbering="5. "

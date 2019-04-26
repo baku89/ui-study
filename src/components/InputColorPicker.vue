@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator'
+import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 import {clamp} from '../math'
 
@@ -55,6 +55,10 @@ export default class InputColorPicker extends Vue {
 	private draggingSB: boolean = false
 	private draggingHue: boolean = false
 
+	private cachedHSB = [-1, -1, -1]
+	private previewStylesHue = {}
+	private previewStylesSB = {}
+
 	private get isHSB(): boolean {
 		const mode = this.value.mode
 		return mode === 'hsv' || mode === 'hsl'
@@ -68,21 +72,24 @@ export default class InputColorPicker extends Vue {
 		return this.value.cssColor
 	}
 
-	private get previewStylesSB(): object {
-		const hsb = this.hsb.elements as number[]
-		return {
-			left: `${hsb[1]}%`,
-			top: `${100 - hsb[2]}%`,
-			background: this.cssColor
-		}
-	}
+	@Watch('value', {immediate: true})
+	private updatePreviewStyles() {
+		const [h, s, b] = this.hsb.elements as number[]
+		const [h0, s0, b0] = this.cachedHSB
 
-	private get previewStylesHue(): object {
-		const hsb = this.hsb.elements as number[]
-		return {
-			top: `${(1 - hsb[0] / 360) * 100}%`,
-			background: this.cssColor
+		if (h % 360 !== h0 % 360 || s !== s0 || b !== b0) {
+			this.previewStylesHue = {
+				top: `${(1 - h / 360) * 100}%`,
+				background: this.cssColor
+			}
+
+			this.previewStylesSB = {
+				left: `${s}%`,
+				top: `${100 - b}%`,
+				background: this.cssColor
+			}
 		}
+		return
 	}
 
 	private onDragSB(type: DragEventType, e: MouseDragEvent) {
@@ -119,10 +126,25 @@ export default class InputColorPicker extends Vue {
 	private emitNewValue(h: number, s: number, b: number) {
 		const newValue = this.hsb.clone()
 
-		newValue.elements = [h, s, b]
+		const hsb = [h, s, b]
+
+		this.previewStylesHue = {
+			top: `${(1 - h / 360) * 100}%`,
+			background: this.cssColor
+		}
+
+		this.previewStylesSB = {
+			left: `${s}%`,
+			top: `${100 - b}%`,
+			background: this.cssColor
+		}
+
+		newValue.elements = hsb
 		if (!this.isHSB) {
 			newValue.convertMode(this.value.mode)
 		}
+
+		this.cachedHSB = hsb
 
 		this.$emit('input', newValue)
 	}

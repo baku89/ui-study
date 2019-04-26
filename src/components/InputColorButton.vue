@@ -57,10 +57,6 @@ import {buttons} from 'mouse-event'
 export default class InputColorButton extends Vue {
 	public selected: boolean = false
 
-	public updateValue(newValue: Color) {
-		this.$emit('input', newValue)
-	}
-
 	@Prop({type: Object, required: true}) private value!: Color
 
 	@Inject({from: 'SelectionManager', default: null})
@@ -68,8 +64,12 @@ export default class InputColorButton extends Vue {
 
 	private editing: boolean = false
 
-	get previewStyles(): object {
+	private get previewStyles(): object {
 		return {background: this.value.cssColor}
+	}
+
+	public updateValue(newValue: Color) {
+		this.$emit('input', newValue)
 	}
 
 	private onMousedownRight(e: Event) {

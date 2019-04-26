@@ -1,6 +1,7 @@
 import keycode from 'keycode'
 import EventEmitter from 'eventemitter3'
 import WebMidi, {InputEventBase} from 'webmidi'
+import {vec2} from 'gl-matrix'
 
 export interface BindEvent {
 	address: string
@@ -9,13 +10,19 @@ export interface BindEvent {
 }
 
 class BindManager extends EventEmitter {
+	private _mousePosition = vec2.create()
 	private toggleTable = new Map<string, boolean>()
 
 	constructor() {
 		super()
+		this.setupMouse()
 		this.setupKeyboard()
 		this.setupMidi()
 		this.setupGamepad()
+	}
+
+	public get mousePosition(): vec2 {
+		return this._mousePosition
 	}
 
 	public keycode(e: Event): string {
@@ -44,8 +51,14 @@ class BindManager extends EventEmitter {
 		})
 	}
 
+	private setupMouse() {
+		window.addEventListener('mousemove', (e: MouseEvent) => {
+			vec2.set(this.mousePosition, e.pageX, e.pageY)
+		})
+	}
+
 	private setupKeyboard() {
-		document.addEventListener('keydown', (e: KeyboardEvent) => {
+		window.addEventListener('keydown', (e: KeyboardEvent) => {
 			const key = this.keycode(e)
 			const address = `/key/${key}`
 			this.toggleTable.set(address, true)
@@ -64,7 +77,7 @@ class BindManager extends EventEmitter {
 			this.emit(`press:${address}`, payload)
 		})
 
-		document.addEventListener('keyup', (e: KeyboardEvent) => {
+		window.addEventListener('keyup', (e: KeyboardEvent) => {
 			const key = this.keycode(e)
 			const address = `/key/${key}`
 			const payload = {address, value: false, originalEvent: e}

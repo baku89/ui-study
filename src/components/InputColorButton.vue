@@ -7,7 +7,6 @@
 			@mousedown.right="onMousedownRight"
 		/>
 		<Popover class="InputColorButton__popover" :active.sync="editing" placement="right-start">
-			<div class="popper__arrow"/>
 			<div class="InputColorButton__popover-content">
 				<InputColorPicker class="InputColorButton__color-picker" :value="value" @input="onInput"/>
 				<div class="InputColorButton__parameters">
@@ -139,6 +138,7 @@ export default class InputColorButton extends Vue {
 
 	&__popover
 		margin-left 0.3em
+		padding var(--layout-popover-padding)
 		width 20em
 		border 1px solid var(--color-border-text)
 		border-radius $border-radius

@@ -9,6 +9,7 @@
 			:max="Array.isArray(max) ? max[index] : max"
 			:step="Array.isArray(step) ? step[index] : step"
 			:precision="precision"
+			:showSign="showSign"
 			:label="labels ? labels[index] : undefined"
 			:unit="unit"
 			@input="onInput(index, $event)"
@@ -31,6 +32,7 @@ export default class InputVector extends Vue {
 	@Prop([Number, Array]) private step!: number | number[]
 	@Prop(Array) private labels!: string[]
 	@Prop(String) private unit!: string
+	@Prop(Boolean) private showSign!: boolean
 
 	private onInput(index: number, value: number) {
 		const newValue = Array.from(this.value)

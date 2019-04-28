@@ -74,6 +74,7 @@ export default class InputNumber extends Vue {
 	@Prop(Number) private min!: number
 	@Prop(Number) private max!: number
 	@Prop(Number) private step!: number
+	@Prop({type: Boolean, default: false}) private showSign!: boolean
 
 	private inputValue: string = this.value.toString()
 
@@ -99,7 +100,11 @@ export default class InputNumber extends Vue {
 	private readonly Config!: DataConfig
 
 	private get displayValue(): string {
-		return toFixed(this.value, this.precision, this.shouldOmitZero)
+		let displayValue = toFixed(this.value, this.precision, this.shouldOmitZero)
+		if (this.showSign && this.value > 0) {
+			displayValue = '+' + displayValue
+		}
+		return displayValue
 	}
 
 	private get hasMin(): boolean {

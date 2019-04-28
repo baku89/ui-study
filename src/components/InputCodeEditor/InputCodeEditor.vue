@@ -68,9 +68,11 @@ export default class InputCodeEditor extends Vue {
 	overflow scroll
 	border 1px solid var(--color-border)
 	border-radius $border-radius
-	font-family var(--font-code)
+	background var(--color-field)
 
 	&__editor
 		position relative
 		width 100%
+		background transparent
+		font-family var(--font-code)
 </style>

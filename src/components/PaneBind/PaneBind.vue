@@ -28,6 +28,7 @@
 					:max="bind.method === 'set' ? max : undefined"
 					:step="step"
 					:unit="unit"
+					:showSign="bind.method === 'add'"
 					class="PaneBind__option-value"
 					v-model="bind.option.value"
 					@input="$emit('update:bindList')"
@@ -155,6 +156,27 @@ export default class PaneBind extends Vue {
 	box-shadow 0 0 1.5em 0 rgba(black, 0.2)
 	user-select none
 	enable-menu-color()
+
+	&:before
+		position absolute
+		top 0
+		left 50%
+		display block
+		width 0
+		height 0
+		border-width $popover-arrow-size
+		border-style solid
+		border-color transparent
+		content ''
+
+	&[x-placement=^bottom]
+		margin-top $popover-arrow-size
+
+		&:before
+			margin-top -1 * $popover-arrow-size
+			margin-left -1 * $popover-arrow-size
+			border-top-width 0
+			border-bottom-color var(--color-bg)
 
 	&__header
 		display flex

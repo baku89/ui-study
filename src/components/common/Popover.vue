@@ -50,7 +50,6 @@ export default class Popover extends Vue {
 			if (this.position === 'cursor') {
 				const x = BindManager.mousePosition[0]
 				const y = BindManager.mousePosition[1]
-				console.log(x, y)
 				this.referenceEl = {
 					getBoundingClientRect: () => ({
 						top: y,
@@ -93,9 +92,8 @@ export default class Popover extends Vue {
 	}
 
 	private createPopper() {
-		const referenceEl = this.referenceEl as Element
 		// @ts-ignore
-		this.popperInstance = new Popper(referenceEl, this.$el, {
+		this.popperInstance = new Popper(this.referenceEl, this.$el, {
 			placement: this.placement
 		})
 	}

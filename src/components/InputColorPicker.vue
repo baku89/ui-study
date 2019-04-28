@@ -114,8 +114,6 @@ export default class InputColorPicker extends Vue {
 	}
 
 	private emitNewValue(h: number, s: number, b: number) {
-		const newValue = this.hsb.clone()
-
 		const hsb = [h, s, b]
 
 		this.previewStylesHue = {
@@ -129,6 +127,7 @@ export default class InputColorPicker extends Vue {
 			background: this.cssColor
 		}
 
+		const newValue = this.hsb.clone()
 		newValue.elements = hsb
 		if (!this.isHSB) {
 			newValue.convertMode(this.value.mode)

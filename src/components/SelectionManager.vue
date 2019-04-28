@@ -86,7 +86,7 @@ export default class SelectionManager extends Vue {
 	@Inject({from: 'Config', default: DefaultConfig})
 	private readonly Config!: DataConfig
 
-	private items: Selection[] = []
+	private items!: Selection[]
 
 	private dragging: boolean = false
 	private drag: {
@@ -164,6 +164,10 @@ export default class SelectionManager extends Vue {
 				this.controls[key] = false
 			}
 		}
+	}
+
+	private created() {
+		this.items = []
 	}
 
 	private mounted() {
@@ -333,8 +337,8 @@ export default class SelectionManager extends Vue {
 		font-size 0.8em
 		line-height var(--layout-input-height)
 		opacity 0.3
-		transition all 0.1s ease
-		transform scale(0.8)
+		// transition all 0.1s ease
+		// transform scale(0.8)
 		transform-origin 50% 0
 		user-select none
 

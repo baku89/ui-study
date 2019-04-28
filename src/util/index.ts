@@ -1,5 +1,6 @@
 import mouse from 'mouse-event'
 
+import deserialize from './deserialize'
 import RoteryDrag from './RoteryDrag'
 import MouseDragEvent from './MouseDragEvent'
 
@@ -22,4 +23,10 @@ function setButtonUnfocusableForMouse(button: HTMLElement) {
 		}
 	})
 }
-export {getDOMCenter, setButtonUnfocusableForMouse, RoteryDrag, MouseDragEvent}
+export {
+	getDOMCenter,
+	setButtonUnfocusableForMouse,
+	RoteryDrag,
+	MouseDragEvent,
+	deserialize
+}

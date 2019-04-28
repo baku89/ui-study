@@ -38,6 +38,7 @@ export default class Color {
 	}
 
 	public mode!: ColorMode
+
 	public elements!: ColorElements
 
 	constructor(mode: ColorMode, elements: ColorElements) {
@@ -130,5 +131,9 @@ export default class Color {
 		}
 
 		return this
+	}
+
+	private toJSON() {
+		return {$type: 'Color', value: [this.mode, this.elements]}
 	}
 }

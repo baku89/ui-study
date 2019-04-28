@@ -1,6 +1,7 @@
 <template>
 	<div class="InputColorPicker">
 		<Drag
+			:dragging.sync="draggingSB"
 			measure="normalized"
 			:clamp="true"
 			@dragstart="onDragSB('dragstart', $event)"
@@ -15,6 +16,7 @@
 			</div>
 		</Drag>
 		<Drag
+			:dragging.sync="draggingHue"
 			measure="normalized"
 			detectDirection="vertical"
 			:clamp="true"
@@ -95,12 +97,6 @@ export default class InputColorPicker extends Vue {
 	private onDragSB(type: DragEventType, e: MouseDragEvent) {
 		const hsb = this.hsb.elements as number[]
 
-		if (type === 'dragstart') {
-			this.draggingSB = true
-		} else if (type === 'dragend') {
-			this.draggingSB = false
-		}
-
 		if (type !== 'dragend') {
 			const s = e.current[0] * 100
 			const b = (1 - e.current[1]) * 100
@@ -110,12 +106,6 @@ export default class InputColorPicker extends Vue {
 
 	private onDragHue(type: DragEventType, e: MouseDragEvent) {
 		const hsb = this.hsb.elements as number[]
-
-		if (type === 'dragstart') {
-			this.draggingHue = true
-		} else if (type === 'dragend') {
-			this.draggingHue = false
-		}
 
 		if (type !== 'dragend') {
 			const h = (1 - e.current[1]) * 360

@@ -1,11 +1,11 @@
 <template>
 	<div class="InputSlider">
 		<Drag
+			:dragging.sync="dragging"
 			detectDirection="horizontal"
 			measure="normalized"
 			@dragstart="onDragstart"
 			@drag="onDrag"
-			@dragend="onDragend"
 		>
 			<div class="InputSlider__slit" :class="{dragging}" ref="slit">
 				<div class="InputSlider__accum" :style="accumStyles"/>
@@ -39,9 +39,9 @@ export default class InputSlider extends Vue {
 	@Inject({from: 'Config', default: DefaultConfig})
 	private readonly Config!: DataConfig
 
-	private dragStartValue!: number
-
 	private dragging: boolean = false
+
+	private dragStartValue!: number
 
 	private get percent(): number {
 		return ratio(this.value, this.min, this.max, true) * 100
@@ -70,8 +70,6 @@ export default class InputSlider extends Vue {
 	}
 
 	private onDragstart(e: {current: vec2; originalEvent: MouseEvent}) {
-		this.dragging = true
-
 		if (e.originalEvent.target === this.$refs.knob) {
 			this.dragStartValue = this.value
 		} else {
@@ -100,10 +98,6 @@ export default class InputSlider extends Vue {
 		if (this.value !== newValue) {
 			this.$emit('input', newValue)
 		}
-	}
-
-	private onDragend() {
-		this.dragging = false
 	}
 }
 </script>

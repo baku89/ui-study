@@ -5,11 +5,11 @@
 		:selectable="true"
 	>
 		<Drag
+			:dragging.sync="dragging"
 			:minDragDistance="3"
 			detectDirection="vertical"
 			@dragstart="onDragstart"
 			@drag="onDrag"
-			@dragend="dragging = false"
 			@click="onClick"
 		>
 			<div class="InputColorElement__display">
@@ -188,7 +188,6 @@ export default class InputColorElement extends Vue {
 		this.slitMaxY = e.current[1] - (1 - position) * SLIT_HEIGHT
 		this.slitLeft = getDOMCenter(this.$refs.input as HTMLElement)[0]
 		this.previewY = e.current[1]
-		this.dragging = true
 	}
 
 	private onDrag(e: {current: vec2; delta: vec2}) {

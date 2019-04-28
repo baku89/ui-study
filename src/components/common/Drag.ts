@@ -19,6 +19,7 @@ export default class Drag extends Vue {
 	@Prop({type: Number, default: 0}) private minDragDistance!: number
 	@Prop({type: Boolean, default: false}) private clamp!: boolean
 	@Prop(String) private box!: string
+	@Prop(Boolean) private dragging!: boolean
 
 	@Inject({from: 'Config', default: DefaultConfig})
 	private readonly Config!: DataConfig
@@ -92,6 +93,9 @@ export default class Drag extends Vue {
 			}
 			BindManager.on('press', this.onBindToggle)
 			BindManager.on('release', this.onBindToggle)
+			if (this.dragging !== undefined) {
+				this.$emit('update:dragging', this.dragStarted)
+			}
 			this.$emit('dragstart', event)
 			vec2.copy(this.prev, this.current)
 		} else {
@@ -155,6 +159,9 @@ export default class Drag extends Vue {
 
 					BindManager.on('press', this.onBindToggle)
 					BindManager.on('release', this.onBindToggle)
+					if (this.dragging !== undefined) {
+						this.$emit('update:dragging', this.dragStarted)
+					}
 					this.$emit('dragstart', event)
 					vec2.copy(this.prev, this.origin)
 				}
@@ -182,6 +189,9 @@ export default class Drag extends Vue {
 
 	private onMouseup(e: Event) {
 		if (this.dragStarted) {
+			if (this.dragging !== undefined) {
+				this.$emit('update:dragging', this.dragStarted)
+			}
 			this.$emit('dragend', {originalEvent: e})
 		} else {
 			this.$emit('click', {originalEvent: e})
@@ -195,6 +205,9 @@ export default class Drag extends Vue {
 		window.removeEventListener('mouseup', this.onMouseup)
 		BindManager.off('press', this.onBindToggle)
 		BindManager.off('release', this.onBindToggle)
+		if (this.dragging !== undefined) {
+			this.$emit('update:dragging', this.dragStarted)
+		}
 	}
 
 	private setAbsCoordByMouseEvent(coord: vec2, e: MouseEvent) {

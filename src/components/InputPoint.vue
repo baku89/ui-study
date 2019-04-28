@@ -1,6 +1,6 @@
 <template>
 	<div class="InputPoint">
-		<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="onDragend">
+		<Drag :dragging.sync="dragging" @dragstart="onDragstart" @drag="onDrag">
 			<button
 				class="InputPoint__knob"
 				:class="{dragging}"
@@ -104,8 +104,6 @@ export default class InputPoint extends Vue {
 	}
 
 	private onDragstart(e: {current: vec2}) {
-		this.dragging = true
-
 		const $knob = this.$refs.knob as HTMLElement
 		this.dragFrom = getDOMCenter($knob)
 
@@ -124,10 +122,6 @@ export default class InputPoint extends Vue {
 		this.dragTo[0] = e.current[0] - this.knobOffset[0]
 		this.dragTo[1] = e.current[1] - this.knobOffset[1]
 		this.$emit('input', newValue)
-	}
-
-	private onDragend() {
-		this.dragging = false
 	}
 }
 </script>

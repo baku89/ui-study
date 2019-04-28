@@ -5,11 +5,11 @@
 		:class="{editing, selected, updating: dragging || updatedRecently}"
 	>
 		<Drag
+			:dragging.sync="dragging"
 			:minDragDistance="3"
 			detectDirection="horizontal"
 			@dragstart="onDragstart"
 			@drag="onDrag"
-			@dragend="dragging = false"
 			@click="onClick"
 		>
 			<div class="InputNumber__display">
@@ -189,8 +189,6 @@ export default class InputNumber extends Vue {
 		drag.inc = 0
 		this.$set(drag.position, 0, current[0])
 		this.$set(drag.position, 1, current[1])
-
-		this.dragging = true
 	}
 
 	private onDrag({delta, current}: MouseDragEvent) {

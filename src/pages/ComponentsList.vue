@@ -8,12 +8,7 @@
 			<p>Slider, Scale, Position, and Color.</p>
 			<div class="ui">
 				<div class="param">
-					<ParameterList
-						v-model="ex1"
-						:defaultSchema="ex1Schema"
-						:schema="ex1UserSchema"
-						@update:schema="onUserSchemaUpdated('ex1UserSchema', $event)"
-					/>
+					<ParameterList v-model="ex1" :defaultSchemas="[ex1Schema]" :schema.sync="ex1UserSchema"/>
 				</div>
 				<div class="preview">
 					<div class="aspect">
@@ -31,7 +26,7 @@
 					</div>
 				</div>
 			</div>
-
+			<!-- 
 			<h2>
 				Example
 				<span class="outline">#2</span>
@@ -151,19 +146,17 @@
 						ref="timelineDraw"
 					/>
 				</Timeline>
-			</div>
+			</div>-->
 		</div>
 	</SelectionManager>
 </template>
 
 <script lang="ts">
-import {Component, Vue, Watch} from 'vue-property-decorator'
-
+import {Component, Vue, Watch, Inject} from 'vue-property-decorator'
 import Color from '../data/Color'
-
 import TimelineColor from '../components/TimelineColor.vue'
-
 import Components from '../components'
+import {p, g} from '../data/Schema'
 
 const PI_2 = Math.PI * 2
 
@@ -173,10 +166,6 @@ const PI_2 = Math.PI * 2
 		const time = 2
 		const min = 0
 		const max = 240
-		// const colors = new Uint8ClampedArray(
-		// 	Array((max - min + 1) * 4)
-		// 		.fill(0)
-		// 		.map((v, i) => (i % 4 === 3 ? 255 : 0))
 		const values = new Float32Array(Array(max - min + 1).fill(0.5))
 
 		return {
@@ -188,78 +177,42 @@ const PI_2 = Math.PI * 2
 				stroke: new Color('hsv', [331, 83, 89]),
 				strokeWidth: 3
 			},
-			ex1Schema: {
-				radius: {ui: 'slider', min: 0, max: 50, unit: '%'},
-				scale: {ui: 'scale', keepProportion: false},
-				position: {ui: 'point', unit: '%'},
-				fill: {ui: 'color'},
-				stroke: {ui: 'color'},
-				strokeWidth: {ui: 'slider', min: 0, max: 10, step: 1, precision: 0}
-			},
-			ex1UserSchema: {
-				radius: {
-					bindList: [
-						{
-							address: '/key/1',
-							method: 'set',
-							option: {
-								value: 0
-							}
-						},
-						{
-							address: '/key/u',
-							method: 'add',
-							option: {
-								value: 1
-							}
-						},
-						{
-							address: '/midi/ch0',
-							method: 'map',
-							option: {
-								from: [0, 127],
-								to: [0, 50]
-							}
-						}
-					]
-				},
-				scale: {
-					bindList: [
-						{
-							address: '/key/2',
-							method: 'set',
-							option: {
-								value: [2, 2]
-							}
-						}
-					]
-				}
-			},
+			ex1Schema: g('', {}, [
+				p('radius', {ui: 'slider', min: 0, max: 50, unit: '%', prefix: 'R'}),
+				p('scale', {ui: 'scale', keepProportion: false}),
+				p('position', {ui: 'point', unit: '%'}),
+				p('fill', {ui: 'color'}),
+				p('stroke', {ui: 'color'}),
+				p('strokeWidth', {ui: 'slider', min: 0, max: 10, step: 1, precision: 0})
+			]),
+			ex1UserSchema: g('', {}, []),
 			ex2: {
 				text: 'Hello World',
 				rotation: 0,
 				trim: [0, 50]
 			},
-			ex2Schema: {
-				text: {ui: 'string'},
-				rotation: {ui: 'angle'},
-				trim: {ui: 'range', min: 0, max: 100, unit: '%'}
-			},
-			ex2UserSchema: {},
+			ex2Schema: g('', {}, [
+				p('text', {ui: 'string'}),
+				p('rotation', {ui: 'angle'}),
+				p('trim', {ui: 'range', min: 0, max: 100, unit: '%'})
+			]),
+			ex2UserSchema: g('', {}, []),
 			ex3: {
 				image: 'Mochi',
 				inverted: false,
 				edge: 'Rounded'
 			},
-			ex3Schema: {
-				image: {ui: 'dropdown', values: ['Mochi', 'Dango', 'Beko-mochi']},
-				inverted: {ui: 'checkbox'},
-				edge: {ui: 'mode', values: ['Rounded', 'Circle', 'Glow']}
-			},
-			ex3UserSchema: {},
+			ex3Schema: g('', {}, [
+				p('image', {ui: 'dropdown', values: ['Mochi', 'Dango', 'Beko-mochi']}),
+				p('inverted', {ui: 'checkbox'}),
+				p('edge', {ui: 'mode', values: ['Rounded', 'Circle', 'Glow']})
+			]),
+			ex3UserSchema: g('', {}, []),
 			ex4: {
 				seed: 1
 			},
+			ex4Schema: g('', {}, [p('seed', {ui: 'seed'})]),
+			ex4UserSchema: g('', {}, []),
 			ex5: {
 				code: 'console.log("Hello World")'
 			},
@@ -275,6 +228,8 @@ const PI_2 = Math.PI * 2
 	}
 })
 export default class ComponentsList extends Vue {
+	@Inject({from: 'Config'}) private Config!: any
+
 	private trimText(text: string, min: number, max: number) {
 		const len = text.length
 
@@ -282,10 +237,6 @@ export default class ComponentsList extends Vue {
 		const end = Math.floor((max / 100) * len)
 
 		return text.slice(start, end)
-	}
-
-	private onUserSchemaUpdated(name: string, schema: any[]) {
-		this.$set(this, name, schema)
 	}
 
 	private togglePlay() {
@@ -351,7 +302,7 @@ export default class ComponentsList extends Vue {
 		height: number
 	) {
 		const value = this.$data.ex6.values[frame]
-		ctx.fillStyle = 'red' // 'var(--color-text)' //`rgb(${value}, ${value}, ${value})`
+		ctx.fillStyle = (this.Config.theme.colorActive as Color).cssColor
 		ctx.fillRect(0, height * (1 - value), width, height * value)
 	}
 }

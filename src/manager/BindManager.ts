@@ -12,6 +12,11 @@ export interface BindEvent {
 class BindManager extends EventEmitter {
 	private _mousePosition = vec2.create()
 	private toggleTable = new Map<string, boolean>()
+	private detectHandler: {
+		type: string
+		callback: EventEmitter.ListenerFn
+		reject: (reason?: any) => void
+	} | null = null
 
 	constructor() {
 		super()
@@ -39,16 +44,35 @@ class BindManager extends EventEmitter {
 		return this.toggleTable.get(address) || false
 	}
 
-	public async detect(): Promise<string> {
+	public async detect(
+		type: undefined | 'press' | 'change' = 'press'
+	): Promise<string> {
+		this.abortDetection()
+
 		return new Promise((resolve, reject) => {
-			// Key
-			this.once('press', (e: BindEvent) => {
-				if (e.originalEvent instanceof Event) {
-					e.originalEvent.preventDefault()
-				}
-				resolve(e.address)
-			})
+			this.detectHandler = {
+				type,
+				callback: (e: BindEvent) => {
+					if (e.originalEvent instanceof Event) {
+						e.originalEvent.preventDefault()
+					}
+					this.detectHandler = null
+					resolve(e.address)
+				},
+				reject
+			}
+
+			this.once(type, this.detectHandler.callback)
 		})
+	}
+
+	public abortDetection() {
+		if (this.detectHandler !== null) {
+			const {type: eventType, callback, reject} = this.detectHandler
+			this.detectHandler = null
+			this.off(eventType, callback)
+			reject('Aborted')
+		}
 	}
 
 	private setupMouse() {
@@ -108,6 +132,7 @@ class BindManager extends EventEmitter {
 				this.emit(toggleType, togglePayload)
 				this.emit(`${toggleType}:${address}`, togglePayload)
 
+				this.emit('change', changePayload)
 				this.emit(`change:${address}`, changePayload)
 			}
 

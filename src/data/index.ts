@@ -1,7 +1,7 @@
 import Color from './Color'
 
 // Transform
-type DataTransformType1D =
+export type DataTransformType1D =
 	| 'translateX'
 	| 'translateY'
 	| 'scaleX'
@@ -11,18 +11,18 @@ type DataTransformType1D =
 	| 'skewX'
 	| 'skewY'
 
-type DataTransformType2D = 'translate' | 'scale' | 'skew'
+export type DataTransformType2D = 'translate' | 'scale' | 'skew'
 
-type DataTransformTypeMatrix = 'matrix'
+export type DataTransformTypeMatrix = 'matrix'
 
-type DataTransformType =
+export type DataTransformType =
 	| DataTransformType1D
 	| DataTransformType2D
 	| DataTransformTypeMatrix
 
-type DataTransformValue = number | number[]
+export type DataTransformValue = number | number[]
 
-const DataTransformType1DList = [
+export const DataTransformType1DList = [
 	'translateX',
 	'translateY',
 	'scaleX',
@@ -33,32 +33,26 @@ const DataTransformType1DList = [
 	'skewY'
 ]
 
-const DataTransformType2DList = ['translate', 'scale', 'skew']
+export const DataTransformType2DList = ['translate', 'scale', 'skew']
 
-const DataTransformTypeMatrixList = ['matrix']
+export const DataTransformTypeMatrixList = ['matrix']
 
-const DataTransformTypeList = [
+export const DataTransformTypeList = [
 	...DataTransformType1DList,
 	...DataTransformType2DList,
 	...DataTransformTypeMatrixList
 ]
 
-interface DataTransformStack {
+export interface DataTransformStack {
 	type: DataTransformType
 	value: DataTransformValue
 	active: boolean
 }
 
-type DataTransform = DataTransformStack[]
+export type DataTransform = DataTransformStack[]
 
-export {
-	Color,
-	DataTransform,
-	DataTransformType,
-	DataTransformValue,
-	DataTransformType1DList,
-	DataTransformType2DList,
-	DataTransformTypeMatrixList,
-	DataTransformTypeList,
-	DataTransformStack
+export interface Store {
+	[name: string]: number | string | number[] | Color | Store
 }
+
+export {Color}

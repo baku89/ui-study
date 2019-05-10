@@ -19,6 +19,64 @@ export default class GradientPalette extends Vue {
 
 	private ctx!: CanvasRenderingContext2D
 	private canvas!: HTMLCanvasElement
+	private uniforms!: any
+	private oldElements!: number[]
+
+	private get constants(): number[] {
+		return Array(3)
+			.fill(0)
+			.map((_: number, i: number) => i)
+			.filter((i: number) => !this.varyings.includes(i))
+	}
+
+	private get modeIndex(): number {
+		const varyingHash = this.varyings.join('-')
+
+		let index = 0
+		switch (varyingHash) {
+			case '0':
+				index = 0
+				break
+			case '1':
+				index = 1
+				break
+			case '2':
+				index = 2
+				break
+			case '0-1':
+				index = 3
+				break
+			case '1-2':
+				index = 4
+				break
+			case '0-2':
+				index = 5
+				break
+		}
+
+		switch (this.color.mode) {
+			case 'hsl':
+				index += 10
+				break
+			case 'rgb':
+				index += 20
+				break
+			case 'hsv':
+				index += 30
+				break
+		}
+
+		return index
+	}
+
+	private created() {
+		this.uniforms = {
+			resolution: [0, 0],
+			mode: 0,
+			elements: null
+		}
+		this.oldElements = [0, 0, 0]
+	}
 
 	private mounted() {
 		if (!GradientPalette.gl) {
@@ -45,9 +103,15 @@ export default class GradientPalette extends Vue {
 		this.renderPad()
 	}
 
-	@Watch('color')
+	@Watch('color', {deep: true})
 	private onColorChanged() {
-		this.renderPad()
+		const changed = false
+		for (const i of this.constants) {
+			if (this.color.elements[i] !== this.oldElements[i]) {
+				this.renderPad()
+				break
+			}
+		}
 	}
 
 	@Watch('varyings')
@@ -56,6 +120,10 @@ export default class GradientPalette extends Vue {
 	}
 
 	private renderPad() {
+		this.oldElements[0] = this.color.elements[0] as number
+		this.oldElements[1] = this.color.elements[1] as number
+		this.oldElements[2] = this.color.elements[2] as number
+
 		twgl.resizeCanvasToDisplaySize(this.canvas)
 
 		if (this.canvas.width === 0 || this.canvas.height === 0) {
@@ -68,58 +136,17 @@ export default class GradientPalette extends Vue {
 		gl.canvas.height = this.canvas.height
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
 
-		const uniforms = {
-			resolution: [gl.canvas.width, gl.canvas.height],
-			mode: this.getModeIndex(this.color.mode, this.varyings),
-			elements: this.color.elements
-		}
+		this.uniforms.resolution[0] = gl.canvas.width
+		this.uniforms.resolution[1] = gl.canvas.height
+		this.uniforms.mode = this.modeIndex
+		this.uniforms.elements = this.color.elements
 
 		gl.useProgram(programInfo.program)
 		twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo)
-		twgl.setUniforms(programInfo, uniforms)
+		twgl.setUniforms(programInfo, this.uniforms)
 		twgl.drawBufferInfo(gl, bufferInfo)
 
 		this.ctx.drawImage(gl.canvas, 0, 0, this.canvas.width, this.canvas.height)
-	}
-
-	private getModeIndex(mode: ColorMode, varyings: number[]): number {
-		const varyingHash = varyings.join('-')
-
-		let index = 0
-		switch (varyingHash) {
-			case '0':
-				index = 0
-				break
-			case '1':
-				index = 1
-				break
-			case '2':
-				index = 2
-				break
-			case '0-1':
-				index = 3
-				break
-			case '1-2':
-				index = 4
-				break
-			case '0-2':
-				index = 5
-				break
-		}
-
-		switch (mode) {
-			case 'hsl':
-				index += 10
-				break
-			case 'rgb':
-				index += 20
-				break
-			case 'hsv':
-				index += 30
-				break
-		}
-
-		return index
 	}
 }
 </script>

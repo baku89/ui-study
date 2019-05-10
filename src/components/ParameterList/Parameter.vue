@@ -4,7 +4,7 @@
 		:class="{popovering: isBindOpen || isContextMenuOpen}"
 		@click.right="openContextMenu"
 	>
-		<label class="Parameter__label" v-if="label" :style="{width}">{{label}}</label>
+		<label class="Parameter__label">{{schema.label}}</label>
 		<div class="Parameter__field">
 			<slot/>
 		</div>
@@ -17,17 +17,7 @@
 			<Menu :items="contextMenuItems" @click="onClickContextMenu"/>
 		</Popover>
 		<Popover :active.sync="isBindOpen">
-			<PaneBind
-				:value="value"
-				:precision="precision"
-				:max="max"
-				:min="min"
-				:step="step"
-				:unit="unit"
-				:ui="bindUI"
-				:bindList="bindList"
-				@update:bindList="onBindListUpdated"
-			/>
+			<PaneBind :value="value" :schema="schema" @update:schema="$emit('update:schema', schema)"/>
 		</Popover>
 	</div>
 </template>
@@ -36,57 +26,25 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import Mousetrap from 'mousetrap'
 
-import Portal from './common/Portal'
-import Menu from './common/Menu'
-import Popover from './common/Popover.vue'
-import PaneBind from './PaneBind'
+import Portal from '../common/Portal'
+import Menu from '../common/Menu'
+import Popover from '../common/Popover.vue'
+import PaneBind from '../PaneBind'
 
-import BindManager from '../core/BindManager'
-import deepcopy from '../util/deepcopy'
+import BindManager from '../../manager/BindManager'
+import deepcopy from '../../util/deepcopy'
+import {Color} from '../../data'
+import {Schema} from '../../data/Schema'
 
 @Component({
 	components: {Portal, Menu, Popover, PaneBind}
 })
 export default class Parameter extends Vue {
-	@Prop(String) private label!: string
-	@Prop(String) private width!: string
+	@Prop(Object) private schema!: Schema
 	@Prop() private value!: any
-	@Prop(Number) private precision!: number
-	@Prop([Number, Array]) private min!: number | number[]
-	@Prop([Number, Array]) private max!: number | number[]
-	@Prop(Number) private step!: number
-	@Prop(String) private unit!: number
 	@Prop() private default!: any
-	@Prop({
-		type: Array,
-		default() {
-			return []
-		}
-	})
-	private bindList!: any
-
 	private isContextMenuOpen: boolean = false
 	private isBindOpen: boolean = false
-
-	private get bindUI(): 'number' | 'color' | 'string' | 'vector' | 'checkbox' {
-		const valueType = typeof this.value
-
-		if (valueType === 'number' || valueType === 'string') {
-			return valueType
-		} else if (valueType === 'boolean') {
-			return 'checkbox'
-		} else {
-			if (Array.isArray(this.value)) {
-				if (this.value.every(val => typeof val === 'number')) {
-					return 'vector'
-				} else {
-					return 'color'
-				}
-			}
-		}
-
-		return 'number'
-	}
 
 	private get contextMenuItems(): any[] {
 		const items = []
@@ -119,19 +77,14 @@ export default class Parameter extends Vue {
 		if (value === 'bind') {
 			this.isBindOpen = true
 		} else if (value === 'reset') {
-			console.log(this.default)
 			this.$emit('input', this.default)
 		}
-	}
-
-	private onBindListUpdated(bindList: any) {
-		this.$emit('update:bindList', this.bindList)
 	}
 }
 </script>
 
 <style lang="stylus" scoped>
-@import '../style/config.styl'
+@import '../../style/config.styl'
 
 .Parameter
 	display flex
@@ -146,7 +99,7 @@ export default class Parameter extends Vue {
 	&__label
 		overflow hidden
 		margin-right 0.5em
-		width 7em
+		width var(--parameter-list-width)
 		white-space nowrap
 		line-height var(--layout-input-height)
 

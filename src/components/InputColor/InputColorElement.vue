@@ -13,7 +13,7 @@
 			@click="onClick"
 		>
 			<div class="InputColorElement__display">
-				<div class="InputColorElement__label" v-if="info.label[varying]">{{info.label[varying]}}</div>
+				<div class="InputColorElement__prefix" v-if="info.prefix[varying]">{{info.prefix[varying]}}</div>
 				{{value.toFixed(0)}}
 				<span
 					v-if="info.unit[varying]"
@@ -52,7 +52,7 @@ import keycode from 'keycode'
 
 import {getDOMCenter} from '../../util'
 import {parseNumber, ratio, clamp, lerp} from '../../math'
-import BindManager from '../../core/BindManager'
+import BindManager from '../../manager/BindManager'
 import Color, {ColorModeInfo} from '../../data/Color'
 
 import Drag from '../common/Drag'
@@ -60,7 +60,7 @@ import Portal from '../common/Portal'
 import SvgArrow from '../common/SvgArrow.vue'
 import GradientPalette from '../common/GradientPalette'
 import SelectionManager from '../SelectionManager.vue'
-import {DefaultConfig, DataConfig} from '../../core'
+import {ConfigDefault} from '../../core/config'
 
 const SLIT_HEIGHT = 200
 const SLIT_WIDTH = 6
@@ -94,8 +94,8 @@ export default class InputColorElement extends Vue {
 	@Inject({from: 'SelectionManager', default: null})
 	private readonly SelectionManager!: SelectionManager
 
-	@Inject({from: 'Config', default: DefaultConfig})
-	private readonly Config!: DataConfig
+	@Inject({from: 'Config', default: ConfigDefault})
+	private readonly Config!: any
 
 	private get value(): number {
 		return (this.color.elements as number[])[this.varying]
@@ -195,7 +195,10 @@ export default class InputColorElement extends Vue {
 		const t = ratio(this.previewY, this.slitMinY, this.slitMaxY)
 
 		const newValue = lerp(0, this.info.max[this.varying], t)
-		this.$emit('update:element', newValue)
+
+		if (this.color.elements[this.varying] !== newValue) {
+			this.$emit('update:element', newValue)
+		}
 	}
 
 	@Watch('color')
@@ -249,7 +252,7 @@ export default class InputColorElement extends Vue {
 		^[0].editing > &
 			visibility hidden
 
-	&__label
+	&__prefix
 		position absolute
 		margin-left -0.05em
 		height 100%

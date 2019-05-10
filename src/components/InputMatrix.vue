@@ -1,5 +1,8 @@
 <template>
-	<div :class="['InputMatrix', direction]" :style="{height: `calc(var(--layout-input-height) * ${rows}`}">
+	<div
+		:class="['InputMatrix', direction]"
+		:style="{height: `calc(var(--layout-input-height) * ${rows}`}"
+	>
 		<InputNumber
 			v-for="(v, index) in value"
 			:key="index + 1"
@@ -77,8 +80,13 @@ export default class InputMatrix extends Vue {
 	}
 
 	private onInput(index: number, value: number) {
-		const newValue = Array.from(this.value)
+		const newValue = this.value
 		newValue[index] = value
+		// @ts-ignore
+		if (newValue.__ob__) {
+			// @ts-ignore
+			newValue.__ob__.dep.notify()
+		}
 		this.$emit('input', newValue, index)
 	}
 }

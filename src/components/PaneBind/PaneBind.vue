@@ -4,18 +4,19 @@
 			<h3 class="PaneBind__title">BIND</h3>
 			<InputIconAction
 				class="PaneBind__add"
-				:items="addItems"
+				:items="addMenuItems"
 				src="./assets/icon_plus.svg"
 				@click="addBind"
 			/>
 		</div>
-		<div class="PaneBind__row" v-for="(bind, index) in bindList" :key="index">
-			<div class="PaneBind__row-header">
+		<div class="PaneBind__row" v-for="(bind, index) in schema.bindList" :key="index">
+			<div class="PaneBind__row-header" @dblclick="removeBind(index)">
 				<label class="PaneBind__method">{{bind.method[0].toUpperCase() + bind.method.substr(1)}}</label>
 				<ParamFieldBind
 					class="PaneBind__address"
-					:value="bind.address"
-					@input="onAddressUpdate(index, bind, $event)"
+					v-model="bind.address"
+					:detectType="bind.method !== 'map' ? 'press' : 'change'"
+					@input="$emit('update:schema', schema)"
 				/>
 			</div>
 			<div class="PaneBind__option" v-if="/^(set|add)$/.test(bind.method)">
@@ -23,15 +24,15 @@
 				<component
 					:is="'ParamField' + ui[0].toUpperCase() + ui.substr(1)"
 					:compact="true"
-					:precision="precision"
-					:min="bind.method === 'set' ? min : undefined"
-					:max="bind.method === 'set' ? max : undefined"
-					:step="step"
-					:unit="unit"
+					:precision="schema.precision"
+					:min="bind.method === 'set' ? schema.min : undefined"
+					:max="bind.method === 'set' ? schema.max : undefined"
+					:step="schema.step"
+					:unit="schema.unit"
 					:showSign="bind.method === 'add'"
 					class="PaneBind__option-value"
 					v-model="bind.option.value"
-					@input="$emit('update:bindList')"
+					@input="$emit('update:schema', schema);"
 				/>
 			</div>
 			<template v-else-if="bind.method === 'map'">
@@ -40,7 +41,7 @@
 					<ParamFieldVector
 						class="PaneBind__option-value"
 						v-model="bind.option.from"
-						@input="$emit('update:bindList')"
+						@input="$emit('update:schema', schema)"
 					/>
 				</div>
 				<div class="PaneBind__option">
@@ -48,7 +49,7 @@
 					<ParamFieldVector
 						class="PaneBind__option-value"
 						v-model="bind.option.to"
-						@input="$emit('update:bindList')"
+						@input="$emit('update:schema', schema)"
 					/>
 				</div>
 			</template>
@@ -66,6 +67,7 @@ import ParamFieldColor from '../ParamFieldColor.vue'
 import ParamFieldNumber from '../ParamFieldNumber.vue'
 import ParamFieldString from '../ParamFieldString.vue'
 import ParamFieldVector from '../ParamFieldVector.vue'
+import {Schema, BindSchema} from '../../data/Schema'
 
 @Component({
 	components: {
@@ -79,22 +81,26 @@ import ParamFieldVector from '../ParamFieldVector.vue'
 	}
 })
 export default class PaneBind extends Vue {
-	@Prop({type: String, required: true}) private ui!:
-		| 'number'
-		| 'color'
-		| 'string'
-		| 'vector'
-		| 'checkbox'
-	@Prop({type: [Number, String, Boolean, Array], required: true})
+	@Prop({type: [Number, String, Boolean, Array, Object], required: true})
 	private value!: any
-	@Prop({type: Array, required: true}) private bindList!: any
-	@Prop(Number) private precision!: number
-	@Prop([Number, Array]) private min!: number | number[]
-	@Prop([Number, Array]) private max!: number | number[]
-	@Prop([Number, Array]) private step!: number | number[]
-	@Prop(String) private unit!: string
+	@Prop({type: Object, required: true}) private schema!: Schema
 
-	private get addItems(): any[] {
+	private created() {
+		console.log(this.schema)
+	}
+
+	private get ui(): string {
+		const {ui} = this.schema
+		if (ui === 'slider' || ui === 'number') {
+			return 'number'
+		} else if (ui === 'point' || ui === 'scale') {
+			return 'vector'
+		} else {
+			return ui
+		}
+	}
+
+	private get addMenuItems(): any[] {
 		const items = [{value: 'set', label: 'Set'}]
 
 		if (/^(number|vector)$/.test(this.ui)) {
@@ -108,13 +114,14 @@ export default class PaneBind extends Vue {
 		return items
 	}
 
-	private onAddressUpdate(index: number, bind: any, address: string) {
-		this.$set(this.bindList, index, {...bind, address})
-		this.$emit('update:bindList', this.bindList)
+	private updateAddress(bind: any, address: string) {
+		bind.address = address
+		this.$emit('update:schema', this.schema)
 	}
 
 	private addBind(method: string) {
-		let bind
+		let bind: BindSchema | null = null
+		const {schema} = this
 
 		if (method === 'set') {
 			bind = {method, address: '', option: {value: this.value}}
@@ -127,19 +134,28 @@ export default class PaneBind extends Vue {
 		} else if (method === 'map') {
 			const to = [0, 1]
 
-			if (this.min && typeof this.min === 'number') {
-				to[0] = this.min
+			if (schema.min && typeof schema.min === 'number') {
+				to[0] = schema.min
 			}
-			if (this.max && typeof this.max === 'number') {
-				to[1] = this.max
+			if (schema.max && typeof schema.max === 'number') {
+				to[1] = schema.max
 			}
 			bind = {method, address: '/MIDI/', option: {from: [0, 127], to}}
 		}
 
 		if (bind) {
-			this.bindList.push(bind)
-			this.$emit('update:bindList', this.bindList)
+			if (!schema.bindList) {
+				this.$set(schema, 'bindList', [])
+			}
+			schema.bindList!.push(bind)
+			this.$emit('update:schema', schema)
 		}
+	}
+
+	private removeBind(index: number) {
+		const {bindList} = this.schema
+		bindList!.splice(index, 1)
+		this.$emit('update:schema', this.schema)
 	}
 }
 </script>
@@ -210,7 +226,6 @@ export default class PaneBind extends Vue {
 	&__option
 		display flex
 		margin-left 0.2em
-		// padding-top calc(0.5 * (var(--layout-param-height) - var(--layout-input-height)))
 		padding-bottom calc(0.5 * (var(--layout-param-height) - var(--layout-input-height)))
 		padding-left 0.8em
 		border-left 1px solid var(--color-border)

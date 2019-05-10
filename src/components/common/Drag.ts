@@ -4,8 +4,8 @@ import {vec2} from 'gl-matrix'
 
 import {clamp} from '../../math'
 import {MouseDragEvent} from '../../util'
-import {DataConfig, DefaultConfig} from '../../core'
-import BindManager, {BindEvent} from '../../core/BindManager'
+import {ConfigDefault} from '../../core/config'
+import BindManager, {BindEvent} from '../../manager/BindManager'
 
 @Component
 export default class Drag extends Vue {
@@ -21,8 +21,8 @@ export default class Drag extends Vue {
 	@Prop(String) private box!: string
 	@Prop(Boolean) private dragging!: boolean
 
-	@Inject({from: 'Config', default: DefaultConfig})
-	private readonly Config!: DataConfig
+	@Inject({from: 'Config', default: ConfigDefault})
+	private readonly Config!: any
 
 	private dragStarted!: boolean
 

@@ -1,8 +1,12 @@
 import mouse from 'mouse-event'
 
+import constrainValue from './constrain-value'
 import deserialize from './deserialize'
 import RoteryDrag from './RoteryDrag'
 import MouseDragEvent from './MouseDragEvent'
+import getValueByPath from './get-value-by-path'
+// import parseSchema from './parse-schema'
+import splitToParentAndKey from './split-to-parent-and-key'
 
 function getDOMCenter(el: HTMLElement): number[] {
 	const {top, right, bottom, left} = el.getBoundingClientRect()
@@ -24,9 +28,13 @@ function setButtonUnfocusableForMouse(button: HTMLElement) {
 	})
 }
 export {
+	constrainValue,
 	getDOMCenter,
+	getValueByPath,
 	setButtonUnfocusableForMouse,
 	RoteryDrag,
 	MouseDragEvent,
-	deserialize
+	deserialize,
+	// parseSchema,
+	splitToParentAndKey
 }

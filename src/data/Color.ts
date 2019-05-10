@@ -6,15 +6,15 @@ export type ColorElements = string | number[]
 
 interface ColorModeInfoValue {
 	max: number[]
-	label: string[]
+	prefix: string[]
 	unit: string[]
 }
 
 export const ColorModeInfo: {[s: string]: ColorModeInfoValue} = {
-	hex: {max: [NaN], label: [''], unit: ['']},
-	rgb: {max: [255, 255, 255], label: ['R', 'G', 'B'], unit: ['', '', '']},
-	hsl: {max: [360, 100, 100], label: ['H', 'S', 'L'], unit: ['°', '%', '%']},
-	hsv: {max: [360, 100, 100], label: ['H', 'S', 'V'], unit: ['°', '%', '%']}
+	hex: {max: [NaN], prefix: [''], unit: ['']},
+	rgb: {max: [255, 255, 255], prefix: ['R', 'G', 'B'], unit: ['', '', '']},
+	hsl: {max: [360, 100, 100], prefix: ['H', 'S', 'L'], unit: ['°', '%', '%']},
+	hsv: {max: [360, 100, 100], prefix: ['H', 'S', 'V'], unit: ['°', '%', '%']}
 }
 
 export default class Color {
@@ -41,21 +41,32 @@ export default class Color {
 
 	public elements!: ColorElements
 
+	// @ts-nocheck
+	public __ob__?: any
+
+	private _cssColor!: {value: string; hash: string}
+
 	constructor(mode: ColorMode, elements: ColorElements) {
 		this.mode = mode
 		this.elements = elements
-	}
 
-	public clone(): Color {
-		const elements = Array.isArray(this.elements)
-			? [...this.elements]
-			: this.elements
-		return new Color(this.mode, elements)
+		Object.defineProperty(this, '_cssColor', {
+			enumerable: false,
+			writable: true,
+			configurable: false,
+			value: {value: '', hash: ''}
+		})
 	}
 
 	public get cssColor(): string {
-		console.log('cssColor')
 		const {mode, elements} = this
+
+		const hash = mode + elements
+
+		if (this._cssColor.hash === hash) {
+			return this._cssColor.value
+		}
+
 		let cssColor: string
 
 		if (mode === 'hex') {
@@ -75,7 +86,18 @@ export default class Color {
 				cssColor = `rgb(${r}, ${g}, ${b})`
 			}
 		}
+
+		this._cssColor.hash = hash
+		this._cssColor.value = cssColor
+
 		return cssColor
+	}
+
+	public clone(): Color {
+		const elements = Array.isArray(this.elements)
+			? [...this.elements]
+			: this.elements
+		return new Color(this.mode, elements)
 	}
 
 	public convertMode(mode: ColorMode): Color {
@@ -134,6 +156,7 @@ export default class Color {
 	}
 
 	private toJSON() {
-		return {$type: 'Color', value: [this.mode, this.elements]}
+		const {mode, elements} = this
+		return [':Color', [this.mode, this.elements]]
 	}
 }

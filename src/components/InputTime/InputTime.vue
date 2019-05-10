@@ -77,14 +77,14 @@ import keycode from 'keycode'
 
 import {getDOMCenter, MouseDragEvent} from '../../util'
 import Timecode from '../../util/Timecode'
-import {DefaultConfig, DataConfig} from '../../core'
+import {ConfigDefault} from '../../core/config'
 
 import Drag from '../common/Drag'
 import Portal from '../common/Portal'
 // import SvgArrow from '../common/SvgArrow.vue'
 import SvgOverlayHorizontalDrag from '../common/SvgOverlayHorizontalDrag.vue'
 import {quantize} from '../../math'
-import BindManager from '../../core/BindManager'
+import BindManager from '../../manager/BindManager'
 
 @Component({
 	components: {Drag, Portal, SvgOverlayHorizontalDrag}
@@ -95,8 +95,8 @@ export default class InputTime extends Vue {
 	@Prop(Number) private max!: number
 
 	@Inject({from: 'fps', default: 24}) private readonly fps!: number
-	@Inject({from: 'Config', default: DefaultConfig})
-	private readonly Config!: DataConfig
+	@Inject({from: 'Config', default: ConfigDefault})
+	private readonly Config!: any
 
 	private smpte: string = ''
 	private frames: string = '00'

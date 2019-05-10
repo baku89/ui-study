@@ -21,8 +21,7 @@ import InputVector from './InputVector.vue'
 import LayoutSplitter from './LayoutSplitter'
 import LayoutTabs from './LayoutTabs'
 import LayoutTab from './LayoutTab.vue'
-import Parameter from './Parameter.vue'
-import ParameterList from './ParameterList.vue'
+import ParameterList from './ParameterList'
 import ParamFieldAffine from './ParamFieldAffine.vue'
 import ParamFieldAngle from './ParamFieldAngle.vue'
 import ParamFieldCheckbox from './ParamFieldCheckbox.vue'
@@ -65,7 +64,6 @@ export default {
 	LayoutSplitter,
 	LayoutTabs,
 	LayoutTab,
-	Parameter,
 	ParameterList,
 	ParamFieldAffine,
 	ParamFieldAngle,

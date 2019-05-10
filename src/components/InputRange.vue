@@ -47,8 +47,8 @@ import Drag from './common/Drag'
 import {vec2} from 'gl-matrix'
 import {lerp, clamp, ratio, quantize} from '../math'
 import {MouseDragEvent} from '../util'
-import {DefaultConfig, DataConfig} from '../core'
-import BindManager from '../core/BindManager'
+import {ConfigDefault} from '../core/config'
+import BindManager from '../manager/BindManager'
 
 @Component({
 	components: {
@@ -61,23 +61,23 @@ export default class InputRange extends Vue {
 	@Prop({type: Number, required: true}) private max!: number
 	@Prop(Number) private step!: number
 
-	@Inject({from: 'Config', default: DefaultConfig})
-	private readonly Config!: DataConfig
+	@Inject({from: 'Config', default: ConfigDefault})
+	private readonly Config!: any
 
 	private hoverTarget: 'bar' | 'first' | 'second' | null = null
 	private dragMode: 'bar' | 'first' | 'second' | null = null
 
 	private dragStartValue!: [number, number]
 
-	get lower() {
+	private get lower() {
 		return Math.min(this.value[0], this.value[1])
 	}
 
-	get upper() {
+	private get upper() {
 		return Math.max(this.value[0], this.value[1])
 	}
 
-	get barStyles() {
+	private get barStyles() {
 		const lower = Math.min(this.value[0], this.value[1])
 		const upper = Math.max(this.value[0], this.value[1])
 
@@ -88,14 +88,18 @@ export default class InputRange extends Vue {
 			right: `${right}%`
 		}
 	}
-	get firstStyles() {
+	private get firstStyles() {
 		const left = ratio(this.value[0], this.min, this.max, true) * 100
 		return {left: `${left}%`}
 	}
 
-	get secondStyles() {
+	private get secondStyles() {
 		const left = ratio(this.value[1], this.min, this.max, true) * 100
 		return {left: `${left}%`}
+	}
+
+	private created() {
+		this.dragStartValue = [0, 0]
 	}
 
 	private onMousemove(e: MouseEvent) {
@@ -118,7 +122,8 @@ export default class InputRange extends Vue {
 
 	private onDragstart() {
 		this.dragMode = this.hoverTarget
-		this.dragStartValue = [this.value[0], this.value[1]]
+		this.dragStartValue[0] = this.value[0]
+		this.dragStartValue[1] = this.value[1]
 	}
 
 	private onDrag(e: MouseDragEvent) {

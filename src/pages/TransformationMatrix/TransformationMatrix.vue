@@ -136,13 +136,12 @@ import {
 } from '../../data'
 import {MouseDragEvent} from '../../util'
 import {toRadians, ratio} from '../../math'
-import BindManager from '../../core/BindManager'
+import BindManager from '../../manager/BindManager'
 
 import Components from '../../components'
 import Param from './Param.vue'
 import Drag from '../../components/common/Drag'
 import TransformStore from './transform-store'
-import {DefaultConfig, DataConfig} from '../../core'
 
 @Observer
 @Component({
@@ -204,8 +203,8 @@ export default class TransformationMatrix extends Vue {
 		| 'bottom'
 		| 'left'
 	private isSymmetrical: boolean = false
-	@Inject({from: 'Config', default: DefaultConfig})
-	private readonly Config!: DataConfig
+	@Inject({from: 'Config'})
+	private readonly Config!: any
 
 	// Lifecycle events
 	private mounted() {

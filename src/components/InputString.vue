@@ -35,6 +35,7 @@ export default class InputString extends Vue {
 		}
 
 		this.$emit('input', newValue)
+		this.$emit('change', newValue, this.value)
 	}
 }
 </script>

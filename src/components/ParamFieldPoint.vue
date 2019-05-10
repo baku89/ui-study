@@ -9,8 +9,9 @@
 			:step="step"
 			:unit="unit"
 			@input="onInput"
+			@change="onChange"
 		/>
-		<InputPoint :value="value" @input="onInput"/>
+		<InputPoint :value="value" @input="onInput" @change="onChange"/>
 	</div>
 </template>
 
@@ -35,6 +36,10 @@ export default class ParamFieldPoint extends Vue {
 
 	private onInput(newValue: number[]) {
 		this.$emit('input', newValue)
+	}
+
+	private onChange(newValue: number[], oldValue: number[]) {
+		this.$emit('change', newValue, oldValue)
 	}
 }
 </script>

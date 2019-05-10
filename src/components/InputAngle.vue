@@ -21,13 +21,13 @@
 import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 import {getDOMCenter, RoteryDrag, MouseDragEvent} from '../util'
-import BindManager from '../core/BindManager'
+import BindManager from '../manager/BindManager'
 
 import Drag from './common/Drag'
 import Portal from './common/Portal'
 import SvgArcArrow from './common/SvgArcArrow.vue'
 import {mod} from '../math'
-import {DataConfig, DefaultConfig} from '../core'
+import {ConfigDefault} from '../core/config'
 
 @Component({
 	components: {
@@ -47,9 +47,9 @@ export default class InputAngle extends Vue {
 
 	@Inject({
 		from: 'Config',
-		default: DefaultConfig
+		default: ConfigDefault
 	})
-	private readonly Config!: DataConfig
+	private readonly Config!: any
 
 	private created() {
 		this.roteryDrag = new RoteryDrag()
@@ -86,9 +86,11 @@ export default class InputAngle extends Vue {
 			let angle = mod(newValue, 360)
 			const turn = Math.floor(newValue / 360)
 
-			angle = this.Config.quantizeAngles.reduce((prev, curr) => {
-				return Math.abs(curr - angle) < Math.abs(prev - angle) ? curr : prev
-			})
+			angle = this.Config.quantizeAngles.reduce(
+				(prev: number, curr: number) => {
+					return Math.abs(curr - angle) < Math.abs(prev - angle) ? curr : prev
+				}
+			)
 
 			newValue = turn * 360 + angle
 		}

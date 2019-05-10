@@ -10,8 +10,8 @@
 		<InputString class="ParamFieldBind__address right" :value="path" @input="updatePath"/>
 		<button
 			class="ParamFieldBind__detect-button"
-			:class="{detecting: isDetecting}"
-			@click="startDetect"
+			:class="{detecting: detecting}"
+			@click="toggleDetect"
 		/>
 	</div>
 </template>
@@ -22,7 +22,7 @@ import keycode from 'keycode'
 
 import InputDropdown from './InputDropdown.vue'
 import InputString from './InputString.vue'
-import BindManager from '../core/BindManager'
+import BindManager from '../manager/BindManager'
 
 @Component({
 	components: {InputDropdown, InputString}
@@ -30,8 +30,9 @@ import BindManager from '../core/BindManager'
 export default class ParamFieldBind extends Vue {
 	@Prop({type: String, required: true})
 	private value!: string
+	@Prop(String) private detectType!: 'press' | 'change'
 
-	private isDetecting: boolean = false
+	private detecting: boolean = false
 
 	private get device(): string {
 		return this.value.substr(1).split(/\/(.+)/)[0]
@@ -53,14 +54,26 @@ export default class ParamFieldBind extends Vue {
 		this.$emit('input', newValue)
 	}
 
-	private async startDetect(e: Event) {
-		this.isDetecting = !this.isDetecting
+	private async toggleDetect(e: Event) {
+		this.detecting = !this.detecting
 
-		if (this.isDetecting) {
-			const newValue = await BindManager.detect()
+		if (this.detecting) {
+			let newValue
+			try {
+				newValue = await BindManager.detect(this.detectType)
+			} catch (err) {
+				this.detecting = false
+				return
+			}
 			this.$emit('input', newValue)
-			this.isDetecting = false
+			this.detecting = false
+		} else {
+			BindManager.abortDetection()
 		}
+	}
+
+	private onDetectionAborted() {
+		this.detecting = false
 	}
 }
 </script>
@@ -109,12 +122,12 @@ $rec-color = #ff254e
 			border none
 			background $rec-color
 			box-shadow 0 0 0 1px $rec-color
-			animation recording 0.5s ease 0s infinite alternate
+			animation recording 0.3s ease 0s infinite alternate
 
 @keyframes recording
 	0%
 		opacity 1
 
 	100%
-		opacity 0.1
+		opacity 0.3
 </style>

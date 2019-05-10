@@ -6,6 +6,7 @@
 			measure="normalized"
 			@dragstart="onDragstart"
 			@drag="onDrag"
+			@dragend="onDragend"
 		>
 			<div class="InputSlider__slit" :class="{dragging}" ref="slit">
 				<div class="InputSlider__accum" :style="accumStyles"/>
@@ -20,10 +21,10 @@ import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 
 import {lerp, clamp, ratio, quantize} from '../math'
-import BindManager from '../core/BindManager'
+import BindManager from '../manager/BindManager'
 
 import Drag from './common/Drag'
-import {DefaultConfig, DataConfig} from '../core'
+import {ConfigDefault} from '../core/config'
 
 @Component({
 	components: {
@@ -34,14 +35,19 @@ export default class InputSlider extends Vue {
 	@Prop({type: Number, required: true}) private value!: number
 	@Prop({type: Number, required: true}) private min!: number
 	@Prop({type: Number, required: true}) private max!: number
+	@Prop({type: Boolean, default: true}) private limitMin!: boolean
+	@Prop({type: Boolean, default: true}) private limitMax!: boolean
 	@Prop(Number) private step!: number
 
-	@Inject({from: 'Config', default: DefaultConfig})
-	private readonly Config!: DataConfig
+	@Inject({from: 'Config', default: ConfigDefault})
+	private readonly Config!: any
 
 	private dragging: boolean = false
+	private lastValue!: number
 
-	private dragStartValue!: number
+	private created() {
+		this.lastValue = this.value
+	}
 
 	private get percent(): number {
 		return ratio(this.value, this.min, this.max, true) * 100
@@ -71,23 +77,23 @@ export default class InputSlider extends Vue {
 
 	private onDragstart(e: {current: vec2; originalEvent: MouseEvent}) {
 		if (e.originalEvent.target === this.$refs.knob) {
-			this.dragStartValue = this.value
+			this.lastValue = this.value
 		} else {
 			const newValue = lerp(this.min, this.max, e.current[0])
-			this.dragStartValue = newValue
+			this.lastValue = newValue
 			this.$emit('input', newValue)
 		}
 	}
 
 	private onDrag(e: {current: vec2}) {
-		const originX = ratio(this.dragStartValue, this.min, this.max)
+		const originX = ratio(this.lastValue, this.min, this.max)
 		let inc = (e.current[0] - originX) * (this.max - this.min)
 
 		if (BindManager.pressed(this.Config.keySlower)) {
 			inc *= 0.1
 		}
 
-		let newValue = this.dragStartValue + inc
+		let newValue = this.lastValue + inc
 
 		if (this.step !== undefined) {
 			newValue = quantize(newValue, this.step)
@@ -98,6 +104,10 @@ export default class InputSlider extends Vue {
 		if (this.value !== newValue) {
 			this.$emit('input', newValue)
 		}
+	}
+
+	private onDragend() {
+		this.$emit('change', this.value, this.lastValue)
 	}
 }
 </script>

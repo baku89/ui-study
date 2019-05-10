@@ -32,8 +32,8 @@ import {MouseDragEvent} from '../../util'
 
 import InputRange from '../InputRange.vue'
 import TimelineSeekbarScale from './TimelineSeekbarScale.vue'
-import {DataConfig, DefaultConfig} from '../../core'
-import BindManager from '../../core/BindManager'
+import {ConfigDefault} from '../../core/config'
+import BindManager from '../../manager/BindManager'
 
 @Component({
 	components: {Drag, InputRange, TimelineSeekbarScale},
@@ -49,8 +49,8 @@ export default class Timeline extends Vue {
 	@Prop({type: Number, required: true}) private max!: number
 	@Prop({type: Boolean, default: false}) private autoScroll!: boolean
 
-	@Inject({from: 'Config', default: DefaultConfig})
-	private readonly Config!: DataConfig
+	@Inject({from: 'Config', default: ConfigDefault})
+	private readonly Config!: any
 
 	private Timeline = {
 		displayRange: [0, 0]

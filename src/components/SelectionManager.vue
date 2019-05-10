@@ -2,7 +2,7 @@
 	<div class="SelectionManager">
 		<slot/>
 		<Popover class="SelectionManager__popover" :active="showControl" ref="popover">
-			<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="dragging = false">
+			<Drag @dragstart="onDragstart" @drag="onDrag" @dragend="onDragend">
 				<ul class="SelectionManager__menu" :class="{dragging}" :selectable="true">
 					<li v-if="controls.add" class="SelectionManager__control">
 						<InputIconButton src="./assets/icon_plus.svg" mode="add"/>
@@ -52,8 +52,9 @@ import InputIconButton from './InputIconButton.vue'
 import {MouseDragEvent} from '../util'
 import Color from '../data/Color'
 import {clamp, toFixed} from '../math'
-import {DefaultConfig, DataConfig} from '../core'
-import BindManager from '../core/BindManager'
+import {ConfigDefault} from '../core/config'
+import BindManager from '../manager/BindManager'
+import HistoryManager from '../manager/HistoryManager'
 
 interface SelectableNode<T> {
 	selected: boolean
@@ -83,14 +84,15 @@ function getValue(node: SelectableNode<any>) {
 export default class SelectionManager extends Vue {
 	@Provide() public SelectionManager = this
 
-	@Inject({from: 'Config', default: DefaultConfig})
-	private readonly Config!: DataConfig
+	@Inject({from: 'Config', default: ConfigDefault})
+	private readonly Config!: any
 
-	private items!: Selection[]
+	private items: Selection[] = []
 
 	private dragging: boolean = false
 	private drag: {
-		startValues: number[] | Color[]
+		startValues: any[]
+		lastValues: any[]
 		inc: number
 		speed: 'normal' | 'fast' | 'slow'
 		text: string
@@ -99,6 +101,7 @@ export default class SelectionManager extends Vue {
 		stringify?: (inc: number) => string
 	} = {
 		startValues: [],
+		lastValues: [],
 		inc: 0,
 		speed: 'normal',
 		text: '',
@@ -245,6 +248,7 @@ export default class SelectionManager extends Vue {
 			}
 
 			drag.startValues = this.items.map(({node}) => getValue(node))
+			drag.lastValues = [...drag.startValues]
 			drag.inc = 0
 
 			this.$set(drag.position, 0, e.current[0])
@@ -273,11 +277,36 @@ export default class SelectionManager extends Vue {
 
 		for (const [i, item] of this.items.entries()) {
 			const newValue = drag.operator!(drag.startValues[i], drag.inc)
+			drag.lastValues[i] = newValue
 			item.node.updateValue(newValue)
 			await this.$nextTick()
 		}
 
 		return false
+	}
+
+	private onDragend() {
+		this.dragging = false
+
+		const items = [...this.items]
+		const startValues = [...this.drag.startValues]
+		const endValues = [...this.drag.lastValues]
+
+		const undo = async () => {
+			for (const [i, item] of items.entries()) {
+				item.node.updateValue(startValues[i])
+				await this.$nextTick()
+			}
+		}
+
+		const redo = async () => {
+			for (const [i, item] of items.entries()) {
+				item.node.updateValue(endValues[i])
+				await this.$nextTick()
+			}
+		}
+
+		HistoryManager.addHistory({undo, redo})
 	}
 
 	private async swapValues() {
@@ -309,6 +338,8 @@ export default class SelectionManager extends Vue {
 			}
 			target = target.parentElement
 		}
+
+		console.log(clickedSelectable)
 
 		if (!clickedSelectable) {
 			this.deselectAll()

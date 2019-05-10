@@ -2,11 +2,10 @@
 	<div class="InputColor">
 		<InputString
 			v-if="isHex"
-			class="left"
 			:value="value.elements"
 			:validator="validateColorHex"
 			:style="{fontFamily: 'var(--font-monospace)'}"
-			@input="hupdateHexElement"
+			@input="updateHexElement"
 		/>
 		<template v-else>
 			<InputColorElement
@@ -63,15 +62,20 @@ export default class InputColor extends Vue {
 	}
 
 	private updateHexElement(hex: string) {
-		const newValue = this.value.clone()
+		const newValue = this.value
 		newValue.elements = hex
 		this.$emit('input', newValue)
 	}
 
 	private updateElement(index: number, element: number) {
-		const newValue = this.value.clone()
+		const newValue = this.value
 		const elements = newValue.elements as number[]
 		elements[index] = element
+		// @ts-ignore
+		if (newValue.elements.__ob__) {
+			// @ts-ignore
+			newValue.elements.__ob__.dep.notify()
+		}
 		this.$emit('input', newValue)
 	}
 }

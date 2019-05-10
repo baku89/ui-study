@@ -10,7 +10,7 @@
 		>
 			<div class="InputColorPicker__sv" :class="{dragging: draggingSB}">
 				<div class="InputColorPicker__sv-inner">
-					<GradientPalette class="InputColorPicker__palette" :color="hsb" :varyings="[1, 2]"/>
+					<GradientPalette class="InputColorPicker__palette" :color="hsb" :varyings="varyingsSB"/>
 					<div class="InputColorPicker__sv-preview" :style="previewStylesSB"/>
 				</div>
 			</div>
@@ -25,7 +25,7 @@
 			@dragend="onDragHue('dragend', $event)"
 		>
 			<div class="InputColorPicker__hue" :class="{dragging: draggingHue}">
-				<GradientPalette class="InputColorPicker__palette" :color="hsb" :varyings="[0]"/>
+				<GradientPalette class="InputColorPicker__palette" :color="hsb" :varyings="varyingsHue"/>
 				<div class="InputColorPicker__hue-preview" :style="previewStylesHue"/>
 			</div>
 		</Drag>
@@ -60,6 +60,9 @@ export default class InputColorPicker extends Vue {
 	private cachedHSB = [-1, -1, -1]
 	private previewStylesHue = {}
 	private previewStylesSB = {}
+
+	private varyingsSB = [1, 2]
+	private varyingsHue = [0]
 
 	private get isHSB(): boolean {
 		const mode = this.value.mode
@@ -127,7 +130,7 @@ export default class InputColorPicker extends Vue {
 			background: this.cssColor
 		}
 
-		const newValue = this.hsb.clone()
+		const newValue = this.hsb
 		newValue.elements = hsb
 		if (!this.isHSB) {
 			newValue.convertMode(this.value.mode)
@@ -135,6 +138,11 @@ export default class InputColorPicker extends Vue {
 
 		this.cachedHSB = hsb
 
+		// @ts-ignore
+		if (newValue.elements.__ob__) {
+			// @ts-ignore
+			newValue.elements.__ob__.dep.notify()
+		}
 		this.$emit('input', newValue)
 	}
 }

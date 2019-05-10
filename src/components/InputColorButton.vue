@@ -69,6 +69,9 @@ export default class InputColorButton extends Vue {
 	}
 
 	public updateValue(newValue: Color) {
+		if (newValue.__ob__) {
+			newValue.__ob__.dep.notify()
+		}
 		this.$emit('input', newValue)
 	}
 
@@ -84,7 +87,10 @@ export default class InputColorButton extends Vue {
 	}
 
 	private convertMode(mode: ColorMode) {
-		const newValue = Color.convertMode(this.value, mode)
+		const newValue = this.value.convertMode(mode)
+		if (newValue.__ob__) {
+			newValue.__ob__.dep.notify()
+		}
 		this.$emit('input', newValue)
 	}
 }

@@ -5,6 +5,7 @@
 				class="InputPoint__knob"
 				:class="{dragging}"
 				ref="knob"
+				@focus="onFocus"
 				@keydown="onKeydown"
 				@keyup="onKeyup"
 			>
@@ -36,8 +37,8 @@ import {vec2} from 'gl-matrix'
 import Drag from './common/Drag'
 import SvgArrow from './common/SvgArrow.vue'
 import {getDOMCenter} from '../util'
-import {DataConfig, DefaultConfig} from '../core'
-import BindManager from '../core/BindManager'
+import {ConfigDefault} from '../core/config'
+import BindManager from '../manager/BindManager'
 
 interface ArrowKeyInfo {
 	delta: number[]
@@ -63,11 +64,13 @@ export default class InputPoint extends Vue {
 	private knobOffset: number[] = [0, 0]
 
 	private dragging: boolean = false
+
+	private startValue: number[] = []
 	private dragFrom: number[] = [0, 0]
 	private dragTo: number[] = [0, 0]
 
-	@Inject({from: 'Config', default: DefaultConfig})
-	private readonly Config!: DataConfig
+	@Inject({from: 'Config', default: ConfigDefault})
+	private readonly Config!: any
 
 	// UI
 	private ui: {
@@ -103,6 +106,14 @@ export default class InputPoint extends Vue {
 		this.ui.keyArrowAngle = null
 	}
 
+	private onFocus() {
+		this.startValue = [...this.value]
+	}
+
+	private onBlur() {
+		this.notifyChanged()
+	}
+
 	private onDragstart(e: {current: vec2}) {
 		const $knob = this.$refs.knob as HTMLElement
 		this.dragFrom = getDOMCenter($knob)
@@ -111,17 +122,36 @@ export default class InputPoint extends Vue {
 		this.dragTo[1] = this.dragFrom[1]
 		this.knobOffset[0] = e.current[0] - this.dragFrom[0]
 		this.knobOffset[1] = e.current[1] - this.dragFrom[1]
+
+		this.startValue = [...this.value]
 	}
 
 	private onDrag(e: {delta: vec2; current: vec2}) {
-		const newValue = [this.value[0] + e.delta[0], this.value[1] + e.delta[1]]
+		const newValue = this.value // [this.value[0] + e.delta[0], this.value[1] + e.delta[1]]
+
+		newValue[0] += e.delta[0]
+		newValue[1] += e.delta[1]
 
 		const $knob = this.$refs.knob as HTMLElement
 		this.dragFrom = getDOMCenter($knob)
 
 		this.dragTo[0] = e.current[0] - this.knobOffset[0]
 		this.dragTo[1] = e.current[1] - this.knobOffset[1]
+
+		// @ts-ignore
+		if (newValue.__ob__) {
+			// @ts-ignore
+			newValue.__ob__.dep.notify()
+		}
 		this.$emit('input', newValue)
+	}
+
+	private onDragend() {
+		this.notifyChanged()
+	}
+
+	private notifyChanged() {
+		this.$emit('change', [...this.value], this.startValue)
 	}
 }
 </script>

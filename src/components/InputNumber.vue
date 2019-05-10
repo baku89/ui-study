@@ -10,10 +10,11 @@
 			detectDirection="horizontal"
 			@dragstart="onDragstart"
 			@drag="onDrag"
+			@dragend="onDragend"
 			@click="onClick"
 		>
 			<div class="InputNumber__display">
-				<div class="InputNumber__label" v-if="label">{{this.label}}</div>
+				<div class="InputNumber__prefix" v-if="prefix">{{this.prefix}}</div>
 				{{displayValue}}
 				<span v-if="unit" class="InputNumber__unit">{{unit}}</span>
 			</div>
@@ -24,7 +25,7 @@
 			v-model="inputValue"
 			@focus="onFocus"
 			@change="onChange"
-			@blur="editing = false"
+			@blur="onBlur"
 			@keydown="onKeydown"
 			ref="input"
 		>
@@ -48,12 +49,11 @@ import {getDOMCenter, MouseDragEvent} from '../util'
 import {vec2} from 'gl-matrix'
 import keycode from 'keycode'
 
-import {DataConfig, DefaultConfig} from '../core'
-import BindManager from '../core/BindManager'
+import {ConfigDefault} from '../core/config'
+import BindManager from '../manager/BindManager'
 
 import Drag from './common/Drag'
 import Portal from './common/Portal'
-// import SvgArrow from './common/SvgArrow.vue'
 import SelectionManager from './SelectionManager.vue'
 import SvgOverlayHorizontalDrag from './common/SvgOverlayHorizontalDrag.vue'
 
@@ -69,21 +69,21 @@ export default class InputNumber extends Vue {
 
 	@Prop({type: Number, required: true}) private value!: number
 	@Prop({type: Number, default: 1}) private precision!: number
-	@Prop(String) private label!: string
+	@Prop(String) private prefix!: string
 	@Prop(String) private unit!: string
 	@Prop(Number) private min!: number
 	@Prop(Number) private max!: number
 	@Prop(Number) private step!: number
 	@Prop({type: Boolean, default: false}) private showSign!: boolean
 
-	private inputValue: string = this.value.toString()
+	private startValue!: number
+	private inputValue!: string
 
 	private editing: boolean = false
 	private dragging: boolean = false
 
 	private drag = {
 		position: [0, 0],
-		startValue: 0,
 		inc: 0,
 		speed: 'normal',
 		text: ''
@@ -96,8 +96,13 @@ export default class InputNumber extends Vue {
 	@Inject({from: 'SelectionManager', default: null})
 	private readonly SelectionManager!: SelectionManager
 
-	@Inject({from: 'Config', default: DefaultConfig})
-	private readonly Config!: DataConfig
+	@Inject({from: 'Config', default: ConfigDefault})
+	private readonly Config!: any
+
+	private created() {
+		this.startValue = this.value
+		this.inputValue = this.value.toString()
+	}
 
 	private get displayValue(): string {
 		let displayValue = toFixed(this.value, this.precision, this.shouldOmitZero)
@@ -134,6 +139,11 @@ export default class InputNumber extends Vue {
 		}
 	}
 
+	private onBlur() {
+		this.editing = false
+		this.notifyChanged()
+	}
+
 	private getConstrainedValue(newValue: number) {
 		if (this.hasMin) {
 			newValue = Math.max(this.min, newValue)
@@ -154,6 +164,15 @@ export default class InputNumber extends Vue {
 		}
 	}
 
+	private notifyStartChange() {
+		this.startValue = this.value
+		this.$emit('startChange')
+	}
+
+	private notifyChanged() {
+		this.$emit('change', this.value, this.startValue)
+	}
+
 	private onClick() {
 		const input = this.$refs.input as HTMLInputElement
 		input.focus()
@@ -166,6 +185,7 @@ export default class InputNumber extends Vue {
 		if (this.SelectionManager) {
 			this.SelectionManager.add(this)
 		}
+		this.notifyStartChange()
 	}
 
 	private onKeydown(e: KeyboardEvent) {
@@ -190,7 +210,7 @@ export default class InputNumber extends Vue {
 	private onDragstart({current}: MouseDragEvent) {
 		const {drag} = this
 
-		drag.startValue = this.value
+		this.notifyStartChange()
 		drag.inc = 0
 		this.$set(drag.position, 0, current[0])
 		this.$set(drag.position, 1, current[1])
@@ -212,13 +232,17 @@ export default class InputNumber extends Vue {
 		this.$set(drag.position, 0, current[0])
 		this.$set(drag.position, 1, current[1])
 
-		const newValue = this.getConstrainedValue(drag.startValue + drag.inc)
+		const newValue = this.getConstrainedValue(this.startValue + drag.inc)
 
-		const actualInc = newValue - this.drag.startValue
+		const actualInc = newValue - this.startValue
 		this.drag.text =
 			(actualInc > 0 ? '+' : '') + actualInc.toFixed(this.precision)
 
 		this.$emit('input', newValue)
+	}
+
+	private onDragend() {
+		this.notifyChanged()
 	}
 
 	@Watch('value')
@@ -272,7 +296,7 @@ export default class InputNumber extends Vue {
 		^[0].editing > &
 			visibility hidden
 
-	&__label
+	&__prefix
 		position absolute
 		margin-left -0.05em
 		height 100%

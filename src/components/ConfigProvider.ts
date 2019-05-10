@@ -1,14 +1,14 @@
-import {Component, Vue, Watch, Provide, Inject} from 'vue-property-decorator'
+import {Component, Vue} from 'vue-property-decorator'
 import Case from 'case'
 
-import {DefaultConfig, DataConfig} from '../core'
+import {ConfigDefault} from '../core/config'
+import Color from '../data/Color'
 import deepcopy from '../util/deepcopy'
-import Color from 'src/data/Color'
 
 @Component({
 	data() {
 		return {
-			Config: deepcopy(DefaultConfig)
+			Config: deepcopy(ConfigDefault)
 		}
 	},
 	provide() {
@@ -18,35 +18,37 @@ import Color from 'src/data/Color'
 	}
 })
 export default class ConfigProvider extends Vue {
-	@Inject({from: 'Config', default: null}) private ParentConfig!: DataConfig
+	private Config!: any
 
 	private get attrElement(): HTMLElement {
-		return this.ParentConfig
-			? (this.$el as HTMLElement)
-			: document.documentElement
+		return document.documentElement
+	}
+
+	private created() {
+		this.$watch('Config.lang', this.updateLang, {immediate: true})
 	}
 
 	private mounted() {
-		this.updateLang()
-
 		// Set theme
-		const {theme} = this.$data.Config
+		const {theme} = this.Config
 		for (const key of Object.keys(theme)) {
-			this.$watch(`Config.theme.${key}`, (newValue: any) => {
-				this.updateThemeProperty(key, newValue)
-			})
-			this.updateThemeProperty(key, theme[key])
+			this.$watch(
+				`Config.theme.${key}`,
+				(newValue: any) => {
+					this.updateThemeProperty(key, newValue)
+				},
+				{immediate: true}
+			)
 		}
 	}
 
 	private render() {
 		return this.$scopedSlots.default!({
-			Config: this.$data.Config
+			Config: this.Config
 		})
 	}
 
-	@Watch('Config.lang', {deep: true})
-	private updateLang(lang: string = this.$data.Config.lang) {
+	private updateLang(lang: string = this.Config.lang) {
 		this.attrElement.classList.remove('en', 'ja')
 		this.attrElement.classList.add(lang)
 	}

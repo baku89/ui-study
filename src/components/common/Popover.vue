@@ -10,7 +10,7 @@ import Popper from 'popper.js'
 import keycode from 'keycode'
 
 import Portal from './Portal'
-import BindManager from '../../core/BindManager'
+import BindManager from '../../manager/BindManager'
 
 @Component({
 	components: {Portal}

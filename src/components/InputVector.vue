@@ -13,6 +13,8 @@
 			:label="labels ? labels[index] : undefined"
 			:unit="unit"
 			@input="onInput(index, $event)"
+			@startChange="onStartChange"
+			@change="onChange"
 		/>
 	</div>
 </template>
@@ -34,10 +36,25 @@ export default class InputVector extends Vue {
 	@Prop(String) private unit!: string
 	@Prop(Boolean) private showSign!: boolean
 
+	private startValue!: number[]
+
+	private created() {
+		this.startValue = [...this.value]
+	}
+
 	private onInput(index: number, value: number) {
-		const newValue = Array.from(this.value)
-		newValue[index] = value
+		const newValue = this.value
+		this.$set(newValue, index, value)
 		this.$emit('input', newValue, index)
+	}
+
+	private onStartChange() {
+		this.startValue = [...this.value]
+	}
+
+	private onChange() {
+		const newValue = [...this.value]
+		this.$emit('change', newValue, this.startValue)
 	}
 }
 </script>

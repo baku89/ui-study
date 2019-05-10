@@ -6,6 +6,7 @@ import ComponentsList from './pages/ComponentsList.vue'
 import ParameterControl from './pages/ParameterControl'
 import TransformationMatrix from './pages/TransformationMatrix'
 import GraphicsOnLisp from './pages/GraphicsOnLisp'
+import Easing from './pages/Easing'
 
 Vue.use(Router)
 
@@ -37,6 +38,11 @@ export default new Router({
 			path: '/graphics-on-lisp',
 			name: 'graphics-on-lisp',
 			component: GraphicsOnLisp
+		},
+		{
+			path: '/easing',
+			name: 'easing',
+			component: Easing
 		}
 	]
 })

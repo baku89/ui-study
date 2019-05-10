@@ -35,13 +35,13 @@
 <script lang="ts">
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
-import {clamp} from '../math'
+import {clamp} from '../../math'
 
-import Color, {ColorMode, ColorElements} from '../data/Color'
-import {MouseDragEvent} from '../util'
+import Color, {ColorMode, ColorElements} from '../../data/Color'
+import {MouseDragEvent} from '../../util'
 
-import GradientPalette from './common/GradientPalette'
-import Drag from './common/Drag'
+import GradientPalette from '../common/GradientPalette'
+import Drag from '../common/Drag'
 
 type DragEventType = 'dragstart' | 'drag' | 'dragend'
 
@@ -149,7 +149,7 @@ export default class InputColorPicker extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-@import '../style/config.styl'
+@import '../../style/config.styl'
 
 .InputColorPicker
 	position relative

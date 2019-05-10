@@ -15,8 +15,8 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import InputNumber from './InputNumber.vue'
-import InputAngle from './InputAngle.vue'
+import InputNumber from './InputNumber'
+import InputAngle from './InputAngle'
 
 @Component({
 	components: {InputNumber, InputAngle}

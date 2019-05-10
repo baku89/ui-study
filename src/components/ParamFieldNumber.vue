@@ -1,6 +1,6 @@
 <script lang="ts">
 import Vue from 'vue'
-import InputNumber from './InputNumber.vue'
+import InputNumber from './InputNumber'
 
 export default Vue.extend({
 	name: 'ParamFieldNumber',

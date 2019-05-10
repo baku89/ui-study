@@ -154,7 +154,7 @@
 <script lang="ts">
 import {Component, Vue, Watch, Inject} from 'vue-property-decorator'
 import Color from '../data/Color'
-import TimelineColor from '../components/TimelineColor.vue'
+import TimelineColor from '../components/TimelineColor'
 import Components from '../components'
 import {p, g} from '../data/Schema'
 

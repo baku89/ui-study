@@ -47,7 +47,7 @@ import Drag from './common/Drag'
 import Popover from './common/Popover.vue'
 import Portal from './common/Portal'
 import SvgOverlayHorizontalDrag from './common/SvgOverlayHorizontalDrag.vue'
-import InputIconButton from './InputIconButton.vue'
+import InputIconButton from './InputIconButton'
 
 import {MouseDragEvent} from '../util'
 import Color from '../data/Color'

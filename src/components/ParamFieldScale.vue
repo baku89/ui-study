@@ -37,9 +37,9 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import InputNumber from './InputNumber.vue'
-import InputVector from './InputVector.vue'
-import InputIconToggle from './InputIconToggle.vue'
+import InputNumber from './InputNumber'
+import InputVector from './InputVector'
+import InputIconToggle from './InputIconToggle'
 
 @Component({
 	components: {InputNumber, InputVector, InputIconToggle}

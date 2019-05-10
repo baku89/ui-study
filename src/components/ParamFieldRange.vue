@@ -16,8 +16,8 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import InputVector from './InputVector.vue'
-import InputRange from './InputRange.vue'
+import InputVector from './InputVector'
+import InputRange from './InputRange'
 
 @Component({
 	components: {InputVector, InputRange}

@@ -21,7 +21,12 @@ export default function deserialize(text: string) {
 
 		for (const key of keys) {
 			const value = obj[key]
-			if (Array.isArray(value) && typeof value[0] === 'string' && value[0]) {
+			if (
+				Array.isArray(value) &&
+				typeof value[0] === 'string' &&
+				value[0] === ':'
+			) {
+				// It should be an instance of class
 			} else if (typeof value === 'object') {
 				if (typeof value.$type === 'string') {
 					obj[key] = new DataClass[value.$type](...value.value)

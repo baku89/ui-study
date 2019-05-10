@@ -42,7 +42,7 @@ export default class InputString extends Vue {
 
 
 <style lang="stylus" scoped>
-@import '../style/config.styl'
+@import '../../style/config.styl'
 
 .InputString
 	input-border-style()

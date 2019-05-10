@@ -30,7 +30,7 @@ import Drag from '../common/Drag'
 import {ratio, quantize, clamp, lerp} from '../../math'
 import {MouseDragEvent} from '../../util'
 
-import InputRange from '../InputRange.vue'
+import InputRange from '../InputRange'
 import TimelineSeekbarScale from './TimelineSeekbarScale.vue'
 import {ConfigDefault} from '../../core/config'
 import BindManager from '../../manager/BindManager'

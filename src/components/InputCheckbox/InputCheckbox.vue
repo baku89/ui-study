@@ -26,7 +26,7 @@ export default class InputCheckbox extends Vue {
 
 
 <style lang="stylus" scoped>
-@import '../style/config.styl'
+@import '../../style/config.styl'
 
 .InputCheckbox
 	position relative

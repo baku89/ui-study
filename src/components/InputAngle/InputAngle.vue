@@ -20,14 +20,14 @@
 <script lang="ts">
 import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
-import {getDOMCenter, RoteryDrag, MouseDragEvent} from '../util'
-import BindManager from '../manager/BindManager'
+import {getDOMCenter, RoteryDrag, MouseDragEvent} from '../../util'
+import BindManager from '../../manager/BindManager'
 
-import Drag from './common/Drag'
-import Portal from './common/Portal'
-import SvgArcArrow from './common/SvgArcArrow.vue'
-import {mod} from '../math'
-import {ConfigDefault} from '../core/config'
+import Drag from '../common/Drag'
+import Portal from '../common/Portal'
+import SvgArcArrow from '../common/SvgArcArrow.vue'
+import {mod} from '../../math'
+import {ConfigDefault} from '../../core/config'
 
 @Component({
 	components: {
@@ -105,7 +105,7 @@ export default class InputAngle extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-@import '../style/config.styl'
+@import '../../style/config.styl'
 
 .InputAngle
 	position relative

@@ -9,8 +9,8 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import {setButtonUnfocusableForMouse} from '../util'
-import Icon from './common/Icon.vue'
+import {setButtonUnfocusableForMouse} from '../../util'
+import Icon from '../common/Icon.vue'
 import {VNode} from 'vue'
 
 @Component({components: {Icon}})
@@ -31,7 +31,7 @@ export default class InputButton extends Vue {
 
 
 <style lang="stylus" scoped>
-@import '../style/config.styl'
+@import '../../style/config.styl'
 
 .InputButton
 	height var(--layout-input-height)

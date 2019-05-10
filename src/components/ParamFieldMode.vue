@@ -1,6 +1,6 @@
 <script lang="ts">
 import Vue from 'vue'
-import InputMode from './InputMode.vue'
+import InputMode from './InputMode'
 
 export default Vue.extend({
 	name: 'ParamFieldMode',

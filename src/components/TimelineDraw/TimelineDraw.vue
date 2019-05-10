@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import {Component, Prop, Vue, Inject, Watch} from 'vue-property-decorator'
-import {lerp} from '../math'
+import {lerp} from '../../math'
 
 type DrawFunc = (
 	ctx: CanvasRenderingContext2D,

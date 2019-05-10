@@ -34,7 +34,7 @@ export default class InputMode extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-@import '../style/config.styl'
+@import '../../style/config.styl'
 
 .InputMode
 	position relative

@@ -1,6 +1,6 @@
 <script lang="ts">
 import Vue from 'vue'
-import InputDropdown from './InputDropdown.vue'
+import InputDropdown from './InputDropdown'
 
 export default Vue.extend({
 	name: 'ParamFieldDropdown',

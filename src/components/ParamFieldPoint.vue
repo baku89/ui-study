@@ -18,8 +18,8 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import InputVector from './InputVector.vue'
-import InputPoint from './InputPoint.vue'
+import InputVector from './InputVector'
+import InputPoint from './InputPoint'
 
 @Component({
 	components: {InputVector, InputPoint}

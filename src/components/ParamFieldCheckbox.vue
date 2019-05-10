@@ -1,6 +1,6 @@
 <script lang="ts">
 import Vue from 'vue'
-import InputCheckbox from './InputCheckbox.vue'
+import InputCheckbox from './InputCheckbox'
 
 export default Vue.extend({
 	name: 'ParamFieldCheckbox',

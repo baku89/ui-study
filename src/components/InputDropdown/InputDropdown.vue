@@ -41,7 +41,7 @@ export default class InputDropdown extends Vue {
 
 
 <style lang="stylus" scoped>
-@import '../style/config.styl'
+@import '../../style/config.styl'
 
 $right-arrow-width = 1em
 

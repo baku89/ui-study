@@ -20,8 +20,8 @@
 import {Component, Prop, Vue, Inject, Watch} from 'vue-property-decorator'
 import keycode from 'keycode'
 
-import InputDropdown from './InputDropdown.vue'
-import InputString from './InputString.vue'
+import InputDropdown from './InputDropdown'
+import InputString from './InputString'
 import BindManager from '../manager/BindManager'
 
 @Component({

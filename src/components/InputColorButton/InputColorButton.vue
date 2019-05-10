@@ -37,13 +37,13 @@
 import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import colorConvert from 'color-convert'
 
-import Color, {ColorMode} from '../data/Color'
+import Color, {ColorMode} from '../../data/Color'
 
-import InputColor from './InputColor'
-import InputColorPicker from './InputColorPicker.vue'
-import InputDropdown from './InputDropdown.vue'
-import Popover from '../components/common/Popover.vue'
-import SelectionManager from './SelectionManager.vue'
+import InputColor from '../InputColor'
+import InputColorPicker from '../InputColorPicker'
+import InputDropdown from '../InputDropdown'
+import Popover from '../common/Popover.vue'
+import SelectionManager from '../SelectionManager.vue'
 import {buttons} from 'mouse-event'
 
 @Component({
@@ -98,7 +98,7 @@ export default class InputColorButton extends Vue {
 
 
 <style lang="stylus" scoped>
-@import '../style/config.styl'
+@import '../../style/config.styl'
 
 .InputColorButton
 	position relative

@@ -20,11 +20,11 @@
 import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import {vec2} from 'gl-matrix'
 
-import {lerp, clamp, ratio, quantize} from '../math'
-import BindManager from '../manager/BindManager'
+import {lerp, clamp, ratio, quantize} from '../../math'
+import BindManager from '../../manager/BindManager'
 
-import Drag from './common/Drag'
-import {ConfigDefault} from '../core/config'
+import Drag from '../common/Drag'
+import {ConfigDefault} from '../../core/config'
 
 @Component({
 	components: {

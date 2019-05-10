@@ -16,7 +16,7 @@
 <script lang="ts">
 import {Component, Provide, Prop, Vue} from 'vue-property-decorator'
 
-import InputMatrix from './InputMatrix.vue'
+import InputMatrix from './InputMatrix'
 
 @Component({
 	components: {InputMatrix}

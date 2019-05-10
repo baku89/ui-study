@@ -34,7 +34,7 @@
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
 import InputColorElement from './InputColorElement.vue'
-import InputString from '../InputString.vue'
+import InputString from '../InputString'
 
 import Color from '../../data/Color'
 

@@ -44,18 +44,18 @@
 
 <script lang="ts">
 import {Component, Prop, Vue, Inject, Watch} from 'vue-property-decorator'
-import {parseNumber, toFixed, quantize, clamp} from '../math'
-import {getDOMCenter, MouseDragEvent} from '../util'
+import {parseNumber, toFixed, quantize, clamp} from '../../math'
+import {getDOMCenter, MouseDragEvent} from '../../util'
 import {vec2} from 'gl-matrix'
 import keycode from 'keycode'
 
-import {ConfigDefault} from '../core/config'
-import BindManager from '../manager/BindManager'
+import {ConfigDefault} from '../../core/config'
+import BindManager from '../../manager/BindManager'
 
-import Drag from './common/Drag'
-import Portal from './common/Portal'
-import SelectionManager from './SelectionManager.vue'
-import SvgOverlayHorizontalDrag from './common/SvgOverlayHorizontalDrag.vue'
+import Drag from '../common/Drag'
+import Portal from '../common/Portal'
+import SelectionManager from '../SelectionManager.vue'
+import SvgOverlayHorizontalDrag from '../common/SvgOverlayHorizontalDrag.vue'
 
 @Component({
 	components: {
@@ -264,7 +264,7 @@ export default class InputNumber extends Vue {
 
 
 <style lang="stylus" scoped>
-@import '../style/config.styl'
+@import '../../style/config.styl'
 
 .InputNumber
 	input-border-style()

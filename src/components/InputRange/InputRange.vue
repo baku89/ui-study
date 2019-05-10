@@ -43,12 +43,12 @@
 
 <script lang="ts">
 import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
-import Drag from './common/Drag'
+import Drag from '../common/Drag'
 import {vec2} from 'gl-matrix'
-import {lerp, clamp, ratio, quantize} from '../math'
-import {MouseDragEvent} from '../util'
-import {ConfigDefault} from '../core/config'
-import BindManager from '../manager/BindManager'
+import {lerp, clamp, ratio, quantize} from '../../math'
+import {MouseDragEvent} from '../../util'
+import {ConfigDefault} from '../../core/config'
+import BindManager from '../../manager/BindManager'
 
 @Component({
 	components: {
@@ -195,7 +195,7 @@ export default class InputRange extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-@import '../style/config.styl'
+@import '../../style/config.styl'
 
 .InputRange
 	position relative

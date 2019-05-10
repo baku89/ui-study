@@ -15,8 +15,8 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import Icon from './common/Icon.vue'
-import {setButtonUnfocusableForMouse} from '../util'
+import Icon from '../common/Icon.vue'
+import {setButtonUnfocusableForMouse} from '../../util'
 
 @Component({
 	components: {Icon}
@@ -34,7 +34,7 @@ export default class InputIconToggle extends Vue {
 
 
 <style lang="stylus" scoped>
-@import '../style/config.styl'
+@import '../../style/config.styl'
 
 .InputIconToggle
 	position relative

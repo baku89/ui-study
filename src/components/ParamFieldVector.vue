@@ -1,6 +1,6 @@
 <script lang="ts">
 import Vue from 'vue'
-import InputVector from './InputVector.vue'
+import InputVector from './InputVector'
 
 export default Vue.extend({
 	name: 'ParamFieldVector',

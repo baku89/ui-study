@@ -34,11 +34,11 @@ import {Component, Prop, Vue, Inject} from 'vue-property-decorator'
 import keycode from 'keycode'
 import {vec2} from 'gl-matrix'
 
-import Drag from './common/Drag'
-import SvgArrow from './common/SvgArrow.vue'
-import {getDOMCenter} from '../util'
-import {ConfigDefault} from '../core/config'
-import BindManager from '../manager/BindManager'
+import Drag from '../common/Drag'
+import SvgArrow from '../common/SvgArrow.vue'
+import {getDOMCenter} from '../../util'
+import {ConfigDefault} from '../../core/config'
+import BindManager from '../../manager/BindManager'
 
 interface ArrowKeyInfo {
 	delta: number[]
@@ -157,7 +157,7 @@ export default class InputPoint extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-@import '../style/config.styl'
+@import '../../style/config.styl'
 
 .InputPoint
 	position relative

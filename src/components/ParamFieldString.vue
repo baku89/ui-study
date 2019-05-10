@@ -1,6 +1,6 @@
 <script lang="ts">
 import Vue from 'vue'
-import InputString from './InputString.vue'
+import InputString from './InputString'
 
 export default Vue.extend({
 	name: 'ParamFieldString',

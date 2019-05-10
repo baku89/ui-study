@@ -11,7 +11,7 @@ import {Component, Prop, Vue} from 'vue-property-decorator'
 import Color from '../data/Color'
 
 import InputColor from './InputColor'
-import InputColorButton from './InputColorButton.vue'
+import InputColorButton from './InputColorButton'
 
 @Component({
 	components: {InputColor, InputColorButton}

@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import InputNumber from './InputNumber.vue'
+import InputNumber from '../InputNumber'
 
 @Component({
 	components: {InputNumber}
@@ -93,7 +93,7 @@ export default class InputMatrix extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-@import '../style/config.styl'
+@import '../../style/config.styl'
 
 .InputMatrix
 	display flex

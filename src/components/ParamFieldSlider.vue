@@ -17,8 +17,8 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 
-import InputNumber from './InputNumber.vue'
-import InputSlider from './InputSlider.vue'
+import InputNumber from './InputNumber'
+import InputSlider from './InputSlider'
 
 @Component({
 	components: {InputNumber, InputSlider}

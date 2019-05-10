@@ -38,7 +38,7 @@ import {vec2} from 'gl-matrix'
 import {clamp} from '../../math'
 
 import Color, {ColorMode, ColorElements} from '../../data/Color'
-import {MouseDragEvent} from '../../util'
+import {MouseDragEvent, forceNotify} from '../../util'
 
 import GradientPalette from '../common/GradientPalette'
 import Drag from '../common/Drag'
@@ -138,11 +138,7 @@ export default class InputColorPicker extends Vue {
 
 		this.cachedHSB = hsb
 
-		// @ts-ignore
-		if (newValue.elements.__ob__) {
-			// @ts-ignore
-			newValue.elements.__ob__.dep.notify()
-		}
+		forceNotify(newValue.elements)
 		this.$emit('input', newValue)
 	}
 }

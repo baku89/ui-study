@@ -22,6 +22,7 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import InputNumber from '../InputNumber'
+import {forceNotify} from '../../util'
 
 @Component({
 	components: {InputNumber}
@@ -82,12 +83,8 @@ export default class InputMatrix extends Vue {
 	private onInput(index: number, value: number) {
 		const newValue = this.value
 		newValue[index] = value
-		// @ts-ignore
-		if (newValue.__ob__) {
-			// @ts-ignore
-			newValue.__ob__.dep.notify()
-		}
-		this.$emit('input', newValue, index)
+		forceNotify(newValue)
+		this.$emit('input', newValue)
 	}
 }
 </script>

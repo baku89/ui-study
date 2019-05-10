@@ -37,6 +37,7 @@ import InputColorElement from './InputColorElement.vue'
 import InputString from '../InputString'
 
 import Color from '../../data/Color'
+import {forceNotify} from '../../util'
 
 @Component({
 	components: {InputColorElement, InputString}
@@ -71,11 +72,7 @@ export default class InputColor extends Vue {
 		const newValue = this.value
 		const elements = newValue.elements as number[]
 		elements[index] = element
-		// @ts-ignore
-		if (newValue.elements.__ob__) {
-			// @ts-ignore
-			newValue.elements.__ob__.dep.notify()
-		}
+		forceNotify(newValue.elements)
 		this.$emit('input', newValue)
 	}
 }

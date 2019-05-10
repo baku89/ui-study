@@ -2,10 +2,9 @@ import mouse from 'mouse-event'
 
 import constrainValue from './constrain-value'
 import deserialize from './deserialize'
+import forceNotify from './force-notify'
 import RoteryDrag from './RoteryDrag'
 import MouseDragEvent from './MouseDragEvent'
-import getValueByPath from './get-value-by-path'
-// import parseSchema from './parse-schema'
 import splitToParentAndKey from './split-to-parent-and-key'
 
 function getDOMCenter(el: HTMLElement): number[] {
@@ -29,12 +28,11 @@ function setButtonUnfocusableForMouse(button: HTMLElement) {
 }
 export {
 	constrainValue,
+	deserialize,
+	forceNotify,
 	getDOMCenter,
-	getValueByPath,
 	setButtonUnfocusableForMouse,
 	RoteryDrag,
 	MouseDragEvent,
-	deserialize,
-	// parseSchema,
 	splitToParentAndKey
 }

@@ -45,6 +45,7 @@ import InputDropdown from '../InputDropdown'
 import Popover from '../common/Popover.vue'
 import SelectionManager from '../SelectionManager.vue'
 import {buttons} from 'mouse-event'
+import {forceNotify} from '../../util'
 
 @Component({
 	components: {
@@ -69,9 +70,7 @@ export default class InputColorButton extends Vue {
 	}
 
 	public updateValue(newValue: Color) {
-		if (newValue.__ob__) {
-			newValue.__ob__.dep.notify()
-		}
+		forceNotify(newValue)
 		this.$emit('input', newValue)
 	}
 
@@ -88,9 +87,7 @@ export default class InputColorButton extends Vue {
 
 	private convertMode(mode: ColorMode) {
 		const newValue = this.value.convertMode(mode)
-		if (newValue.__ob__) {
-			newValue.__ob__.dep.notify()
-		}
+		forceNotify(newValue)
 		this.$emit('input', newValue)
 	}
 }

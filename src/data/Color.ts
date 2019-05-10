@@ -41,9 +41,6 @@ export default class Color {
 
 	public elements!: ColorElements
 
-	// @ts-nocheck
-	public __ob__?: any
-
 	private _cssColor!: {value: string; hash: string}
 
 	constructor(mode: ColorMode, elements: ColorElements) {

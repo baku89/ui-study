@@ -36,7 +36,7 @@ import {vec2} from 'gl-matrix'
 
 import Drag from '../common/Drag'
 import SvgArrow from '../common/SvgArrow.vue'
-import {getDOMCenter} from '../../util'
+import {getDOMCenter, forceNotify} from '../../util'
 import {ConfigDefault} from '../../core/config'
 import BindManager from '../../manager/BindManager'
 
@@ -127,7 +127,7 @@ export default class InputPoint extends Vue {
 	}
 
 	private onDrag(e: {delta: vec2; current: vec2}) {
-		const newValue = this.value // [this.value[0] + e.delta[0], this.value[1] + e.delta[1]]
+		const newValue = this.value
 
 		newValue[0] += e.delta[0]
 		newValue[1] += e.delta[1]
@@ -138,11 +138,8 @@ export default class InputPoint extends Vue {
 		this.dragTo[0] = e.current[0] - this.knobOffset[0]
 		this.dragTo[1] = e.current[1] - this.knobOffset[1]
 
-		// @ts-ignore
-		if (newValue.__ob__) {
-			// @ts-ignore
-			newValue.__ob__.dep.notify()
-		}
+		forceNotify(newValue)
+
 		this.$emit('input', newValue)
 	}
 
